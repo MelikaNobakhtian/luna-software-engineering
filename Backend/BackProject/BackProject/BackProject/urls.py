@@ -24,4 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', RegisterView.as_view(), name="register"),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
+    path('login/', LoginAPIView.as_view(), name="login"),
 ]

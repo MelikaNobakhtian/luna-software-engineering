@@ -146,5 +146,5 @@ STATIC_URL = '/static/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'fateme.ahmadi1522@gmail.com'
-EMAIL_HOST_PASSWORD = 'islukyuggpqscwcj'
+EMAIL_HOST_USER = 'haminob48@gmail.com'
+EMAIL_HOST_PASSWORD = 'panikdhsqqvmnagr'
