@@ -4,13 +4,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, username, email, password=None,password2=None):
+    def create_user(self, username, email, password=None,password2=None,doctor_number=None):
         if username is None:
             raise TypeError('Users should have a username')
         if email is None:
             raise TypeError('Users should have a Email')
+        if doctor_number is None:
+            user = self.model(username=username, email=self.normalize_email(email))
 
-        user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
         user.is_stuff = False
         user.save()
@@ -42,6 +43,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
+
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        }
+
+class DoctorUser(AbstractBaseUser, PermissionsMixin):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=255, unique=True)
+    doctor_number = models.CharField(max_length=6, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    auth_provider = models.CharField(
+        max_length=255, blank=False,
+        null=False, default=AUTH_PROVIDERS.get('email'))
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name','last_name']
 
     objects = UserManager()
 
