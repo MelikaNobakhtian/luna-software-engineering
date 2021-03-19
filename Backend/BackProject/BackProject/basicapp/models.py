@@ -33,7 +33,10 @@ AUTH_PROVIDERS = {'email': 'email'}
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=50,default='unknown')
+    last_name = models.CharField(max_length=100,default='unknown')
     email = models.EmailField(max_length=255, unique=True)
+    id_num = models.CharField(max_length=10,unique=True)
     is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -56,28 +59,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             'access': str(refresh.access_token)
         }
 
-class DoctorUser(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=255, unique=True)
+class DoctorUser(models.Model):
     doctor_number = models.CharField(max_length=6, unique=True)
-    is_verified = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
-    auth_provider = models.CharField(
-        max_length=255, blank=False,
-        null=False, default=AUTH_PROVIDERS.get('email'))
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name','last_name']
-
-    objects = UserManager()
-
-    def __str__(self):
-        return self.email
-
-    def tokens(self):
-        refresh = RefreshToken.for_user(self)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+    )
