@@ -3,7 +3,7 @@ from rest_framework import generics, status, views, permissions
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
+from .models import *
 from .utils import Util
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -39,15 +39,15 @@ class RegisterView(generics.GenericAPIView):
 
 class RegisterDoctorView(generics.GenericAPIView):
 
-    serializer_class = RegisterDoctorSerializer
-
     def post(self, request):
         user = request.data
-        serializer = self.serializer_class(data=user)
+        serializer = RegisterSerializer(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
-        user = DoctorUser.objects.get(email=user_data['email'])
+        user = User.objects.get(email=user_data['email'])
+        new_doc = DoctorUser(user=user,doctor_number=request.data.get('doctor_number'))
+        new_doc.save()
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
         relativeLink = reverse('email-verify')
@@ -58,6 +58,7 @@ class RegisterDoctorView(generics.GenericAPIView):
                 'email_subject': 'Verify your email'}
 
         Util.send_email(data)
+        user_data['doctor_number'] = new_doc.doctor_number
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
