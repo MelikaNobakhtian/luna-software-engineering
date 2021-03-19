@@ -1,0 +1,19 @@
+
+.signup-background{
+    height:"100%";
+    width:"100%";
+    background-color: rgba(0, 204, 102, 0);
+}
+.background {
+    overflow-x: hidden;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 3rem;
+    font-family: 'Muli',sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--color-white);
+    margin: 0;
+    background-color: rgb(42, 100, 50);
+  }
