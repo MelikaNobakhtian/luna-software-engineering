@@ -30,7 +30,7 @@ function Login() {
 
             <Form noValidate onSubmit= {handleSubmit}>
             <Form.Group >
-              <Form.Label> username</Form.Label>
+              <Form.Label> نام کاربری</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><AccountCircleIcon></AccountCircleIcon></InputGroup.Text>
@@ -41,7 +41,7 @@ function Login() {
                 value={username}
                 onChange={(e) => setUserName(e.target.value)}
                  isValid={usernameErr}
-                 placeholder="Enter Username"
+                 placeholder="نام کاربری خود را واد نمایید  "
                 // isInvalid={Boolean(usernameErr)}
                 // errors={usernameErr}
               />
@@ -50,7 +50,7 @@ function Login() {
               </InputGroup>
               </Form.Group>
               <Form.Group >
-              <Form.Label>password</Form.Label>
+              <Form.Label>کلمه عبور</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
@@ -61,7 +61,7 @@ function Login() {
                 value={passwords}
                 onChange={(e) => setPasswords(e.target.value)}
                 isValid={passErr}
-                placeholder="Enter password"
+                placeholder="کلمه عبور را وارد کنید "
               />
               <Form.Control.Feedback type="invalid">{passErr} </Form.Control.Feedback>
 
@@ -69,7 +69,7 @@ function Login() {
               </Form.Group>
 
          <Button block  type="submit" variant="success">
-          LOGIN
+          ورود
         </Button>
         </Form>
      

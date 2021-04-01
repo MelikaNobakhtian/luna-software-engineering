@@ -33,7 +33,7 @@ function SignUp(e) {
 
         <Form noValidate onSubmit= {handleSubmit}>
            <Form.Group >
-              <Form.Label> username</Form.Label>
+              <Form.Label> نام کاربری</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><AccountCircleIcon></AccountCircleIcon></InputGroup.Text>
@@ -44,16 +44,16 @@ function SignUp(e) {
                 value={username}
                 onChange={(e) => setUserName(e.target.value)}
                  isValid={usernameErr}
-                 placeholder="Enter Username"
-                // isInvalid={Boolean(usernameErr)}
-                // errors={usernameErr}
+                 placeholder=" نام کاربری خود را وارد نمایید"
+                isInvalid={Boolean(usernameErr)}
+                 errors={usernameErr}
               />
         <Form.Control.Feedback type="invalid" >{usernameErr}</Form.Control.Feedback>
               </InputGroup>
               </Form.Group>
 
               <Form.Group >
-              <Form.Label> email</Form.Label>
+              <Form.Label>ایمیل</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><EmailIcon></EmailIcon></InputGroup.Text>
@@ -64,14 +64,14 @@ function SignUp(e) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 isValid={emailErr}
-                placeholder="Enter Email"
+                placeholder="ایمیل خود را وارد  نمایید "
               />
               <Form.Control.Feedback type="invalid">{emailErr} </Form.Control.Feedback>
               </InputGroup>
               </Form.Group>
 
-              <Form.Group >
-              <Form.Label> password</Form.Label>
+              <Form.Group>
+              <Form.Label> کلمه عبور</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
@@ -82,14 +82,14 @@ function SignUp(e) {
                 //  value={passwords}
                 //  onChange={(e) => setPasswords(e.target.value)}
                 isValid={passErr}
-                placeholder="Enter Passwoed"
+                placeholder="کلمه عبور را وارد نمایید"
               />
         <Form.Control.Feedback type="invalid">{passErr}</Form.Control.Feedback>
               </InputGroup>
               </Form.Group>
 
               <Form.Group >
-              <Form.Label> confrim password</Form.Label>
+              <Form.Label> تایید کلمه عبور </Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
@@ -100,13 +100,13 @@ function SignUp(e) {
                 // value={passwords}
                 // onChange={(e) => setPasswords(e.target.value)}
                 isValid={confirmPassErr}
-                placeholder="Enter confrim password"
+                placeholder="کلمه عبور خود را تایید نمایید"
               />
               <Form.Control.Feedback type="invalid">{confirmPassErr}</Form.Control.Feedback>
 
               </InputGroup>
               </Form.Group>
-          <Button block  type="submit" variant="success">SIGNUP</Button>
+          <Button block  type="submit" variant="success">ثبت نام</Button>
         </Form>
    
         </div>
