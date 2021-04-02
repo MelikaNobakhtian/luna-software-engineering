@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import login from './login';
-import signUp from './signUp';
+import login from './components/login/login';
+import signUp from './components/login/signUp';
 
 
 
