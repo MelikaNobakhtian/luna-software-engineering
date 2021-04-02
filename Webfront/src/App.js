@@ -20,12 +20,17 @@ function App() {
       />
     )
   }
-  return (<Router>
+  return (
+    <Router>
+       <div style={{direction:"rtl"}}>
           <Switch>
-            <Route exact path='/' component={signUp} />
+            <Route exact path='/signup' component={signUp} />
+            <Route exact path='/login' component={login} />
        
           </Switch>
+          </div>
     </Router>
+    
   );
 }
 
