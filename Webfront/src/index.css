@@ -9,7 +9,7 @@ body, html, .App, #root, .outer {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  text-align: left;
+  text-align: right;
 }
 
 

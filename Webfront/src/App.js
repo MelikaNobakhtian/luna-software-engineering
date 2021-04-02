@@ -22,7 +22,7 @@ function App() {
   }
   return (
     <Router>
-       <div style={{direction:"rtl"}}>
+       <div className="text-right" style={{direction:"rtl"}}>
           <Switch>
             <Route exact path='/signup' component={signUp} />
             <Route exact path='/login' component={login} />

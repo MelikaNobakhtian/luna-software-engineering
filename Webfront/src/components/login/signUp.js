@@ -7,8 +7,11 @@ import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LockIcon from '@material-ui/icons/Lock';
 import './signUp.css'
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import {API_BASE_URL} from '../apiConstant/apiConstant';
 
-function SignUp(e) {
+function SignUp(props) {
 
     const [errors, setErrors] = useState({});
     const [email, setEmail] = useState("");
@@ -18,21 +21,23 @@ function SignUp(e) {
     const [emailErr, setEmailErr] = useState("")
     const [passErr, setPassErr] = useState("")
     const [confirmPassErr, setConfirmPassErr] = useState("")
-    
+    const [number, setNumber] = useState("")
+
     function handleSubmit(event) {
         event.preventDefault();
+        
       }
 
 
     return (
-        <div className="background">
+        <div className="background d-flex justify-content-center ">
         <div className="outer">
         <div className="row justify-content-center">
           <div className="col-xs-10 col-sm-9 col-md-6 col-lg-5 col-xl-4">
             <div className="inner">
 
         <Form noValidate onSubmit= {handleSubmit}>
-           <Form.Group >
+           <Form.Group>
               <Form.Label> نام کاربری</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
@@ -53,7 +58,7 @@ function SignUp(e) {
               </Form.Group>
 
               <Form.Group >
-              <Form.Label>ایمیل</Form.Label>
+              <Form.Label className="mt-3">ایمیل</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><EmailIcon></EmailIcon></InputGroup.Text>
@@ -71,7 +76,7 @@ function SignUp(e) {
               </Form.Group>
 
               <Form.Group>
-              <Form.Label> کلمه عبور</Form.Label>
+              <Form.Label  className="mt-3"> کلمه عبور</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
@@ -89,7 +94,7 @@ function SignUp(e) {
               </Form.Group>
 
               <Form.Group >
-              <Form.Label> تایید کلمه عبور </Form.Label>
+              <Form.Label  className="mt-3"> تایید کلمه عبور </Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
@@ -106,7 +111,37 @@ function SignUp(e) {
 
               </InputGroup>
               </Form.Group>
-          <Button block  type="submit" variant="success">ثبت نام</Button>
+
+              <hr></hr>
+
+              <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" id="isDoctor"/>
+                <label className="form-check-label" for="isDoctor">من پزشک هستم</label>
+              </div>
+
+              <Form.Group >
+              <Form.Label  className=""> شماره نظام پزشکی</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
+                </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="number"
+                // value={passwords}
+                // onChange={(e) => setPasswords(e.target.value)}
+                isValid={number}
+                placeholder="کلمه عبور خود را تایید نمایید"
+              />
+              <Form.Control.Feedback type="invalid">{number}</Form.Control.Feedback>
+
+              </InputGroup>
+              </Form.Group>
+
+          <Button  className="mt-3" block  type="submit" variant="success">ثبت نام</Button>
+          
+
+         
         </Form>
    
         </div>
