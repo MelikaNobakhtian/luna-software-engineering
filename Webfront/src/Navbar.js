@@ -2,20 +2,18 @@
 // import './navbar.css';
 
 import "bootstrap/dist/css/bootstrap.min.css"
-
+import 'bootstrap/dist/js/bootstrap.bundle';
   import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
   // import {navbar,nav,Button} from "bootstrap"
  // import {Navbar,Nav} from 'bootstrap';
 // import * as ReactBootstrap from 'react-bootstrap';
-//ino hey goft nemishnase bad az npm install popper va bootstrap toye package.json ham hastan
 // import Button from  "react-bootstrap/Button";
 function Navbar() {
   return (
-    //yarn chiye farghesh ba npm 
-     //fargh nav o navbar
+    
     <div  >
-   
-    <nav class="navbar navbar-expand-lg navbar-light" dir="rtl" style={{backgroundColor:"#E2FBF9"}}  >
+      
+    <nav class="navbar navbar-expand-lg order-2 order-lg-1 navbar-light" dir="rtl" style={{backgroundColor:"#E2FBF9"}}  >
     <div class="container-fluid" 
     // style={{backgroundColor:"#E2FBF9"}}
     >
