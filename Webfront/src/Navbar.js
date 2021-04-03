@@ -3,7 +3,7 @@
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import 'bootstrap/dist/js/bootstrap.bundle';
-  import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
+import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
   // import {navbar,nav,Button} from "bootstrap"
  // import {Navbar,Nav} from 'bootstrap';
 // import * as ReactBootstrap from 'react-bootstrap';
@@ -13,56 +13,62 @@ function Navbar() {
     
     <div  >
       
-    <nav class="navbar navbar-expand-lg order-2 order-lg-1 navbar-light" dir="rtl" style={{backgroundColor:"#E2FBF9"}}  >
-    <div class="container-fluid" 
+    <nav className="navbar navbar-expand-lg navbar-light" dir="rtl" style={{backgroundColor:"#E2FBF9"}}  >
+    <div className="container-fluid" 
     // style={{backgroundColor:"#E2FBF9"}}
     >
-    <a class="navbar-brand" style={{alignSelf:"flex-end"}} href="#">کاشف</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <a className="navbar-brand" style={{}} href="#">کاشف</a>
+    
+    <button className=" navbar-toggler"  type="button" data-bs-toggle="collapse" 
+    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span className="navbar-toggler-icon" data-bs-target=".navbar-collapse.show" data-bs-target="#navbarNav" ></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">گرفتن نوبت</a>
+    <div className="collapse navbar-collapse mb-5 mb-lg-0" id="navbarNav">
+      <ul className="navbar-nav">
+        <li className="nav-item">
+          <a className="nav-link active" aria-current="page" href="#">گرفتن نوبت</a>
         </li>
         
-        {/* <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li> */}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown link
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
+        {/* <li className="nav-item">
+          <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li> ///*/}
+     
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form className="d-flex">
+        <input className="form-control me-2" type="search"  placeholder="Search" aria-label="Search"></input>
+        <button className="btn btn-outline-success" type="submit">Search</button>
       </form>
      
     </div>
-    <div  class="collapse navbar-collapse flex-row-reverse" id="navbarNav"
+    <div  className="collapse navbar-collapse flex-row-reverse" id="navbarNav" 
     // style={{backgroundColor:"green"}}
     >
-      <ul class="navbar-nav  "  style={{backgroundColor:"lightblue",alignSelf:"baseline"}} >
-      <li class="nav-item ">
-          <a class="nav-link" style={{fontSize:"calc(1em + 1vw)", fontWeight:"bold"}} href="#">مهندس هستید؟</a>
+      <ul className="navbar-nav  "  style={{backgroundColor:"#E2FBF9"}} >
+      <li className="nav-item dropdown" data-bs-toggle="collapse" dir ="ltr"  >
+          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           مهندس هستید؟
+          </a>
+          <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a className="dropdown-item" href="#">ثبت نام مهندس</a></li>
+            <li><a className="dropdown-item" href="#">ورود مهندس</a></li>
+        
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">ورود یا ثبت نام</a>
+        <li className="nav-item">
+          <a className="nav-link" href="#">ورود یا ثبت نام</a>
         </li>
-        <li class="nav-item pull-left">
-          <a class="nav-link"  color="#1f7a8c"  href="#">مشاهده ی اتاق ها</a>
+        <li className="nav-item pull-left">
+          <a className="nav-link"  color="#1f7a8c"  href="#">مشاهده ی اتاق ها</a>
         </li>
         </ul>
         </div>
     </div>
+    <div className="collapse"  id="navbarNav">
+  <div className="bg-dark p-4">
+    <h5 className="text-white h4">Collapsed content</h5>
+    <span className="text-muted">Toggleable via the navbar brand.</span>
+  </div>
+</div>
     </nav>
    
       {/* <ReactBootstrap.Button>HI this is bootstrap bottom</ReactBootstrap.Button> */}
