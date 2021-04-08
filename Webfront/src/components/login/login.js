@@ -10,6 +10,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import './signUp.css'
 import Cookies from 'js-cookie';
 import {API_BASE_URL} from '../apiConstant/apiConstant';
+import docImage from '../../assets/Lovepik_com-401686853-online-medical-consultation.png'
 
 
 function Login(props) {
@@ -43,13 +44,17 @@ function Login(props) {
       }
 
     return (
-        <div className="background d-flex justify-content-center ">
-        <div className="outer">
-        <div className="row justify-content-center">
-          <div className="col-xs-10 col-sm-9 col-md-6 col-lg-5 col-xl-4">
-            <div className="inner">
-
-            <Form  noValidate onSubmit= {handleSubmit}>
+        <div className="d-flex justify-content-center background">
+        <div className="card-group shadow-lg border border-5 border-success rounded" style={{backgroundColor:'white'}} >
+          
+            <div className="card border-0 " >
+                <div class="card-body ">
+                    <h1 className="card-title" style={{textAlign:'center'}}>نوبت آنلاین</h1>
+                    <img className="img-fluid " src={docImage} alt=""></img>
+                </div>
+            </div>
+            <div className="card d-flex justify-content-center border-0 ">
+            <Form className="m-md-5 m-3" noValidate onSubmit= {handleSubmit}>
             <Form.Group  >
               <Form.Label > نام کاربری</Form.Label>
               <InputGroup hasValidation>
@@ -93,12 +98,10 @@ function Login(props) {
           ورود
         </Button>
         </Form>
-     
+            </div>
+        </div>
+       
      </div>
-    </div>
-     </div>
-     </div>
-    </div>
     );
 }
 
