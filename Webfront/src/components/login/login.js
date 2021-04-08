@@ -48,6 +48,12 @@ function Login(props) {
         props.updateTitle('signup');
     }
 
+  //   const redirectToForgotPass = () => {
+  //     props.history.push('/forgotPass'); 
+  //     props.updateTitle('forgotPass');
+  // }
+    
+
     return (
         <div className="d-flex justify-content-center background">
         <div className="card-group shadow-lg border border-5 border-success rounded" style={{backgroundColor:'white'}} >
@@ -95,21 +101,38 @@ function Login(props) {
                 placeholder="کلمه عبور را وارد کنید "
               />
               <Form.Control.Feedback type="invalid">{passErr} </Form.Control.Feedback>
+              
 
               </InputGroup>
+              <span type="button" className="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style={{color:'tomato'}} >رمز خود را فراموش کرده‌اید؟</span> 
               </Form.Group>
 
-         <Button className="mt-3" block  type="submit" variant="success">
-          ورود
-        </Button>
-        <div className="">
+        
+        <div className="mt-3">
+            
+            <Button className="" block  type="submit" variant="success">
+             ورود
+            </Button>
             <span className="btn" onClick={() => redirectToRegister()}>قبلاً ثبت‌نام نکرده‌اید؟</span> 
-        </div>
-        <div className="">
-            <span className="btn" >رمز خود را فراموش کرده‌اید؟</span> 
         </div>
         </Form>
             </div>
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+       
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
        
      </div>
