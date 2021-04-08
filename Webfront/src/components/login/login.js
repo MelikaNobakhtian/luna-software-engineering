@@ -43,6 +43,11 @@ function Login(props) {
           });
       }
 
+      const redirectToRegister = () => {
+        props.history.push('/signup'); 
+        props.updateTitle('signup');
+    }
+
     return (
         <div className="d-flex justify-content-center background">
         <div className="card-group shadow-lg border border-5 border-success rounded" style={{backgroundColor:'white'}} >
@@ -94,9 +99,15 @@ function Login(props) {
               </InputGroup>
               </Form.Group>
 
-         <Button className="mt-3 " block  type="submit" variant="success">
+         <Button className="mt-3" block  type="submit" variant="success">
           ورود
         </Button>
+        <div className="">
+            <span className="btn" onClick={() => redirectToRegister()}>قبلاً ثبت‌نام نکرده‌اید؟</span> 
+        </div>
+        <div className="">
+            <span className="btn" >رمز خود را فراموش کرده‌اید؟</span> 
+        </div>
         </Form>
             </div>
         </div>
