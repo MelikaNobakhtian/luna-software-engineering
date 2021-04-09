@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-ro
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import login from './components/login/login';
 import signUp from './components/login/signUp';
+import Doctorcalender from './Doctorcalender';
 
 
 
@@ -32,6 +33,7 @@ function App() {
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
             <Route exact path='/' component={Navbar} />
+            <Route path='/doctorcal' component={Doctorcalender} />
        
           </Switch>
           </div>
