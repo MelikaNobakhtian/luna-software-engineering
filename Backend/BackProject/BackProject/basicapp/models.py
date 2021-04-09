@@ -67,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class DoctorUser(models.Model):
     doctor_number = models.CharField(max_length=6, unique=True)
+    degree = models.FileField(blank=False,null=False,upload_to="degrees/")
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
