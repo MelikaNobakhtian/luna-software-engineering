@@ -58,6 +58,7 @@ class RegisterDoctorView(generics.GenericAPIView):
                 'email_subject': 'Verify your email'}
 
         Util.send_email(data)
+        user_data['degree']=new_doc.degree
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
