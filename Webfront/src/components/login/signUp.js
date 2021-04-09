@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { useState} from "react";
 import { Toast, Button, Form, FormGroup, Label, Input, FormText,Col,InputGroup } from 'react-bootstrap';
 import { Link, Redirect, withRouter, useHistory } from 'react-router-dom';
-import { Email } from "@material-ui/icons";
 import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LockIcon from '@material-ui/icons/Lock';
@@ -14,10 +13,10 @@ import {API_BASE_URL} from '../apiConstant/apiConstant';
 
 function SignUp(props) {
 
-    // const [errors, setErrors] = useState({});
-    const [email, setEmail] = useState("");
+    const [errors, setErrors] = useState({});
     const [name, setName] = useState("");
     const [lastname, setLastName] = useState("");
+    const [email, setEmail] = useState("");
     const [username, setUserName] = useState("");
     const [passwords, setPasswords] = useState({ password: "", confirmPassword: "" })
     const [nameErr, setNameErr] = useState("")
@@ -33,6 +32,64 @@ function SignUp(props) {
         
       }
 
+      function validatorname(value){
+        setName(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کرن نام ضروری است !";
+        else if(!value.match(/^[a-zA-Z]+$/)){
+        errors="فقط از حروف استفاده نمایید   !";
+        }
+        setNameErr(errors)
+      }
+
+      function validatorlastname(value){
+        setLastName(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کرن نام خانوادگی ضروری است !";
+        else if(!value.match(/^[a-zA-Z]+$/)){
+        errors="فقط از حروف استفاده نمایید   !";
+        }
+        setLastnameErr(errors)
+      }
+
+      function validatorusername(value){
+        setUserName(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کردن نام کاربری ضروری است  !";
+        setUsernameErr(errors)
+      }
+      const regex_email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      function validatoremail (value){
+        setEmail(value)
+        let errors=""
+        if( !regex_email.test(String(value).toLowerCase())){
+          errors = " ایمیل صحیح را وارد نمایید !";
+      }
+      setEmailErr(errors)
+        
+      }
+      const pattern=/^((?=.*[0-9]{1,})|(?=.*[!.@#$&*-_]{1,}))(?=.*[a-z]{1,}).{8,}$/;
+      function validatorpass (values){
+        setPasswords({ ...passwords, password: values})
+        let errors=""
+        if( !pattern.test(String(values).toLowerCase())){
+          errors = "پسورد صحیح را وارد کنید !";
+      }
+      setPassErr(errors)
+      }
+
+      function validatorconfirmpass (values){
+        setPasswords({ ...passwords, confirmPassword: values})
+        let errors=""
+        if(passwords.password!==values){
+          errors = "پسورد وارد شده تطابق ندارد !";
+      }
+      setConfirmPassErr(errors)
+      }
+
 
     return (
         <div className="background d-flex justify-content-center ">
@@ -42,6 +99,7 @@ function SignUp(props) {
             <div className="inner">
 
         <Form noValidate onSubmit= {handleSubmit}>
+
         <Form.Group >
               <Form.Label className="mt-3">نام</Form.Label>
               <InputGroup hasValidation>
@@ -52,8 +110,9 @@ function SignUp(props) {
                 type="text"
                 name="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => validatorname(e.target.value)}
                 isInvalid={Boolean(nameErr)}
+                onBlur={(e) => validatorname(e.target.value)}
                 placeholder="نام خود را وارد  نمایید "
               />
               <Form.Control.Feedback type="invalid">{nameErr} </Form.Control.Feedback>
@@ -71,13 +130,15 @@ function SignUp(props) {
                 type="text"
                 name="last name"
                 value={lastname}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => validatorlastname(e.target.value)}
                 isInvalid={Boolean(lastnameErr)}
+                onBlur={(e) => validatorlastname(e.target.value)}
                 placeholder="نام خانوادگی خود را وارد  نمایید "
               />
               <Form.Control.Feedback type="invalid">{lastnameErr} </Form.Control.Feedback>
               </InputGroup>
               </Form.Group>
+
            <Form.Group>
               <Form.Label> نام کاربری</Form.Label>
               <InputGroup hasValidation>
@@ -88,11 +149,10 @@ function SignUp(props) {
                 type="text"
                 name="username"
                 value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                 isValid={usernameErr}
-                 placeholder=" نام کاربری خود را وارد نمایید"
-                isInvalid={Boolean(usernameErr)}
-                 errors={usernameErr}
+                onChange={(e) => validatorusername(e.target.value)}
+                placeholder=" نام کاربری خود را وارد نمایید"
+                onBlur={(e) => validatorusername(e.target.value)}
+                isInvalid={Boolean(usernameErr)} 
               />
         <Form.Control.Feedback type="invalid" >{usernameErr}</Form.Control.Feedback>
               </InputGroup>
@@ -108,9 +168,10 @@ function SignUp(props) {
                 type="text"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                isValid={emailErr}
+                onChange={(e) => validatoremail(e.target.value)}
+                isInvalid={Boolean(emailErr)}
                 placeholder="ایمیل خود را وارد  نمایید "
+                onBlur={(e) => validatoremail(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">{emailErr} </Form.Control.Feedback>
               </InputGroup>
@@ -122,13 +183,14 @@ function SignUp(props) {
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
                 </InputGroup.Prepend>
-              <Form.Control
-                type="text"
+              <Form.Control 
+                type="password"
                 name="password"
-                //  value={passwords}
-                //  onChange={(e) => setPasswords(e.target.value)}
-                isValid={passErr}
                 placeholder="کلمه عبور را وارد نمایید"
+                value={passwords.password}
+                onChange={(e) => validatorpass(e.target.value)}
+                isInvalid={Boolean(passErr)}
+                onBlur={(e) => validatorpass(e.target.value)}
               />
         <Form.Control.Feedback type="invalid">{passErr}</Form.Control.Feedback>
               </InputGroup>
@@ -141,12 +203,13 @@ function SignUp(props) {
                   <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
                 </InputGroup.Prepend>
               <Form.Control
-                type="text"
+                type="password"
                 name="confrim password"
-                // value={passwords}
-                // onChange={(e) => setPasswords(e.target.value)}
-                isValid={confirmPassErr}
+                value={passwords.confirmPassword}
+                onChange={(e) => validatorconfirmpass(e.target.value)}
+                isInvalid={Boolean(confirmPassErr)}
                 placeholder="کلمه عبور خود را تایید نمایید"
+                onBlur={(e) => validatorconfirmpass(e.target.value)}
               />
               <Form.Control.Feedback type="invalid">{confirmPassErr}</Form.Control.Feedback>
 
@@ -180,9 +243,6 @@ function SignUp(props) {
               </Form.Group>
 
           <Button  className="mt-3" block  type="submit" variant="success">ثبت نام</Button>
-          
-
-         
         </Form>
    
         </div>
