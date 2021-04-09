@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, username, email,first_name,last_name,id_num, password=None,password2=None,doctor_number=None):
+    def create_user(self, username, email,first_name,last_name,id_num, password=None,password2=None):
         if username is None:
             raise TypeError('Users should have a username')
         if email is None:
@@ -66,8 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
 
 class DoctorUser(models.Model):
-    doctor_number = models.CharField(max_length=6, unique=True)
-    degree = models.FileField(blank=False,null=False,upload_to="degrees/")
+    degree = models.FileField(blank=False,null=False,default='',upload_to="degrees/")
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
