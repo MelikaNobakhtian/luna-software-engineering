@@ -18,6 +18,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import { SettingsSystemDaydreamOutlined } from "@material-ui/icons";
 
 
 function Login(props) {
@@ -70,6 +71,19 @@ function Login(props) {
 
   const handleReset = () => {
     setActiveStep(0);
+  };
+
+  const sendEmail = () => {
+    axios.post(API_BASE_URL)
+          .then(function (response) {
+              if(response.status === 200){
+                  handleNext();
+              }
+          })
+          .catch(function (error) {
+                  console.log(error)
+                  handleNext();
+          });
   };
 
     return (
@@ -158,6 +172,27 @@ function Login(props) {
               <label class="form-label">آدرس ایمیل</label>
               <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید"/>
             </div>
+          </form>
+        </div>
+
+              <div >
+                <div>
+                  <Button
+                    onClick={sendEmail}
+                  >
+                    تایید
+                  </Button>
+                </div>
+              </div>
+            </StepContent>
+          </Step>
+
+
+          <Step key="2"> 
+            <StepLabel>کد تایید</StepLabel>
+            <StepContent>
+            <div>
+          <form>
             <div class="mb-3">
               <label class="form-label"  >کد تایید</label>
               <input type="password" class="form-control"  placeholder="کد فرستاده شده به ایمیل خود را وارد کنید"/>
@@ -171,45 +206,7 @@ function Login(props) {
                     onClick={handleNext}
                   >
                     تایید
-                  </Button>
-                </div>
-              </div>
-            </StepContent>
-          </Step>
-
-
-          <Step key="2"> 
-            <StepLabel>وارد کردن ایمیل</StepLabel>
-            <StepContent>
-
-            <div>
-          <form>
-            <div class="mb-3">
-              <label class="form-label">آدرس ایمیل</label>
-              <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید"/>
-            </div>
-            <div class="mb-3">
-              <label class="form-label"  >کد تایید</label>
-              <input type="password" class="form-control"  placeholder="کد فرستاده شده به ایمیل خود را وارد کنید"/>
-            </div>
-          </form>
-        </div>
-
-              <div >
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                  >
-                    {activeStep === 2 ? "Finish" : "Next"}
-                  </Button>
+                   </Button>
                 </div>
               </div>
             </StepContent>
@@ -224,38 +221,26 @@ function Login(props) {
             <div>
           <form>
             <div class="mb-3">
-              <label class="form-label">آدرس ایمیل</label>
-              <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید"/>
+              <label class="form-label"  >رمز جدید</label>
+              <input type="password" class="form-control"  placeholder="رمز جدید خود را وارد کنید"/>
             </div>
             <div class="mb-3">
-              <label class="form-label"  >کد تایید</label>
-              <input type="password" class="form-control"  placeholder="کد فرستاده شده به ایمیل خود را وارد کنید"/>
+              <label class="form-label"  >تکرار رمز جدید</label>
+              <input type="password" class="form-control"  placeholder="رمز جدید خود را دوباره وارد کنید"/>
             </div>
           </form>
         </div>
 
               <div >
                 <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                  >
-                    {activeStep === 2 ? "Finish" : "Next"}
-                  </Button>
+                <button type="submit" class="btn btn-success" onClick={handleNext}>تایید</button>
                 </div>
               </div>
             </StepContent>
           </Step>
        
       </Stepper>
-      {activeStep === 2 && (
+      {activeStep === 3 && (
         <Paper square elevation={0} >
           <Typography>رمز شما با موفقیت عوض شد.</Typography>
         
@@ -271,7 +256,7 @@ function Login(props) {
 
       </div>
       <div class="modal-footer d-flex justify-content-start">
-      <button type="submit" class="btn btn-success">تایید</button>
+      
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick={handleReset}>انصراف</button>
       </div>
     </div>
