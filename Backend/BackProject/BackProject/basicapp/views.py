@@ -14,6 +14,7 @@ from django.http import HttpResponsePermanentRedirect
 import os
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 
 
 class RegisterView(generics.GenericAPIView):
@@ -135,3 +136,17 @@ class UpdateUserProfileView(generics.UpdateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+
+class UserProfileView(APIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    
+    def get_object(self, pk):
+        obj = get_object_or_404(self.queryset,pk=pk)
+        return obj
+
+    def get(self, request, pk, format=None):
+        userprofile = self.get_object(pk)
+        serializer = self.serializer_class(userprofile)
+        return Response(serializer.data)

@@ -28,4 +28,5 @@ urlpatterns = [
     path('login/', LoginAPIView.as_view(), name="login"),
     path('user/<int:pk>/change-password', ChangePasswordView.as_view(), name='change-password'),
     path('user/<int:pk>/update-profile', UpdateUserProfileView.as_view(), name='update-profile'),
+    path('user/<int:pk>',UserProfileView.as_view()),
 ]
