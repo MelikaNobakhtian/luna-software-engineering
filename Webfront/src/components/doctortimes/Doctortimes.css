@@ -1,0 +1,4 @@
+.sessionstime{
+    /* minsize , viewport width age bishtar az minsize , maxsize */
+    font-size: clamp(12px,1.1vw,40px);
+}
