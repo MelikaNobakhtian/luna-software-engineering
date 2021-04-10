@@ -1,9 +1,9 @@
 // import logo from './logo.svg';
 // import './navbar.css';
-
-import "bootstrap/dist/css/bootstrap.min.css"
-import 'bootstrap/dist/js/bootstrap.bundle';
-import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
+import React, { useState } from "react";
+//import "bootstrap/dist/css/bootstrap.min.css"
+//import 'bootstrap/dist/js/bootstrap.bundle';
+//import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
   // import {navbar,nav,Button} from "bootstrap"
  // import {Navbar,Nav} from 'bootstrap';
 // import * as ReactBootstrap from 'react-bootstrap';
