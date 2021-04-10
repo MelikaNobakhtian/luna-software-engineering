@@ -46,7 +46,7 @@ class RegisterDoctorView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        new_doc = DoctorUser(user=user,doctor_number=request.data.get('doctor_number'))
+        new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
@@ -58,7 +58,7 @@ class RegisterDoctorView(generics.GenericAPIView):
                 'email_subject': 'Verify your email'}
 
         Util.send_email(data)
-        user_data['doctor_number'] = new_doc.doctor_number
+        user_data['degree']=new_doc.degree
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
