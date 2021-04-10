@@ -27,4 +27,5 @@ urlpatterns = [
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
     path('login/', LoginAPIView.as_view(), name="login"),
     path('user/<int:pk>/change-password', ChangePasswordView.as_view(), name='change-password'),
+    path('user/<int:pk>/update-profile', UpdateUserProfileView.as_view(), name='update-profile'),
 ]

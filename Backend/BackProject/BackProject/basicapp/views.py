@@ -9,7 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponsePermanentRedirect
 import os
 from rest_framework.permissions import IsAuthenticated
@@ -116,3 +116,22 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(response,status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateUserProfileView(generics.UpdateAPIView):
+    serializer_class = UpdateUserProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset,pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self,request,pk,*args,**kwargs):
+        user = self.get_object()
+        serializer = self.serializer_class(user,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
