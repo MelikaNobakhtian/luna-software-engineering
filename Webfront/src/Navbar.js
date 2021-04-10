@@ -1,12 +1,13 @@
 // import logo from './logo.svg';
 // import './navbar.css';
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import 'bootstrap/dist/js/bootstrap.bundle';
-import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
+// import "bootstrap/dist/css/bootstrap.min.css"
+// import 'bootstrap/dist/js/bootstrap.bundle';
+// import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
   // import {navbar,nav,Button} from "bootstrap"
  // import {Navbar,Nav} from 'bootstrap';
 // import * as ReactBootstrap from 'react-bootstrap';
+import React,{useState} from "react";
 // import Button from  "react-bootstrap/Button";
 function Navbar() {
   return (
@@ -63,12 +64,12 @@ function Navbar() {
         </ul>
         </div>
     </div>
-    <div className="collapse"  id="navbarNav">
+    {/* <div className="collapse"  id="navbarNav">
   <div className="bg-dark p-4">
     <h5 className="text-white h4">Collapsed content</h5>
     <span className="text-muted">Toggleable via the navbar brand.</span>
   </div>
-</div>
+</div> */}
     </nav>
    
       {/* <ReactBootstrap.Button>HI this is bootstrap bottom</ReactBootstrap.Button> */}

@@ -1,9 +1,9 @@
 import React from "react";
 import { render } from "react-dom";
-// import { DatePicker } from "jalali-react-datepicker";
+ import { DatePicker,RangeDatePicker  } from "jalali-react-datepicker";
 import { RestaurantMenu } from "@material-ui/icons";
 import moment from 'moment-jalaali'
-import DatePicker from 'react-datepicker2';
+// import DatePicker from 'react-datepicker2';
 import Navbar from "../../Navbar"
 import "./Doctortimes.css";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
@@ -17,7 +17,7 @@ function Doctorcalender() {
         برای انتخاب وقت های حضوری و یا مجازی خود ابتدا روز مورد نظر خود را از روی تقویم انتخاب کرده و سپس بازه ی زمانی ای که در آن میتوانید نوبت حضوری داشته باشید را در کادر بازه های نوبت حضوری و مدت زمانی را که میتونید در آن وقت مجازی داشته باشید در کادر بازه های نوبت مجازی وارد کنید
         </p> */}
 
-
+        <div class="col-6 row-6" style={{backgroundColor:"lightgreen",height:300}}>h </div>
       <div class="row me-0 ms-0 align-items-center col-auto ">
         <div class="col-auto">
           <label for="hozori" class="col-auto ms-n3 sessionstime ">مدت زمان هر وقت حضوری شما؟</label>
@@ -55,7 +55,7 @@ function Doctorcalender() {
         <div>مدت زمان وقت مجازی شما؟
       <input></input>
         </div> */}
-        {/* <DatePicker></DatePicker> */}
+        <RangeDatePicker></RangeDatePicker>
         
         {/* <div class="row">
       
