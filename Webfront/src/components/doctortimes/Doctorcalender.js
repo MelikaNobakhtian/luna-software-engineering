@@ -29,14 +29,60 @@ function Doctorcalender() {
 
       <div class="d-flex p-2 flex-row-reverse bd-highlight" style={{ backgroundColor: "white" }}>
         {/* hi */}
-        <div class="order-5-lg col-lg-6 mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5 responsive-calendar" style={{borderWidth:20,padding:1,borderRadius:10, borderColor:"lightskyblue",backgroundColor:"lightskyblue"}}>
+        {/* //bein md , sm خیلی فاصله */}
+        {/* // // col-xl-6 cl-xxl-6 col-lg-6 col-md-6 col-sm-auto */}
+        <div class="order-5-lg d-flex flex-row mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5 col-xl-6 col-xxl-6 col-lg-6 col-md-7 col-sm-auto responsive-calendar" 
+        style={{borderWidth:20,padding:1,borderRadius:10,justifyContent:"flex-end", borderColor:"lightskyblue",backgroundColor:"lightskyblue"}}>
+        {/* <div style={{justifyItems:"center",backgroundColor:"green"}}> */}
+        {/* <div style={{alignSelf:"flex-start",alignItems:"flex-start",justifySelf:"flex-start",justifyItems:"flex-start",justifySelf:"flex-start"}}>
+          hiii
+        </div> */}
+        {/* marginRight:"21.9vw" */}
+
+        <div class="d-flex flex-column ms-lg-4 ms-md-5 align-items-center justify-content-center">
+          <div class="row  align-items-center col-auto">
+        <div class="col-auto">
+          <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+        </div>
+        {/* class="col-2 me-n3 " */}
+        <div class=" col-auto row"
+        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+        >
+          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+        </div>
+      </div>
+
+      <div class="row   align-items-center col-auto mt-4 ">
+        <div class="col-auto">
+          <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
+        </div>
+        {/* class="col-2 me-n3 " */}
+        <div class=" col-auto row"
+        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+        >
+          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+        </div>
+      </div>
+      </div>
+
+
+
+
+
+        <div class="" style={{}}>
           <Calendar
+
             // backgroundColor="green"
             // theme="dark"
             // background-image="blue"
             // style={{ backgroundColor: "green" }}
+           
             shouldHighlightWeekends="true"
-            calss=".shadow-0"
+            calss="shadow-0 justify-content-center"
             colorPrimary="#0fbcf9"
             colorPrimaryLight="rgba(75, 207, 250, 0.4)"
             calendarClassName="responsive-calendar"
@@ -48,7 +94,11 @@ function Doctorcalender() {
             // shouldHighlightWeekends
             locale="fa" // add this
           />
+          </div>
+     
+        {/* </div> */}
         </div>
+        
       </div>
       {/* <h1> سلام</h1>
       

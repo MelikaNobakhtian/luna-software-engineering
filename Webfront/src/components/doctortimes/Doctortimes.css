@@ -6,6 +6,40 @@
 
 
 
+.sessionstimee {
+    font-size: 14px 
+   
+   
+  }
+  
+  @media (max-width: 1500px) {
+    .sessionstimee {
+    
+      font-size: 12px !important;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .sessionstimee {
+       
+      font-size: 11px !important;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sessionstimee {
+    
+      font-size: 10px !important;
+    }
+  }
+  
+  /* Large screens */
+  @media (min-width: 2500px) {
+    .sessionstimee {
+    
+      font-size: 13px !important;
+    }
+  }
 
 .responsive-calendar {
   /* by setting font-size, all the elements will correspond */
@@ -17,6 +51,7 @@
 @media (max-width: 1500px) {
   .responsive-calendar {
     margin-left: 5vw;
+    /* width: 30vw; */
     /* justify-self: center; */ 
     /* margin-top: 2vh; */
     font-size: 10px !important;
@@ -46,6 +81,7 @@
 @media (min-width: 2500px) {
   .responsive-calendar {
     margin-left: 5vw;
+    /* width: 30vw; */
     /* align-self:center; */
     /* margin-top: 10vh; */
     font-size: 12px !important;
