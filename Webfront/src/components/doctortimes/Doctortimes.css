@@ -3,25 +3,41 @@
     font-size: clamp(12px,1.1vw,40px);
 }
 
+
+
+
+
 .responsive-calendar {
   /* by setting font-size, all the elements will correspond */
+  /* margin-top: 2vh; */
+  margin-left: 5vw;
   font-size: 10px !important; /* default to 10px */
 }
 
 @media (max-width: 1500px) {
   .responsive-calendar {
-    font-size: 9px !important;
+    margin-left: 5vw;
+    /* justify-self: center; */ 
+    /* margin-top: 2vh; */
+    font-size: 10px !important;
   }
 }
 
 @media (max-width: 1200px) {
   .responsive-calendar {
+      /* justify-self: center;
+    align-self:center; */
+    /* margin-top: 3vh; */
+    /* margin-left: 5vw; */
     font-size: 8px !important;
   }
 }
 
 @media (max-width: 768px) {
   .responsive-calendar {
+    /* justify-self: center;
+    align-self:center; */
+    /* margin-top: 5vh; */
     font-size: 7px !important;
   }
 }
@@ -29,6 +45,9 @@
 /* Large screens */
 @media (min-width: 2500px) {
   .responsive-calendar {
+    margin-left: 5vw;
+    /* align-self:center; */
+    /* margin-top: 10vh; */
     font-size: 12px !important;
   }
 }
