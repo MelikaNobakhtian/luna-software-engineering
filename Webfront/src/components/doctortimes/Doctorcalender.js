@@ -1,22 +1,44 @@
-import React from "react";
+import React , {useState} from "react";
 import { render } from "react-dom";
- import { DatePicker,RangeDatePicker  } from "jalali-react-datepicker";
+ import {RangeDatePicker  } from "jalali-react-datepicker";
 import { RestaurantMenu } from "@material-ui/icons";
 import moment from 'moment-jalaali'
 // import DatePicker from 'react-datepicker2';
 import Navbar from "../../Navbar"
 import "./Doctortimes.css";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import DatePicker, { Calendar } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
 
 function Doctorcalender() {
+  const [selectedDayRange, setSelectedDayRange] = useState({
+    from: null,
+    to: null
+  });
   return (
-    <div>
+    <div >
       <Navbar></Navbar>
+      {/* وقت absolute dige flex end o ina taghiri ijad na */}
+      {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
+
+      <div class="d-flex p-2 flex-row-reverse  bd-highlight mt-5" style={{backgroundColor:"blue"}}>
+      hi
+      <div  class="order-5-lg">
+        <Calendar
+       
+       value={selectedDayRange}
+      onChange={setSelectedDayRange}
+      // shouldHighlightWeekends
+      locale="fa" // add this
+    />
+    </div>
+    </div>
       {/* <h1> سلام</h1>
+      
       <p className="sessionstime">
         برای انتخاب وقت های حضوری و یا مجازی خود ابتدا روز مورد نظر خود را از روی تقویم انتخاب کرده و سپس بازه ی زمانی ای که در آن میتوانید نوبت حضوری داشته باشید را در کادر بازه های نوبت حضوری و مدت زمانی را که میتونید در آن وقت مجازی داشته باشید در کادر بازه های نوبت مجازی وارد کنید
         </p> */}
-
+ 
         <div class="col-6 row-6" style={{backgroundColor:"lightgreen",height:300}}>h </div>
       <div class="row me-0 ms-0 align-items-center col-auto ">
         <div class="col-auto">
@@ -55,8 +77,10 @@ function Doctorcalender() {
         <div>مدت زمان وقت مجازی شما؟
       <input></input>
         </div> */}
+        {/* <div class="d-flex p-2 bd-highlight" style={{position:"absolute", alignSelf:"flex-start",justifySelf:"flex-end",backgroundColor:"blue"}}> */}
+       
         <RangeDatePicker></RangeDatePicker>
-        
+        {/* </div> */}
         {/* <div class="row">
       
         {/* "calc(1em + 0.1vw)" */}
