@@ -21,11 +21,11 @@ function Doctorcalender() {
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex p-2 flex-row-reverse  bd-highlight mt-5" style={{backgroundColor:"blue"}}>
+      <div class="d-flex p-2 flex-row-reverse  bd-highlight mt-1" style={{backgroundColor:"blue"}}>
       hi
-      <div  class="order-5-lg">
+      <div  class="order-5-lg ms-5-lg">
         <Calendar
-       
+        calendarClassName="responsive-calendar" 
        value={selectedDayRange}
       onChange={setSelectedDayRange}
       // shouldHighlightWeekends
