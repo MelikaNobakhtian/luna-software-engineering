@@ -9,6 +9,7 @@ import "./Doctortimes.css";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker, { Calendar } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
+import TextField from '@material-ui/core/TextField';
 
 function Doctorcalender() {
   const [selectedDayRange, setSelectedDayRange] = useState({
@@ -21,6 +22,11 @@ function Doctorcalender() {
     console.log(value.from.year+"year"+value.from.month+"month"+value.from.day+" _ "+value.to)
     setSelectedDayRange(value)
   }
+  const [value, setValue] = React.useState('Controlled');
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
   return (
     <div >
       <Navbar></Navbar>
@@ -53,7 +59,15 @@ function Doctorcalender() {
           <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
         </div>
       </div>
-
+        <div class="shadow-3 mt-4" style={{}}>
+        <TextField
+          id="outlined-textarea"
+          label="بازه های نوبت های حضوری شما"
+          placeholder="8-10 10/30-11/30"
+          multiline
+          variant="outlined"
+        />
+        </div>
       <div class="row   align-items-center col-auto mt-4 ">
         <div class="col-auto">
           <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
@@ -67,6 +81,15 @@ function Doctorcalender() {
           <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
         </div>
       </div>
+      <div class="shadow-3 mt-4" style={{}}>
+        <TextField
+          id="outlined-textarea"
+          label="بازه های نوبت های مجازی شما"
+          placeholder="8-10 10/30-11/30"
+          multiline
+          variant="outlined"
+        />
+        </div>
       </div>
 
 
