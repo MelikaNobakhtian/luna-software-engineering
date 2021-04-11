@@ -11,8 +11,8 @@ function UserProfile(props) {
   const [user , setUser] = useState({
       token : "",
       userName : "fato",
-      userFirstName : "fateme",
-      userLastName : "omidi",
+      firstName : "fateme",
+      lastName : "omidi",
       email : "qqqqq@aaaa",
       picture : "",
       oldPass :"",
@@ -47,50 +47,40 @@ function UserProfile(props) {
           <div className="card border-light border-2 text-white p-2 m-1" style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}>
             <div class="card-header d-flex">
                 <h4>اطلاعات شخصی</h4>
-             
             </div>
             <div class="card-body">
               <div>
               <form class="row g-3">
+                  
                   <div class="col-sm-6 ">
-                    <label for="inputEmail4" class="form-label">نام</label>
-                    <input type="email" class="form-control" id="inputEmail4"/>
+                    <label for="inputFirstName" class="form-label">نام</label>
+                    <input type="text" class="form-control" id="inputFirstName" />
                   </div>
                   <div class="col-sm-6">
-                    <label for="inputPassword4" class="form-label">نام خانوادگی</label>
-                    <input type="password" class="form-control" id="inputPassword4"/>
+                    <label for="inputLastName" class="form-label">نام خانوادگی</label>
+                    <input type="text" class="form-control" id="inputLastName"/>
                   </div>
-                  <div class="col-sm-6">
-                    <label for="inputEmail4" class="form-label">آدرس ایمیل</label>
-                    <input type="email" class="form-control" id="inputEmail4"/>
+                  <div class="col-sm-6 ">
+                    <label for="inputFirstName" class="form-label">نام کاربری</label>
+                    <input type="text" class="form-control" id="inputFirstName" />
                   </div>
-                  <div class="col-sm-6">
-                    <label for="inputAddress2" class="form-label">شماره ملی</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder=""/>
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="inputPassword4" class="form-label">رمز</label>
-                    <input type="password" class="form-control" id="inputPassword4"/>
-                  </div>
-                  <div class="col-12">
-                    <label for="inputAddress" class="form-label">آدرس</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder=""/>
-                  </div>
-                  
-                  <div class="col-sm-6">
-                    <label for="inputCity" class="form-label">شهر</label>
-                    <input type="text" class="form-control" id="inputCity"/>
-                  </div>
-                  <div class="col-sm-4">
-                    <label for="inputState" class="form-label">استان</label>
-                    <select id="inputState" class="form-select">
-                      <option selected>انتخاب کنید...</option>
-                      <option>اصفهان</option>
-                    </select>
-                  </div>
-                  
                   <div class="col-12">
                     <button type="submit" class="btn btn-outline-light">تغییر اطلاعات</button>
+                  </div>
+
+                  <hr></hr>
+
+                  <div class="col-sm-6">
+                    <label for="inputPassword4" class="form-label">رمز فعلی</label>
+                    <input type="password" class="form-control" id="inputPassword4"/>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="inputPassword4" class="form-label">رمز جدید</label>
+                    <input type="password" class="form-control" id="inputPassword4"/>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="inputPassword4" class="form-label">تکرار رمز جدید</label>
+                    <input type="password" class="form-control" id="inputPassword4"/>
                   </div>
                 </form>
               </div>
