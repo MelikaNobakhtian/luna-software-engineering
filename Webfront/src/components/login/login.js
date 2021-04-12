@@ -42,6 +42,22 @@ function Login(props) {
                   console.log(error)
           });
       }
+      function validatorusername(value){
+        setUserName(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کردن نام کاربری ضروری است  !";
+        setUsernameErr(errors)
+      }
+     
+      function validatorpass(value){
+        setPasswords(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کردن کلمه عبور ضروری است  !";
+        setPassErr(errors)
+      }
+     
 
     return (
         <div className="background d-flex justify-content-center ">
@@ -61,11 +77,10 @@ function Login(props) {
                 type="text"
                 name="username"
                 value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                 isValid={usernameErr}
-                 placeholder="نام کاربری خود را واد نمایید  "
-                // isInvalid={Boolean(usernameErr)}
-                // errors={usernameErr}
+                onChange={(e) => validatorusername(e.target.value)}
+                isInvalid={Boolean(usernameErr)}
+                onBlur={(e) => validatorusername(e.target.value)}
+                placeholder="نام کاربری خود را وارد نمایید  "
               />
         <Form.Control.Feedback type="invalid" >{usernameErr}</Form.Control.Feedback>
 
@@ -81,8 +96,9 @@ function Login(props) {
                 type="text"
                 name="password"
                 value={passwords}
-                onChange={(e) => setPasswords(e.target.value)}
-                isValid={passErr}
+                onChange={(e) => validatorpass(e.target.value)}
+                isInvalid={Boolean(passErr)}
+                onBlur={(e) => validatorpass(e.target.value)}
                 placeholder="کلمه عبور را وارد کنید "
               />
               <Form.Control.Feedback type="invalid">{passErr} </Form.Control.Feedback>
