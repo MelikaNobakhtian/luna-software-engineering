@@ -29,18 +29,25 @@ function UserProfile(props) {
               setUser(prevState => ({ 
                 ...prevState,
                 userName: response.data.username,
+                firstName:response.data.firstName,
+                lastName:response.data.lastName,
                 email: response.data.email,
                 picture : API_BASE_URL +response.data.profile_photo
                 }));
-                console.log(user);
             })
             .catch(function (error) {
                 console.log(error);
-                
             });
+      }
+    },[] );
 
-    }
-},[] );
+    const handleChange = (e) => {
+      const {id , value} = e.target   
+      setUser(prevState => ({
+          ...prevState,
+          [id] : value
+      }))
+  }
     
    const [state , setState]=useState(
     {
@@ -101,16 +108,19 @@ function UserProfile(props) {
               <form class="row g-3">
                   
                   <div class="col-sm-4 ">
-                    <label for="inputFirstName" class="form-label">نام</label>
-                    <input type="text" class="form-control" id="inputFirstName" />
+                    <label for="firstName" class="form-label">نام</label>
+                    <input type="text" class="form-control" id="firstName" 
+                    value={user.firstName} onChange={handleChange}/>
                   </div>
                   <div class="col-sm-4">
-                    <label for="inputLastName" class="form-label">نام خانوادگی</label>
-                    <input type="text" class="form-control" id="inputLastName"/>
+                    <label for="lastName" class="form-label">نام خانوادگی</label>
+                    <input type="text" class="form-control" id="lastName"
+                    value={user.lastName} onChange={handleChange}/>
                   </div>
                   <div class="col-sm-4 ">
-                    <label for="inputFirstName" class="form-label">نام کاربری</label>
-                    <input type="text" class="form-control" id="inputFirstName" />
+                    <label for="userName" class="form-label">نام کاربری</label>
+                    <input type="text" class="form-control" id="userName" 
+                    value={user.userName} onChange={handleChange}/>
                   </div>
                   <div class="col-12 ">
                     <input class="form-control" 
@@ -124,22 +134,25 @@ function UserProfile(props) {
                    </div>
                   </div>
                   <div class="col-12">
-                    <button type="submit" class="btn btn-outline-light">تغییر اطلاعات</button>
+                    <button type="submit" class="btn btn-outline-light">ذخیره تغییرات</button>
                   </div>
                   
                   <hr></hr>
 
                   <div class="col-sm-4">
-                    <label for="inputPassword4" class="form-label">رمز فعلی</label>
-                    <input type="password" class="form-control" id="inputPassword4"/>
+                    <label for="oldPass" class="form-label">رمز فعلی</label>
+                    <input type="password" class="form-control" id="oldPass"
+                    value={user.oldPass} onChange={handleChange}/>
                   </div>
                   <div class="col-sm-4">
-                    <label for="inputPassword4" class="form-label">رمز جدید</label>
-                    <input type="password" class="form-control" id="inputPassword4"/>
+                    <label for="newPass" class="form-label">رمز جدید</label>
+                    <input type="password" class="form-control" id="newPass"
+                    value={user.newPass} onChange={handleChange}/>
                   </div>
                   <div class="col-sm-4">
-                    <label for="inputPassword4" class="form-label">تکرار رمز جدید</label>
-                    <input type="password" class="form-control" id="inputPassword4"/>
+                    <label for="newPass2" class="form-label">تکرار رمز جدید</label>
+                    <input type="password" class="form-control" id="newPass2"
+                    value={user.newPass2} onChange={handleChange}/>
                   </div>
 
                   <div class="col-12">
