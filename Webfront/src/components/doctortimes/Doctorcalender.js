@@ -12,7 +12,8 @@ import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup
 import TextField from '@material-ui/core/TextField';
 
 function Doctorcalender() {
-  const [numofhozori, setnumofhozori] = useState(0);
+  const [hozoris, sethozoris] = useState(["8:00","10:00","8:00","10:00","8:00","10:00","8:00","10:00","8:00","10:00"]);
+  const [magazis, setmagazis] = useState(["12:00,14:00,16:00,16:20"]);
   const [selectedDayRange, setSelectedDayRange] = useState({
     from: null,
     to: null
@@ -134,15 +135,17 @@ function Doctorcalender() {
          mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5   ms-sm-5 ms-lg-5 ms-xl-5 ms-xxl-5 ms-md-5
          ms-sm-n2 ms-lg-n2 ms-xl-n2 ms-xxln25 ms-md-n2
          " style={{ borderRadius:10 }}>
-          <div class="border mb-3" style={{height:"26.5vh"}}>
-              <Button>8:00</Button>
-              <Button>8:00</Button>
-              <Button>8:00</Button>
+          <div class="border mb-3 p-2" style={{height:"26.5vh"}}>
+          {hozoris.map((val)=>(
+            <Button type="button" class="btn btn-primary btn-sm col-2" style={{margin:3}}>{val}</Button>
+          ))}
+         
           </div>
           
-          <div class="border"  style={{height:"26.5vh"}}>
-          <Button>12:00</Button>
-          <Button>12:00</Button>
+          <div class="border p-2"  style={{height:"26.5vh"}}>
+          {magazis.map((val)=>(
+            <Button type="button" class="btn btn-primary btn-sm col-2" >{val}</Button>
+          ))}
           </div>
 
 
