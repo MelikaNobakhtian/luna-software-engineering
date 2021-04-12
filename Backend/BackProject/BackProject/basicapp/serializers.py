@@ -87,3 +87,11 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+class DoctorProfileSerializer(serializers.ModelSerializer):
+    addresses = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DoctorUser
+        fields = ['id','user','specialty','sub_specialty','addresses']
+
+    def get_addresses(self,obj):
