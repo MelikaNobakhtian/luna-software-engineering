@@ -74,3 +74,8 @@ class DoctorUser(models.Model):
         on_delete=models.CASCADE,
     )
     state = models.CharField(max_length=30)
+
+class Address(models.Model):
+    doc = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    city = models.CharField(max_length=50)
+    detail = models.TextField()
