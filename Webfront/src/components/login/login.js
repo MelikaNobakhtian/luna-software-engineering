@@ -156,107 +156,16 @@ function Login(props) {
         <h3>تغییر رمز عبور</h3>
       </div>
       <div class="modal-body">
-
-
-
-      <div>
-      <Stepper activeStep={activeStep} orientation="vertical">
-       
-          <Step key="1" >
-            <StepLabel>وارد کردن ایمیل</StepLabel>
-            <StepContent>
-
-            <div>
           <form>
             <div class="mb-3">
               <label class="form-label">آدرس ایمیل</label>
               <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید"/>
             </div>
           </form>
-        </div>
-
-              <div >
-                <div>
-                  <Button
-                    onClick={sendEmail}
-                  >
-                    تایید
-                  </Button>
-                </div>
-              </div>
-            </StepContent>
-          </Step>
-
-
-          <Step key="2"> 
-            <StepLabel>کد تایید</StepLabel>
-            <StepContent>
-            <div>
-          <form>
-            <div class="mb-3">
-              <label class="form-label"  >کد تایید</label>
-              <input type="password" class="form-control"  placeholder="کد فرستاده شده به ایمیل خود را وارد کنید"/>
-            </div>
-          </form>
-        </div>
-
-              <div >
-                <div>
-                  <Button
-                    onClick={handleNext}
-                  >
-                    تایید
-                   </Button>
-                </div>
-              </div>
-            </StepContent>
-          </Step>
-
-
-
-          <Step key="3">
-            <StepLabel>وارد کردن ایمیل</StepLabel>
-            <StepContent>
-
-            <div>
-          <form>
-            <div class="mb-3">
-              <label class="form-label"  >رمز جدید</label>
-              <input type="password" class="form-control"  placeholder="رمز جدید خود را وارد کنید"/>
-            </div>
-            <div class="mb-3">
-              <label class="form-label"  >تکرار رمز جدید</label>
-              <input type="password" class="form-control"  placeholder="رمز جدید خود را دوباره وارد کنید"/>
-            </div>
-          </form>
-        </div>
-
-              <div >
-                <div>
-                <button type="submit" class="btn btn-success" onClick={handleNext}>تایید</button>
-                </div>
-              </div>
-            </StepContent>
-          </Step>
-       
-      </Stepper>
-      {activeStep === 3 && (
-        <Paper square elevation={0} >
-          <Typography>رمز شما با موفقیت عوض شد.</Typography>
-        
-        </Paper>
-      )}
-    </div>
-
-
-
-       
-
-
 
       </div>
       <div class="modal-footer d-flex justify-content-start">
-      
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onClick={sendEmail}>تایید</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onClick={handleReset}>انصراف</button>
       </div>
     </div>
