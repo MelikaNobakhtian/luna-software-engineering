@@ -5,9 +5,9 @@ import Cookies from 'js-cookie';
 import {API_BASE_URL} from '../apiConstant/apiConstant';
 import { Avatar } from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Snackbar from '@material-ui/core/Snackbar';
 
 function UserProfile(props) { 
   const [user , setUser] = useState({
@@ -44,10 +44,6 @@ function UserProfile(props) {
 
     const handleChangeInfosClick = (e) => {
       e.preventDefault();
-      setUser(prevState => ({
-          ...prevState,
-          backError : ""
-      })); 
       // var formdata = new FormData()
       // formdata.append('username',user.userName)
       // formdata.append('firstName',user.firstName)
@@ -69,19 +65,15 @@ function UserProfile(props) {
               console.log(response);
               if(response.status === 200){
                   console.log(response.status);
-                  setUser(prevState => ({
-                      ...prevState,
-                      backError : 'اطلاعات جدید با موفقیت جایگزین شد'
-                  }))
+                  setMassage('اطلاعات جدید با موفقیت جایگزین شد')
+                  setOpenSnack(true);
                   Cookies.set('userName',user.userName);
               }
           })
           .catch(function (error) {
               console.log(error);
-              setUser(prevState => ({
-                  ...prevState,
-                  backError : "نام کاربری از قبل وجود دارد"
-              }));
+              setMassage("نام کاربری از قبل وجود دارد")
+              setOpenSnack(true);
           });
   }
 
@@ -101,11 +93,6 @@ function UserProfile(props) {
   )
   const handleChangePassClick = (e) => {
     e.preventDefault();
-
-    setUser(prevState => ({
-        ...prevState,
-        backError : ""
-    })); 
     if(user.oldPass.length&&user.newPass.length){
         const payload={
             "old_password": user.oldPass,
@@ -124,26 +111,18 @@ function UserProfile(props) {
 
         ).then(function(response){
             console.log(response);
-            setUser(prevState => ({
-                ...prevState,
-                backError : 'پسورد با موفقیت عوض شد'
-            }))
+            setMassage('پسورد با موفقیت عوض شد')
+            setOpenSnack(true);
 
         })
         .catch(function(error){
             console.log(error);
-            setUser(prevState => ({
-                ...prevState,
-                backError : "پسورد قبلی غلط است"
-            }));
+            setMassage("پسورد قبلی غلط است")
+            setOpenSnack(true);
          })
         
     }
-    else {
-        setUser(prevState => ({
-         ...prevState,
-         'backError' : 'لطفاً همه را درست وارد کنید'
-     })); 
+    else { 
      }
 
      setUser(prevState => ({
@@ -175,6 +154,14 @@ function UserProfile(props) {
     }
   };
   
+  const [massage, setMassage]= useState(<br></br>);
+  const[openSnack,setOpenSnack]=useState(false);
+  const handleCloseSnack = (event, reason) => {
+  if (reason === 'clickaway') {
+  return;
+  }
+  setOpenSnack(false);
+  };
     
   return(
     <div className="main-content bg-dark">
@@ -267,6 +254,13 @@ function UserProfile(props) {
             </div>
           </div>
          </div>
+         <Snackbar
+          anchorOrigin={{ vertical:'bottom', horizontal:'center'}}
+          open={openSnack}
+          autoHideDuration={2500}
+          onClose={handleCloseSnack}
+          message={<div style={{fontSize:17}}>{massage}</div>}
+          />
         </div>
       </div>
     </div>
