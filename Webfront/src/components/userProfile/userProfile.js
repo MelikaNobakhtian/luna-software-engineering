@@ -20,6 +20,27 @@ function UserProfile(props) {
       newPass:"",
       newPass2 : ""
    })
+
+   useEffect(() => {
+    if (user.token) {       
+        axios.get(API_BASE_URL + '/user/' + Cookies.get('userId'))
+            .then(function (response){
+              console.log(response);
+              setUser(prevState => ({ 
+                ...prevState,
+                userName: response.data.username,
+                email: response.data.email,
+                picture : API_BASE_URL +response.data.profile_photo
+                }));
+                console.log(user);
+            })
+            .catch(function (error) {
+                console.log(error);
+                
+            });
+
+    }
+},[] );
     
    const [state , setState]=useState(
     {
