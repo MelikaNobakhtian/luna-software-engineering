@@ -12,14 +12,15 @@ import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup
 import TextField from '@material-ui/core/TextField';
 
 function Doctorcalender() {
+  const [numofhozori, setnumofhozori] = useState(0);
   const [selectedDayRange, setSelectedDayRange] = useState({
     from: null,
     to: null
   });
-  const calenderchange=(value)=>{
+  const calenderchange = (value) => {
     console.log("hi")
-    console.log(value +"value")
-    console.log(value.from.year+"year"+value.from.month+"month"+value.from.day+" _ "+value.to)
+    console.log(value + "value")
+    console.log(value.from.year + "year" + value.from.month + "month" + value.from.day + " _ " + value.to)
     setSelectedDayRange(value)
   }
   const [value, setValue] = React.useState('Controlled');
@@ -37,91 +38,118 @@ function Doctorcalender() {
         {/* hi */}
         {/* //bein md , sm خیلی فاصله */}
         {/* // // col-xl-6 cl-xxl-6 col-lg-6 col-md-6 col-sm-auto */}
-        <div class="order-5-lg d-flex flex-row mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5 col-xl-6 col-xxl-6 col-lg-6 col-md-7 col-sm-auto responsive-calendar" 
-        style={{borderWidth:20,padding:1,borderRadius:10,justifyContent:"flex-end", borderColor:"lightskyblue",backgroundColor:"lightskyblue"}}>
-        {/* <div style={{justifyItems:"center",backgroundColor:"green"}}> */}
-        {/* <div style={{alignSelf:"flex-start",alignItems:"flex-start",justifySelf:"flex-start",justifyItems:"flex-start",justifySelf:"flex-start"}}>
+        <div class="order-5-lg d-flex flex-row mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5 col-xl-6 col-xxl-6 col-lg-6 col-md-7 col-sm-auto responsive-calendar"
+          style={{ borderWidth: 20, padding: 1, borderRadius: 10, justifyContent: "flex-end", borderColor: "lightskyblue", backgroundColor: "lightskyblue" }}>
+          {/* <div style={{justifyItems:"center",backgroundColor:"green"}}> */}
+          {/* <div style={{alignSelf:"flex-start",alignItems:"flex-start",justifySelf:"flex-start",justifyItems:"flex-start",justifySelf:"flex-start"}}>
           hiii
         </div> */}
-        {/* marginRight:"21.9vw" */}
+          {/* marginRight:"21.9vw" */}
 
-        <div class="d-flex flex-column ms-lg-4 ms-md-5 align-items-center justify-content-center">
-          <div class="row  align-items-center col-auto">
-        <div class="col-auto">
-          <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
-        </div>
-        {/* class="col-2 me-n3 " */}
-        <div class=" col-auto row"
-        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-        >
-          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
-        </div>
-      </div>
-        <div class="shadow-3 mt-4" style={{}}>
-        <TextField
-          id="outlined-textarea"
-          label="بازه های نوبت های حضوری شما"
-          placeholder="8-10 10/30-11/30"
-          multiline
-          variant="outlined"
-        />
-        </div>
-      <div class="row   align-items-center col-auto mt-4 ">
-        <div class="col-auto">
-          <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
-        </div>
-        {/* class="col-2 me-n3 " */}
-        <div class=" col-auto row"
-        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-        >
-          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
-        </div>
-      </div>
-      <div class="shadow-3 mt-4" style={{}}>
-        <TextField
-          id="outlined-textarea"
-          label="بازه های نوبت های مجازی شما"
-          placeholder="8-10 10/30-11/30"
-          multiline
-          variant="outlined"
-        />
-        </div>
-      </div>
+          <div class="d-flex flex-column ms-lg-4 ms-md-5 align-items-center justify-content-center">
+            <div class="row  align-items-center col-auto">
+              <div class="col-auto">
+                <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+              </div>
+              {/* class="col-2 me-n3 " */}
+              <div class=" col-auto row"
+              // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+              >
+                {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+                {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+                <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+              </div>
+            </div>
+            <div class="shadow-3 mt-4" style={{}}>
+              <TextField
+                id="outlined-textarea"
+                label="بازه های نوبت های حضوری شما"
+                placeholder="8-10 10/30-11/30"
+                multiline
+                variant="outlined"
+              />
 
+            </div>
+            <Button class="btn btn-primary btn-sm mb-n1" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button>
+            <div class="row   align-items-center col-auto mt-4 ">
+              <div class="col-auto">
+                <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
+              </div>
+              {/* class="col-2 me-n3 " */}
+              <div class=" col-auto row"
+              // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+              >
+                {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+                {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+                <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+              </div>
+            </div>
+            <div class="shadow-3 mt-4" style={{}}>
+              <TextField
+                id="outlined-textarea"
+                // lang="fa"
+                label="بازه های نوبت های مجازی شما"
+                placeholder="8-10 10/30-11/30"
+                multiline
+                variant="outlined"
+              />
 
+            </div>
+            <Button class="btn btn-primary btn-sm mb-0" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button>
 
-
-
-        <div class="" style={{}}>
-          <Calendar
-
-            // backgroundColor="green"
-            // theme="dark"
-            // background-image="blue"
-            // style={{ backgroundColor: "green" }}
-           
-            shouldHighlightWeekends="true"
-            calss="shadow-0 justify-content-center"
-            colorPrimary="#0fbcf9"
-            colorPrimaryLight="rgba(75, 207, 250, 0.4)"
-            calendarClassName="responsive-calendar"
-            value={selectedDayRange}
-            onChange={
-              (value)=>calenderchange(value)
-              
-            }
-            // shouldHighlightWeekends
-            locale="fa" // add this
-          />
           </div>
-     
-        {/* </div> */}
+
+
+
+
+
+          <div class="" style={{}}>
+            <Calendar
+
+              // backgroundColor="green"
+              // theme="dark"
+              // background-image="blue"
+              // style={{ backgroundColor: "green" }}
+
+              shouldHighlightWeekends="true"
+              calss="shadow-0 justify-content-center"
+              colorPrimary="#0fbcf9"
+              colorPrimaryLight="rgba(75, 207, 250, 0.4)"
+              calendarClassName="responsive-calendar"
+              value={selectedDayRange}
+              onChange={
+                (value) => calenderchange(value)
+
+              }
+              // shouldHighlightWeekends
+              locale="fa" // add this
+            />
+          </div>
+
+          {/* </div> */}
         </div>
-        
+
+       <div class="" style={{marginLeft:"2vw"}} ></div>
+        <div class="p-3 d-flex col-lg-4 col-xl-4 col-sm-4 col-xxl-4 col-md-4 flex-column border
+         mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5   ms-sm-5 ms-lg-5 ms-xl-5 ms-xxl-5 ms-md-5
+         ms-sm-n2 ms-lg-n2 ms-xl-n2 ms-xxln25 ms-md-n2
+         " style={{ borderRadius:10 }}>
+          <div class="border mb-3" style={{height:"26.5vh"}}>
+              <Button>8:00</Button>
+              <Button>8:00</Button>
+              <Button>8:00</Button>
+          </div>
+          
+          <div class="border"  style={{height:"26.5vh"}}>
+          <Button>12:00</Button>
+          <Button>12:00</Button>
+          </div>
+
+
+
+        </div>
+
+
       </div>
       {/* <h1> سلام</h1>
       
