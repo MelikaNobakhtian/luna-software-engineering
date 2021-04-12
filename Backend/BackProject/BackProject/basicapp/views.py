@@ -85,3 +85,16 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DoctorProfileView(APIView):
+    
+    def get_object(self, pk):
+        try:
+            return DoctorUser.objects.get(pk=pk)
+        except DoctorUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        docprofile = self.get_object(pk)
+        serializer = DoctorProfileSerializer(docprofile)
+        return Response(serializer.data)
