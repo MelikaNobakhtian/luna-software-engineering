@@ -7,6 +7,7 @@ import { Avatar } from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 function UserProfile(props) { 
   const [user , setUser] = useState({
@@ -41,6 +42,49 @@ function UserProfile(props) {
       }
     },[] );
 
+    const handleChangeInfosClick = (e) => {
+      e.preventDefault();
+      setUser(prevState => ({
+          ...prevState,
+          backError : ""
+      })); 
+      // var formdata = new FormData()
+      // formdata.append('username',user.userName)
+      // formdata.append('firstName',user.firstName)
+      // formdata.append('photo',state.file)
+      // console.log(formdata);
+      const payload={
+            "username":user.userName,
+            "firstName":user.firstName,
+            "lastName":user.lastName
+      }
+      const back= JSON.stringify(payload)
+      axios.put(API_BASE_URL+ '/user/'+Cookies.get('userId')+'/update-profile',
+      back,{
+          headers:{
+         "Content-Type":"application/json",
+         "Authorization":"Token "+Cookies.get("userToken")}
+          })
+              .then(function (response) {
+              console.log(response);
+              if(response.status === 200){
+                  console.log(response.status);
+                  setUser(prevState => ({
+                      ...prevState,
+                      backError : 'اطلاعات جدید با موفقیت جایگزین شد'
+                  }))
+                  Cookies.set('userName',user.userName);
+              }
+          })
+          .catch(function (error) {
+              console.log(error);
+              setUser(prevState => ({
+                  ...prevState,
+                  backError : "نام کاربری از قبل وجود دارد"
+              }));
+          });
+  }
+
     const handleChange = (e) => {
       const {id , value} = e.target   
       setUser(prevState => ({
@@ -55,6 +99,61 @@ function UserProfile(props) {
         file:null
     }
   )
+  const handleChangePassClick = (e) => {
+    e.preventDefault();
+
+    setUser(prevState => ({
+        ...prevState,
+        backError : ""
+    })); 
+    if(user.oldPass.length&&user.newPass.length){
+        const payload={
+            "old_password": user.oldPass,
+            "new_password":user.newPass,
+        }
+        const back= JSON.stringify(payload);
+        console.log(back);
+
+        axios.put( API_BASE_URL+ '/user/'+Cookies.get('userId')+'/change-password',
+         back
+         ,{
+          headers:{
+         "Content-Type":"application/json",
+        "Authorization":"Token "+Cookies.get("userToken")}
+         }
+
+        ).then(function(response){
+            console.log(response);
+            setUser(prevState => ({
+                ...prevState,
+                backError : 'پسورد با موفقیت عوض شد'
+            }))
+
+        })
+        .catch(function(error){
+            console.log(error);
+            setUser(prevState => ({
+                ...prevState,
+                backError : "پسورد قبلی غلط است"
+            }));
+         })
+        
+    }
+    else {
+        setUser(prevState => ({
+         ...prevState,
+         'backError' : 'لطفاً همه را درست وارد کنید'
+     })); 
+     }
+
+     setUser(prevState => ({
+      ...prevState,
+      oldPass : "",
+      newPass:""
+  })); 
+
+}
+
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = e => {
@@ -134,7 +233,9 @@ function UserProfile(props) {
                    </div>
                   </div>
                   <div class="col-12">
-                    <button type="submit" class="btn btn-outline-light">ذخیره تغییرات</button>
+                    <button type="submit" class="btn btn-outline-light"  onClick={handleChangeInfosClick}>
+                      <CheckCircleIcon></CheckCircleIcon>
+                      ذخیره تغییرات</button>
                   </div>
                   
                   <hr></hr>
@@ -156,7 +257,9 @@ function UserProfile(props) {
                   </div>
 
                   <div class="col-12">
-                    <button type="submit" class="btn btn-outline-light">تغییر رمز</button>
+                    <button type="submit" class="btn btn-outline-light" onClick={handleChangePassClick}>
+                    <CheckCircleIcon></CheckCircleIcon>
+                    تغییر رمز</button>
                   </div>
                 </form>
               </div>
