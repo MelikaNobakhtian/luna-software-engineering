@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50,default='unknown')
     last_name = models.CharField(max_length=100,default='unknown')
     email = models.EmailField(max_length=255, unique=True)
-    id_num = models.CharField(max_length=10,unique=True)
+    profile_photo = models.ImageField(upload_to='profile_photos',default='default.png')
     is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -67,7 +67,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class DoctorUser(models.Model):
     degree = models.FileField(blank=False,null=False,default='',upload_to="degrees/")
+    specialty = models.CharField(max_length=50)
+    sub-specialty = models.CharField(max_length=100)
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
     )
+    state = models.CharField(max_length=30)
