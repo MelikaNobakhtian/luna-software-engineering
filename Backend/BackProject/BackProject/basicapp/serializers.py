@@ -73,3 +73,9 @@ class LoginSerializer(serializers.ModelSerializer):
         }
 
         return super().validate(attrs)
+
+class DoctorProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DoctorUser
+        fields = ['id','user','specialty','sub-specialty']
