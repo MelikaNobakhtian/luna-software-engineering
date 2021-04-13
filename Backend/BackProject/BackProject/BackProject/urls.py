@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from basicapp.views import *
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -30,4 +31,5 @@ urlpatterns = [
     path('user/<int:pk>/update-profile', UpdateUserProfileView.as_view(), name='update-profile'),
     path('user/<int:pk>',UserProfileView.as_view(),name='user-profile'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]
+    
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
