@@ -95,3 +95,4 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
         fields = ['id','user','specialty','sub_specialty','addresses']
 
     def get_addresses(self,obj):
+        return Address.objects.filter(doc=obj)
