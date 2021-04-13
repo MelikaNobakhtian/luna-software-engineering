@@ -18,9 +18,8 @@ class RequestPasswordResetEmailTest(TestCase):
         email = 'testuser@gmail.com'
         first_name = 'Lucy'
         last_name = 'Brown'
-        id_num = '1234567891'
         password = '123456'
-        self.valid_user = User(username=username,email=email,first_name=first_name,last_name=last_name,id_num=id_num,is_verified=True)
+        self.valid_user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
         self.valid_user.set_password(password)
         self.valid_user.save()
         self.invalid_user_mail = 'invalidtestuser@gmail.com'
@@ -44,11 +43,10 @@ class PasswordTokenCheckAPITest(TestCase):
         email = ['testuser@gmail.com' , 'secondtest@gmail.com',]
         first_name = 'Lucy'
         last_name = 'Brown'
-        id_num = ['1234567891','11111111']
         password = '123456'
         self.valid_user=[]
-        self.valid_user.append(User(username=username[0],email=email[0],first_name=first_name,last_name=last_name,id_num=id_num[0],is_verified=True))
-        self.valid_user.append(User(username=username[1],email=email[1],first_name=first_name,last_name=last_name,id_num=id_num[1],is_verified=True))
+        self.valid_user.append(User(username=username[0],email=email[0],first_name=first_name,last_name=last_name,is_verified=True))
+        self.valid_user.append(User(username=username[1],email=email[1],first_name=first_name,last_name=last_name,is_verified=True))
         self.valid_user[0].set_password(password)
         self.valid_user[1].set_password(password)
         self.valid_user[0].save()
@@ -76,11 +74,10 @@ class SetNewPasswordAPIViewTest(TestCase):
         email = ['testuser@gmail.com' , 'secondtest@gmail.com',]
         first_name = 'Lucy'
         last_name = 'Brown'
-        id_num = ['1234567891','11111111']
         password = '123456'
         self.valid_user=[]
-        self.valid_user.append(User(username=username[0],email=email[0],first_name=first_name,last_name=last_name,id_num=id_num[0],is_verified=True))
-        self.valid_user.append(User(username=username[1],email=email[1],first_name=first_name,last_name=last_name,id_num=id_num[1],is_verified=True))
+        self.valid_user.append(User(username=username[0],email=email[0],first_name=first_name,last_name=last_name,is_verified=True))
+        self.valid_user.append(User(username=username[1],email=email[1],first_name=first_name,last_name=last_name,is_verified=True))
         self.valid_user[0].set_password(password)
         self.valid_user[1].set_password(password)
         self.valid_user[0].save()
@@ -96,8 +93,6 @@ class SetNewPasswordAPIViewTest(TestCase):
         new_password = '333333'
         response = client.patch(reverse('password-reset-complete'),data=json.dumps({'password':new_password,'token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
-        print(response.data)
-        print('are you here?')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         response = client.patch(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
