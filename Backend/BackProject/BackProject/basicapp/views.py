@@ -98,3 +98,19 @@ class DoctorProfileView(APIView):
         docprofile = self.get_object(pk)
         serializer = DoctorProfileSerializer(docprofile)
         return Response(serializer.data)
+
+class UpdateDoctorProfileView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorfileSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = DoctorUser.objects.all()
+
+    def update(self,request,pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        doc = get_object_or_404(queryset,pk=pk)
+        self.check_object_permissions(self.request, obj)
+
+        serializer = self.serializer_class(doc,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
