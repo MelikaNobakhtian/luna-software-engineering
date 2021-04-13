@@ -26,4 +26,8 @@ urlpatterns = [
     path('register-doctor/', RegisterDoctorView.as_view(), name="register-doctor"),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
     path('login/', LoginAPIView.as_view(), name="login"),
+    path('doctor/<int:pk>/',DoctorProfileView.as_view(), name="doctor-profile"),
+    path('doctor/<int:pk>/update-profile/',UpdateDoctorProfileView.as_view(), name="update-doctor-profile"),
+    path('doctor/<doc_pk>/update-address/<add_pk>/',UpdateDoctorAddressView.as_view(), name="update-doctor-address"),
+    path('doctor/<int:pk>/set-address/',SetDoctorAddressView.as_view(), name="set-doctor-address"),
 ]
