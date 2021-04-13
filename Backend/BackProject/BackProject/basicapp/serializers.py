@@ -102,3 +102,9 @@ class UpdateDoctorProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorUser
         fields = ['specialty','sub_specialty']
+
+class UpdateDoctorAddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = ['state','city','detail']
