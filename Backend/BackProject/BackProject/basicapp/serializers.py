@@ -39,7 +39,7 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=68, min_length=6, write_only=True)
     tokens = serializers.SerializerMethodField()
-    is_doctor = serializers.BooleanField()
+    is_doctor = serializers.BooleanField(read_only=True)
     doctor_id = serializers.IntegerField(read_only=True)
     user_id = serializers.IntegerField(read_only=True)
 
