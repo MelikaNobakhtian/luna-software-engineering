@@ -109,3 +109,9 @@ class UpdateDoctorAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ['state','city','detail']
+
+class AddressSerializer(serializers.ModelSerializer):
+    doc = DoctorProfileSerializer(read_only=True)
+    class Meta:
+        model = Address
+        fields = ['state','doc','city','detail']
