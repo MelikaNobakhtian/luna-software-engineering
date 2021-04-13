@@ -40,9 +40,9 @@ function SignUp(props) {
         let errors=""
         if(value.length === 0)
         errors ="پر کرن نام ضروری است !";
-        else if(!value.match(/^[a-zA-Z]+$/)){
-        errors="فقط از حروف استفاده نمایید   !";
-        }
+        // else if(!value.match(/^[a-zA-Z]+$/)){
+        // errors="فقط از حروف استفاده نمایید   !";
+        // }
         setNameErr(errors)
       }
 
@@ -51,9 +51,9 @@ function SignUp(props) {
         let errors=""
         if(value.length === 0)
         errors ="پر کرن نام خانوادگی ضروری است !";
-        else if(!value.match(/^[a-zA-Z]+$/)){
-        errors="فقط از حروف استفاده نمایید   !";
-        }
+        // else if(!value.match(/^[a-zA-Z]+$/)){
+        // errors="فقط از حروف استفاده نمایید   !";
+        //  }
         setLastnameErr(errors)
       }
 
