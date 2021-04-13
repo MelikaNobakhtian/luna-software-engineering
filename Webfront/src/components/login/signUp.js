@@ -18,6 +18,7 @@ function SignUp(props) {
     const [lastname, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUserName] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
     const [passwords, setPasswords] = useState({ password: "", confirmPassword: "" })
     const [nameErr, setNameErr] = useState("")
     const [lastnameErr, setLastnameErr] = useState("")
@@ -26,11 +27,13 @@ function SignUp(props) {
     const [passErr, setPassErr] = useState("")
     const [confirmPassErr, setConfirmPassErr] = useState("")
     const [number, setNumber] = useState("")
+    const [fileErr, setFileErr] = useState(null);
 
     function handleSubmit(event) {
         event.preventDefault();
         
-      }
+       }
+   
 
       function validatorname(value){
         setName(value);
@@ -89,7 +92,14 @@ function SignUp(props) {
       }
       setConfirmPassErr(errors)
       }
-
+      function validatorfile (values){
+        setSelectedFile(values)
+        let errors=""
+          if (values === '') {
+            errors = " بارگذاری مدرک ضروری است !";
+          }
+          setFileErr(errors);
+        }
 
     return (
         <div className="background d-flex justify-content-center ">
@@ -222,27 +232,25 @@ function SignUp(props) {
                 <input className="form-check-input" type="checkbox" id="isDoctor"/>
                 <label className="form-check-label" for="isDoctor">من پزشک هستم</label>
               </div>
+              <Form.Group>
+            <Form.File
+              className="position-relative"
+              type="file"
+              required
+              isInvalid={Boolean(fileErr)}
+              name="file"
+              label="مدرک پزشک "
+              value={selectedFile}
+              onChange={(e) => validatorfile(e.target.value)}
+              onBlur={(e) => validatorfile(e.target.value)}
+              feedback={fileErr}
+            />
 
-              <Form.Group >
-              <Form.Label  className=""> شماره نظام پزشکی</Form.Label>
-              <InputGroup hasValidation>
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroupPrepend"><LockIcon></LockIcon></InputGroup.Text>
-                </InputGroup.Prepend>
-              <Form.Control
-                type="text"
-                name="number"
-                // value={passwords}
-                // onChange={(e) => setPasswords(e.target.value)}
-                isValid={number}
-                placeholder="کلمه عبور خود را تایید نمایید"
-              />
-              <Form.Control.Feedback type="invalid">{number}</Form.Control.Feedback>
-
-              </InputGroup>
-              </Form.Group>
+            <Form.Control.Feedback type="invalid">{fileErr}</Form.Control.Feedback>
+          </Form.Group> 
 
           <Button  className="mt-3" block  type="submit" variant="success">ثبت نام</Button>
+
         </Form>
    
         </div>
