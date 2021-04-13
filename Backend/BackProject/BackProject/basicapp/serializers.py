@@ -96,3 +96,9 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 
     def get_addresses(self,obj):
         return Address.objects.filter(doc=obj)
+
+class UpdateDoctorProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DoctorUser
+        fields = ['specialty','sub_specialty']
