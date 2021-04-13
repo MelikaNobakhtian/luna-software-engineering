@@ -100,16 +100,39 @@ class DoctorProfileView(APIView):
         return Response(serializer.data)
 
 class UpdateDoctorProfileView(generics.UpdateAPIView):
-    serializer_class = UpdateDoctorfileSerializer
+    serializer_class = UpdateDoctorProfileSerializer
     permission_classes = (IsAuthenticated,)
     queryset = DoctorUser.objects.all()
 
     def update(self,request,pk,*args,**kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         doc = get_object_or_404(queryset,pk=pk)
-        self.check_object_permissions(self.request, obj)
+        self.check_object_permissions(self.request, doc)
 
         serializer = self.serializer_class(doc,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateDoctorAddressView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorAddressSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = Address.objects.all()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset,pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self,request,doc_pk,add_pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        address = get_object_or_404(queryset,pk=add_pk)
+        doc = DoctorUser.objects.get(pk=doc_pk)
+        self.check_object_permissions(self.request, doc)
+
+        serializer = self.serializer_class(address,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
