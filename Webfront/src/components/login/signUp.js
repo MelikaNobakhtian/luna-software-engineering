@@ -1,17 +1,21 @@
-import React, { Component } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  Toast,
+  //Toast,
   Button,
   Form,
-  FormGroup,
-  Label,
-  Input,
-  FormText,
-  Col,
+  // FormGroup,
+  // Label,
+  // Input,
+  // FormText,
+  // Col,
   InputGroup,
 } from "react-bootstrap";
-import { Link, Redirect, withRouter, useHistory } from "react-router-dom";
+import {
+  // Link,
+  // Redirect,
+  withRouter,
+  //useHistory
+} from "react-router-dom";
 import EmailIcon from "@material-ui/icons/Email";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import LockIcon from "@material-ui/icons/Lock";
@@ -40,9 +44,70 @@ function SignUp(props) {
   const [confirmPassErr, setConfirmPassErr] = useState("");
   const [number, setNumber] = useState("");
   const [fileErr, setFileErr] = useState(null);
+  const [isDoctor, setIsDoctor] = useState(0);
 
   function handleSubmit(event) {
     event.preventDefault();
+    setEmailErr("");
+    setPassErr("");
+
+    if (isDoctor % 2 === 1) {
+      const payload = {
+        username: username,
+        email: email,
+        password : passwords.password,
+        password2 : passwords.confirmPassword,
+        first_name : name,
+        last_name : lastname,
+        file : selectedFile
+      };
+      const back = JSON.stringify(payload);
+      axios
+        .post(API_BASE_URL + "/register-doctor/", back, {
+          headers: { "content-type": "application/json" },
+        })
+        .then(function (response) {
+          if (response.status === 200) {
+            Cookies.set("userTokenR", response.data.token.refresh);
+            Cookies.set("userTokenA", response.data.token.access);
+            Cookies.set("userId", response.data.user_id);
+            Cookies.set("doctorId", response.data.doctor_id);
+            //redirectToHome();
+          } else {
+            console.log(response);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else { const payload = {
+      username: username,
+      email: email,
+      password : passwords.password,
+      password2 : passwords.confirmPassword,
+      first_name : name,
+      last_name : lastname
+    };
+    const back = JSON.stringify(payload);
+    axios
+      .post(API_BASE_URL + "/register/", back, {
+        headers: { "content-type": "application/json" },
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          Cookies.set("userTokenR", response.data.token.refresh);
+          Cookies.set("userTokenA", response.data.token.access);
+          Cookies.set("userId", response.data.user_id);
+          Cookies.set("doctorId", response.data.doctor_id);
+          //redirectToHome();
+        } else {
+          console.log(response);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
   }
 
   function validatorname(value) {
@@ -259,6 +324,7 @@ function SignUp(props) {
                     className="form-check-input"
                     type="checkbox"
                     id="isDoctor"
+                    onClick={() => setIsDoctor(isDoctor + 1)}
                   />
                   <label className="form-check-label" for="isDoctor">
                     من پزشک هستم
