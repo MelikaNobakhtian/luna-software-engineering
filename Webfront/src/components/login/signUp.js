@@ -24,9 +24,10 @@ import "./signUp.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
+import docImage from "../../assets/Lovepik_com-401686853-online-medical-consultation.png";
 
 function SignUp(props) {
-  const [errors, setErrors] = useState({});
+  //const [errors, setErrors] = useState({});
   const [name, setName] = useState("");
   const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ function SignUp(props) {
   const [emailErr, setEmailErr] = useState("");
   const [passErr, setPassErr] = useState("");
   const [confirmPassErr, setConfirmPassErr] = useState("");
-  const [number, setNumber] = useState("");
+  //const [number, setNumber] = useState("");
   const [fileErr, setFileErr] = useState(null);
   const [isDoctor, setIsDoctor] = useState(0);
 
@@ -55,11 +56,11 @@ function SignUp(props) {
       const payload = {
         username: username,
         email: email,
-        password : passwords.password,
-        password2 : passwords.confirmPassword,
-        first_name : name,
-        last_name : lastname,
-        file : selectedFile
+        password: passwords.password,
+        password2: passwords.confirmPassword,
+        first_name: name,
+        last_name: lastname,
+        file: selectedFile,
       };
       const back = JSON.stringify(payload);
       axios
@@ -80,33 +81,34 @@ function SignUp(props) {
         .catch(function (error) {
           console.log(error);
         });
-    } else { const payload = {
-      username: username,
-      email: email,
-      password : passwords.password,
-      password2 : passwords.confirmPassword,
-      first_name : name,
-      last_name : lastname
-    };
-    const back = JSON.stringify(payload);
-    axios
-      .post(API_BASE_URL + "/register/", back, {
-        headers: { "content-type": "application/json" },
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          Cookies.set("userTokenR", response.data.token.refresh);
-          Cookies.set("userTokenA", response.data.token.access);
-          Cookies.set("userId", response.data.user_id);
-          Cookies.set("doctorId", response.data.doctor_id);
-          //redirectToHome();
-        } else {
-          console.log(response);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    } else {
+      const payload = {
+        username: username,
+        email: email,
+        password: passwords.password,
+        password2: passwords.confirmPassword,
+        first_name: name,
+        last_name: lastname,
+      };
+      const back = JSON.stringify(payload);
+      axios
+        .post(API_BASE_URL + "/register/", back, {
+          headers: { "content-type": "application/json" },
+        })
+        .then(function (response) {
+          if (response.status === 200) {
+            Cookies.set("userTokenR", response.data.token.refresh);
+            Cookies.set("userTokenA", response.data.token.access);
+            Cookies.set("userId", response.data.user_id);
+            Cookies.set("doctorId", response.data.doctor_id);
+            //redirectToHome();
+          } else {
+            console.log(response);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 
@@ -172,189 +174,200 @@ function SignUp(props) {
     setFileErr(errors);
   }
 
+  const redirectToLogin = () => {
+    props.history.push("/login");
+  };
+
   return (
-    <div className="background d-flex justify-content-center ">
-      <div className="outer">
-        <div className="row justify-content-center">
-          <div className="col-xs-10 col-sm-9 col-md-6 col-lg-5 col-xl-4">
-            <div className="inner">
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group>
-                  <Form.Label className="mt-3">نام</Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <PersonIcon></PersonIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={name}
-                      onChange={(e) => validatorname(e.target.value)}
-                      isInvalid={Boolean(nameErr)}
-                      onBlur={(e) => validatorname(e.target.value)}
-                      placeholder="نام خود را وارد  نمایید "
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {nameErr}{" "}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label className="mt-3">نام خانوادگی</Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <PersonIcon></PersonIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="text"
-                      name="last name"
-                      value={lastname}
-                      onChange={(e) => validatorlastname(e.target.value)}
-                      isInvalid={Boolean(lastnameErr)}
-                      onBlur={(e) => validatorlastname(e.target.value)}
-                      placeholder="نام خانوادگی خود را وارد  نمایید "
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {lastnameErr}{" "}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label> نام کاربری</Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <AccountCircleIcon></AccountCircleIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="text"
-                      name="username"
-                      value={username}
-                      onChange={(e) => validatorusername(e.target.value)}
-                      placeholder=" نام کاربری خود را وارد نمایید"
-                      onBlur={(e) => validatorusername(e.target.value)}
-                      isInvalid={Boolean(usernameErr)}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {usernameErr}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label className="mt-3">ایمیل</Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <EmailIcon></EmailIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="text"
-                      name="email"
-                      value={email}
-                      onChange={(e) => validatoremail(e.target.value)}
-                      isInvalid={Boolean(emailErr)}
-                      placeholder="ایمیل خود را وارد  نمایید "
-                      onBlur={(e) => validatoremail(e.target.value)}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {emailErr}{" "}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label className="mt-3"> کلمه عبور</Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <LockIcon></LockIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="password"
-                      name="password"
-                      placeholder="کلمه عبور را وارد نمایید"
-                      value={passwords.password}
-                      onChange={(e) => validatorpass(e.target.value)}
-                      isInvalid={Boolean(passErr)}
-                      onBlur={(e) => validatorpass(e.target.value)}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {passErr}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label className="mt-3"> تایید کلمه عبور </Form.Label>
-                  <InputGroup hasValidation>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id="inputGroupPrepend">
-                        <LockIcon></LockIcon>
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <Form.Control
-                      type="password"
-                      name="confrim password"
-                      value={passwords.confirmPassword}
-                      onChange={(e) => validatorconfirmpass(e.target.value)}
-                      isInvalid={Boolean(confirmPassErr)}
-                      placeholder="کلمه عبور خود را تایید نمایید"
-                      onBlur={(e) => validatorconfirmpass(e.target.value)}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {confirmPassErr}
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                </Form.Group>
-
-                <hr></hr>
-
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="isDoctor"
-                    onClick={() => setIsDoctor(isDoctor + 1)}
-                  />
-                  <label className="form-check-label" for="isDoctor">
-                    من پزشک هستم
-                  </label>
-                </div>
-                <Form.Group>
-                  <Form.File
-                    className="position-relative"
-                    type="file"
-                    required
-                    isInvalid={Boolean(fileErr)}
-                    name="file"
-                    label="مدرک پزشک "
-                    value={selectedFile}
-                    onChange={(e) => validatorfile(e.target.value)}
-                    onBlur={(e) => validatorfile(e.target.value)}
-                    feedback={fileErr}
-                  />
-
-                  <Form.Control.Feedback type="invalid">
-                    {fileErr}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Button className="mt-3" block type="submit" variant="success">
-                  ثبت نام
-                </Button>
-              </Form>
-            </div>
+    <div className="d-flex justify-content-center background">
+      <div
+        className="card-group shadow-lg border border-5 border-success rounded"
+        style={{ backgroundColor: "white" }}
+      >
+        <div className="card border-0 align-self-center">
+          <div class="card-body ">
+            <h1 className="card-title" style={{ textAlign: "center" }}>
+              نوبت آنلاین
+            </h1>
+            <img className="img-fluid " src={docImage} alt=""></img>
           </div>
+        </div>
+        <div className="card d-flex justify-content-center border-0 ">
+          <Form className="m-md-5 m-3" noValidate onSubmit={handleSubmit}>
+            <Form.Group>
+              <Form.Label className="mt-3">نام</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <PersonIcon></PersonIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={(e) => validatorname(e.target.value)}
+                  isInvalid={Boolean(nameErr)}
+                  onBlur={(e) => validatorname(e.target.value)}
+                  placeholder="نام خود را وارد  نمایید "
+                />
+                <Form.Control.Feedback type="invalid">
+                  {nameErr}{" "}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="mt-3">نام خانوادگی</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <PersonIcon></PersonIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  name="last name"
+                  value={lastname}
+                  onChange={(e) => validatorlastname(e.target.value)}
+                  isInvalid={Boolean(lastnameErr)}
+                  onBlur={(e) => validatorlastname(e.target.value)}
+                  placeholder="نام خانوادگی خود را وارد  نمایید "
+                />
+                <Form.Control.Feedback type="invalid">
+                  {lastnameErr}{" "}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="mt-3"> نام کاربری</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <AccountCircleIcon></AccountCircleIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  name="username"
+                  value={username}
+                  onChange={(e) => validatorusername(e.target.value)}
+                  placeholder=" نام کاربری خود را وارد نمایید"
+                  onBlur={(e) => validatorusername(e.target.value)}
+                  isInvalid={Boolean(usernameErr)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {usernameErr}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="mt-3">ایمیل</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <EmailIcon></EmailIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  name="email"
+                  value={email}
+                  onChange={(e) => validatoremail(e.target.value)}
+                  isInvalid={Boolean(emailErr)}
+                  placeholder="ایمیل خود را وارد  نمایید "
+                  onBlur={(e) => validatoremail(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {emailErr}{" "}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="mt-3"> کلمه عبور</Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <LockIcon></LockIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  placeholder="کلمه عبور را وارد نمایید"
+                  value={passwords.password}
+                  onChange={(e) => validatorpass(e.target.value)}
+                  isInvalid={Boolean(passErr)}
+                  onBlur={(e) => validatorpass(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {passErr}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className="mt-3"> تایید کلمه عبور </Form.Label>
+              <InputGroup hasValidation>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">
+                    <LockIcon></LockIcon>
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="password"
+                  name="confrim password"
+                  value={passwords.confirmPassword}
+                  onChange={(e) => validatorconfirmpass(e.target.value)}
+                  isInvalid={Boolean(confirmPassErr)}
+                  placeholder="کلمه عبور خود را تایید نمایید"
+                  onBlur={(e) => validatorconfirmpass(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {confirmPassErr}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+
+            <hr></hr>
+
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="isDoctor"
+                onClick={() => setIsDoctor(isDoctor + 1)}
+              />
+              <label className="form-check-label" for="isDoctor">
+                من پزشک هستم
+              </label>
+            </div>
+            <Form.Group>
+              <Form.File
+                className="position-relative"
+                type="file"
+                required
+                isInvalid={Boolean(fileErr)}
+                name="file"
+                label="مدرک پزشک "
+                value={selectedFile}
+                onChange={(e) => validatorfile(e.target.value)}
+                onBlur={(e) => validatorfile(e.target.value)}
+                feedback={fileErr}
+              />
+
+              <Form.Control.Feedback type="invalid">
+                {fileErr}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Button className="mt-3" block type="submit" variant="success">
+              ثبت نام
+            </Button>
+          </Form>
         </div>
       </div>
     </div>
