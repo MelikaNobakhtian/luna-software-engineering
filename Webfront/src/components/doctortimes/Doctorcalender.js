@@ -40,7 +40,7 @@ function Doctorcalender() {
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight justify-self-center mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
+      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
         <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{backgroundColor:"darkgoldenrod"}}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
@@ -169,8 +169,13 @@ function Doctorcalender() {
 
         </div>
        {/* justifu nemishod baraye hamin ms me */}
+       {/* engar chon toye flex */}
        {/* dir="ltr-md rtl" nemishe */}
-        <div class="order-md-2 order-1 col-lg-5 col-md-3 col-sm-11 col-11 align-self-center"  style={{backgroundColor:"darkorchid"}}>
+       {/* cal age andaze width calendar mishe ms auto */}
+        <div class="order-md-2 order-1 col-auto me-md-auto   "  style={{backgroundColor:"darkorchid"
+        // ,position:"absolute",justifyContent:"flex-end"
+        // justify-content: flex-end !important;
+        }}>
       
      
               <Calendar
@@ -181,7 +186,7 @@ function Doctorcalender() {
                 // style={{ backgroundColor: "green" }}
                 // style={{marginLeft:100}}
                 shouldHighlightWeekends="true"
-                calss="shadow-0"
+                calss="shadow-0   "
                 colorPrimary="#0fbcf9"
                 colorPrimaryLight="rgba(75, 207, 250, 0.4)"
                 calendarClassName="responsive-calendar"
