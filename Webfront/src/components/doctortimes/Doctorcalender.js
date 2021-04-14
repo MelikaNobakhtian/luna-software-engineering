@@ -40,8 +40,8 @@ function Doctorcalender() {
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
-        <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{backgroundColor:"darkgoldenrod"}}>
+      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
+        <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{backgroundColor:"white"}}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
             <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column align-items-start  col-sm-auto col-9">
@@ -81,7 +81,7 @@ function Doctorcalender() {
             <div class="p-3 border d-flex col-sm-auto col-11 flex-column border
              mt-4 overflow-auto 
          
-         " style={{ borderRadius: 10, backgroundColor: "cyan", height: "30vh" }}>
+         " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
                 {magazis.map((val) => {
@@ -139,7 +139,7 @@ function Doctorcalender() {
             <div class="p-3 border d-flex  col-sm-auto col-11 flex-column border
             mt-4 overflow-auto 
          
-         " style={{ borderRadius: 10, backgroundColor: "cyan", height: "30vh" }}>
+         " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
                 {magazis.map((val) => {
@@ -172,24 +172,28 @@ function Doctorcalender() {
        {/* engar chon toye flex */}
        {/* dir="ltr-md rtl" nemishe */}
        {/* cal age andaze width calendar mishe ms auto */}
-        <div class="order-md-2 order-1 col-auto me-md-auto   "  style={{backgroundColor:"darkorchid"
+        <div class="order-md-2 mb-lg-auto mb-3 order-1 col-auto me-md-auto   "  style={{backgroundColor:"white"
         // ,position:"absolute",justifyContent:"flex-end"
         // justify-content: flex-end !important;
         }}>
       
-     
+     {/* <div class="border rounded-3 shadow-3 col-auto w-auto h-auto "> */}
               <Calendar
 
                 // backgroundColor="green"
                 // theme="dark"
                 // background-image="blue"
-                // style={{ backgroundColor: "green" }}
+
+                 style={{ borderColor: "green" }}
                 // style={{marginLeft:100}}
+
                 shouldHighlightWeekends="true"
-                calss="shadow-0   "
+                calss="mb-3"
+                borderColor="green"
                 colorPrimary="#0fbcf9"
+                calendarTodayClassName="custom-today-day"
                 colorPrimaryLight="rgba(75, 207, 250, 0.4)"
-                calendarClassName="responsive-calendar"
+                calendarClassName="responsive-calendar custom-calendar"
                 value={selectedDayRange}
                 onChange={
                   (value) => calenderchange(value)
@@ -198,6 +202,7 @@ function Doctorcalender() {
                 // shouldHighlightWeekends
                 locale="fa" // add this
               />
+            {/* </div> */}
             </div>
         
        
@@ -207,6 +212,7 @@ function Doctorcalender() {
 
 
     </div>
+    
 
 
   )
