@@ -4,8 +4,11 @@ from django.test import TestCase, Client
 from rest_framework.test import APIClient 
 from django.urls import reverse
 from .models import *
+from .serializers import *
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
+from django.core.files import File
+from unittest import mock
 import io
 
 
@@ -18,29 +21,26 @@ class DoctorProfileViewTest(TestCase):
         email = 'testdoctor@gmail.com'
         first_name = 'Ramin'
         last_name = 'Mofarrah'
-        password = '123456'
-        user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
-        user.set_passwoUserrd(self.password)
-        user.save()
-        file = io.BytesIO()
-        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
-        image.save(file, 'png')
-        file.name = 'test.png'
-        file.seek(0)
-        self.doc = DoctorUser(degree=file,user=user)
-        self.doc.specialty='dermatology'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock,specialty="dermatology")
         self.doc.save()
         
-
     def test_get_doctor_profile_info(self):
-        #first login doctor to get access token
+
         response_login = client.post(reverse('login'),
-            data=json.dumps({'email':self.doc.user.email , 'password':self.doc.user.password}),
+            data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
         access_token = response_login.data['tokens']['access']
         doc_id = response_login.data['doctor_id']
-        response = client.get(reverse('doctor-profile',kwargs={'pk' : doctor_id}))
+        
+        response = client.get(reverse('doctor-profile',kwargs={'pk' : doc_id}))
 
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
@@ -57,17 +57,14 @@ class UpdateDoctorProfileViewTest(TestCase):
         email = 'testdoctor@gmail.com'
         first_name = 'Ramin'
         last_name = 'Mofarrah'
-        password = '123456'
-        user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
-        user.set_passwoUserrd(self.password)
-        user.save()
-        file = io.BytesIO()
-        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
-        image.save(file, 'png')
-        file.name = 'test.png'
-        file.seek(0)
-        self.doc = DoctorUser(degree=file,user=user)
-        self.doc.specialty='dermatology'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
         self.doc.save()
 
     def generate_photo_file(self):
@@ -80,9 +77,10 @@ class UpdateDoctorProfileViewTest(TestCase):
         
 
     def test_update_profile_doctor(self):
-        #first login doctor to get access token
+        
+        
         response_login = client.post(reverse('login'),
-            data=json.dumps({'email':self.doc.user.email , 'password':self.doc.user.password}),
+            data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
         access_token = response_login.data['tokens']['access']
@@ -91,19 +89,19 @@ class UpdateDoctorProfileViewTest(TestCase):
         new_specialty = "skin"
         new_sub_specialty = "New"
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
-        response = new_client.put(reverse('update-doctor-profile',kwargs={'pk' : doctor_id}),
+        response = new_client.put(reverse('update-doctor-profile',kwargs={'pk' : doc_id}),
             data=json.dumps({'specialty':new_specialty,'sub_specialty':new_sub_specialty}),
             content_type='application/json',headers =auth_headers)
 
         
-        updated_doc = DoctorUser.objects.get(user=self.doc.user)
+        updated_doc = DoctorUser.objects.get(user=self.user)
         
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         #check updated info
-        self.assertEqual(updated_doctor.specialty,new_specialty)
-        self.assertEqual(updated_doctor.sub_specialty,new_sub_specialty)
+        self.assertEqual(updated_doc.specialty,new_specialty)
+        self.assertEqual(updated_doc.sub_specialty,new_sub_specialty)
 
 class SetDoctorAddressViewTest(TestCase):
 
@@ -112,30 +110,28 @@ class SetDoctorAddressViewTest(TestCase):
         email = 'testdoctor@gmail.com'
         first_name = 'Ramin'
         last_name = 'Mofarrah'
-        password = '123456'
-        user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
-        user.set_passwoUserrd(self.password)
-        user.save()
-        file = io.BytesIO()
-        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
-        image.save(file, 'png')
-        file.name = 'test.png'
-        file.seek(0)
-        self.doc = DoctorUser(degree=file,user=user)
-        self.doc.specialty='dermatology'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
         self.doc.save()
         
 
     def test_set_doctor_address(self):
-        #first login doctor to get access token
+        
+
         response_login = client.post(reverse('login'),
-            data=json.dumps({'email':self.doc.user.email , 'password':self.doc.user.password}),
+            data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
         access_token = response_login.data['tokens']['access']
         doc_id = response_login.data['doctor_id']
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
-        response = new_client.post(reverse('set-doctor-address',kwargs={'pk' : doctor_id}),
+        response = new_client.post(reverse('set-doctor-address',kwargs={'pk' : doc_id}),
             data=json.dumps({'count':1,'addresses':[
         {
             "state":"Mazandaran",
@@ -159,18 +155,17 @@ class UpdateDoctorAddressViewTest(TestCase):
         email = 'testdoctor@gmail.com'
         first_name = 'Ramin'
         last_name = 'Mofarrah'
-        password = '123456'
-        user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
-        user.set_passwoUserrd(self.password)
-        user.save()
-        file = io.BytesIO()
-        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
-        image.save(file, 'png')
-        file.name = 'test.png'
-        file.seek(0)
-        self.doc = DoctorUser(degree=file,user=user)
-        self.doc.specialty='dermatology'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
         self.doc.save()
+        add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        add.save()
 
     def generate_photo_file(self):
         file = io.BytesIO()
@@ -182,27 +177,29 @@ class UpdateDoctorAddressViewTest(TestCase):
         
 
     def test_update_address_doctor(self):
-        #first login doctor to get access token
+        
+
         response_login = client.post(reverse('login'),
-            data=json.dumps({'email':self.doc.user.email , 'password':self.doc.user.password}),
+            data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
         access_token = response_login.data['tokens']['access']
         doc_id = response_login.data['doctor_id']
+        add_id = AddressSerializer(DoctorProfileSerializer(self.doc).data['addresses'][0]).data['id']
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
         new_city = "Babol"
         new_detail = "Farmandari"
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
-        response = new_client.put(reverse('update-doctor-address',kwargs={'pk' : doctor_id}),
+        response = new_client.put(reverse('update-doctor-address',kwargs={'doc_pk' : doc_id,'add_pk' : add_id}),
             data=json.dumps({'city':new_city,'detail':new_detail}),
             content_type='application/json',headers =auth_headers)
 
         
-        updated_doc = DoctorUser.objects.get(user=self.doc.user)
+        updated_doc = DoctorProfileSerializer(DoctorUser.objects.get(user=self.user)).data
         
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         #check updated info
-        self.assertEqual(updated_doctor.addresses[0].city,new_city)
-        self.assertEqual(updated_doctor.addresses[0].detail,new_detail)
+        self.assertEqual(updated_doc['addresses'][0].city,new_city)
+        self.assertEqual(updated_doc['addresses'][0].detail,new_detail)
