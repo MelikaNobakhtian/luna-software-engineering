@@ -51,7 +51,7 @@ function Login(props) {
     };
     const back = JSON.stringify(payload);
     axios
-      .post(API_BASE_URL + "/login", back, {
+      .post(API_BASE_URL + "/login/", back, {
         headers: { "content-type": "application/json" },
       })
       .then(function (response) {
@@ -89,16 +89,25 @@ function Login(props) {
   // };
 
   const [sended, setSended] = useState("");
+
   const sendEmail = () => {
+    const payload = {
+      email: email,
+    };
+    const back = JSON.stringify(payload);
     axios
-      .post(API_BASE_URL)
+      .post(API_BASE_URL + "request-reset-email/", back, {
+        headers: { "content-type": "application/json" },
+      })
       .then(function (response) {
         if (response.status === 200) {
           setSended("لینک تغییر رمز به ایمیل شما فرستاده شد");
+        } else if (response.status === 404) {
+          setSended("حسابی با این ایمیل وجود ندارد");
         }
       })
       .catch(function (error) {
-        setPassErr("پسورد صحیح را وارد کنید !");
+        setSended("حسابی با این ایمیل وجود ندارد");
       });
   };
 
@@ -151,7 +160,7 @@ function Login(props) {
                   value={email}
                   onChange={(e) => validatoremail(e.target.value)}
                   isInvalid={Boolean(emailErr)}
-                  placeholder="ایمیل خود را واد نمایید  "
+                  placeholder="ایمیل خود را وارد نمایید  "
                   onBlur={(e) => validatoremail(e.target.value)}
                   // isInvalid={Boolean(emailErr)}
                   // errors={emailErr}
@@ -220,12 +229,30 @@ function Login(props) {
               <div class="modal-body">
                 <form>
                   <div class="mb-3">
-                    <label class="form-label">آدرس ایمیل</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      placeholder="ایمیل خود را وارد کنید"
-                    />
+                    <Form.Group>
+                      <Form.Label> ایمیل</Form.Label>
+                      <InputGroup hasValidation>
+                        <InputGroup.Prepend>
+                          <InputGroup.Text id="inputGroupPrepend">
+                            <AccountCircleIcon></AccountCircleIcon>
+                          </InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          value={email}
+                          onChange={(e) => validatoremail(e.target.value)}
+                          isInvalid={Boolean(emailErr)}
+                          placeholder="ایمیل خود را وارد نمایید  "
+                          onBlur={(e) => validatoremail(e.target.value)}
+                          // isInvalid={Boolean(emailErr)}
+                          // errors={emailErr}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {emailErr}
+                        </Form.Control.Feedback>
+                      </InputGroup>
+                    </Form.Group>
                   </div>
                   <p>{sended}</p>
                 </form>
