@@ -11,7 +11,7 @@ import DatePicker, { Calendar } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import { BsPlusCircleFill } from "react-icons/bs";
-
+  //  بعدا بین md , sm هم فرق و تقویم نشون
 function Doctorcalender() {
   const [hozoris, sethozoris] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }, { id: 2, time: "8:30" }, { id: 3, time: "9:00" }, { id: 4, time: "10:00" }, { id: 5, time: "11:00" }, { id: 6, time: "12:00" }, { id: 7, time: "13:00" }, { id: 8, time: "14:00" }]);
   const [magazis, setmagazis] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }]);
@@ -40,11 +40,11 @@ function Doctorcalender() {
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex p-2 flex-row col-11 my-1 mx-auto bd-highlight justify-self-center mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
-        <div class="order-1  col-lg-7 col-md-9 col-sm-12 col-12" style={{backgroundColor:"darkgoldenrod"}}>
+      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight justify-self-center mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
+        <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{backgroundColor:"darkgoldenrod"}}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-            <div class="d-flex flex-column flex-sm-row align-items-center  col-sm-auto col-9">
+            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column align-items-start  col-sm-auto col-9">
 
 
               <div class="row  align-items-center col-auto ms-4">
@@ -62,7 +62,7 @@ function Doctorcalender() {
               </div>
 
               {/* تا sm */}
-              <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
+              <div class="d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
                 <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
 
                 <div class="input-group   input-group-sm " dir="ltr">
@@ -100,10 +100,10 @@ function Doctorcalender() {
               </div>
             </div>
 
-            <div class="d-flex flex-column flex-sm-row col-sm-auto col-9 align-items-center mt-3 ">
+            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column col-sm-auto col-9 align-items-start mt-3 ">
 
 
-              <div class="row  align-items-center col-auto ms-4">
+              <div class="row  align-items-start col-auto ms-4">
                 <div class="col-auto">
                   <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
                 </div>
@@ -119,7 +119,7 @@ function Doctorcalender() {
               </div>
 
               {/* تا sm */}
-              <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
+              <div class="d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
                 <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
 
                 <div class="input-group   input-group-sm " dir="ltr">
@@ -168,6 +168,33 @@ function Doctorcalender() {
           </div>
 
         </div>
+       {/* justifu nemishod baraye hamin ms me */}
+       {/* dir="ltr-md rtl" nemishe */}
+        <div class="order-md-2 order-1 col-lg-5 col-md-3 col-sm-11 col-11 align-self-center"  style={{backgroundColor:"darkorchid"}}>
+      
+     
+              <Calendar
+
+                // backgroundColor="green"
+                // theme="dark"
+                // background-image="blue"
+                // style={{ backgroundColor: "green" }}
+                // style={{marginLeft:100}}
+                shouldHighlightWeekends="true"
+                calss="shadow-0"
+                colorPrimary="#0fbcf9"
+                colorPrimaryLight="rgba(75, 207, 250, 0.4)"
+                calendarClassName="responsive-calendar"
+                value={selectedDayRange}
+                onChange={
+                  (value) => calenderchange(value)
+
+                }
+                // shouldHighlightWeekends
+                locale="fa" // add this
+              />
+            </div>
+        
        
         
       </div>
