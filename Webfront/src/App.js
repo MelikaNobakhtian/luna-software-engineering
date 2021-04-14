@@ -33,7 +33,7 @@ function App() {
             <Route path='/' component={Navbar} exact={true}/>
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
-            <Route path='/forgotPassword' component={ForgotPassword} />
+            <Route path='/forgotPassword/:tokenId' component={ForgotPassword} />
        
           </Switch>
         </div>

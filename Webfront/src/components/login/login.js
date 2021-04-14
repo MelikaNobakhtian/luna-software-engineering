@@ -11,11 +11,11 @@ import {
   // Col,
   InputGroup,
 } from "react-bootstrap";
-import { 
+import {
   //Link,
-  //Redirect, 
-  withRouter, 
-  //useHistory 
+  //Redirect,
+  withRouter,
+  //useHistory
 } from "react-router-dom";
 //import GroupIcon from '@material-ui/icons/Group';
 //import { Email } from "@material-ui/icons";
@@ -43,7 +43,7 @@ function Login(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    setEemailErr("");
+    setEmailErr("");
     setPassErr("");
     const payload = {
       email: email,
@@ -56,10 +56,13 @@ function Login(props) {
       })
       .then(function (response) {
         if (response.status === 200) {
-          Cookies.set("userToken", response.data.token.refresh);
+          Cookies.set("userTokenR", response.data.token.refresh);
+          Cookies.set("userTokenA", response.data.token.access);
           Cookies.set("userId", response.data.user_id);
           Cookies.set("doctorId", response.data.doctor_id);
           //redirectToHome();
+        } else {
+          console.log(response);
         }
       })
       .catch(function (error) {
@@ -71,37 +74,52 @@ function Login(props) {
     props.history.push("/signup");
   };
 
-  //   const redirectToForgotPass = () => {
-  //     props.history.push('/forgotPass');
-  //     props.updateTitle('forgotPass');
-  // }
-  const [activeStep, setActiveStep] = useState(0);
+  // const [activeStep, setActiveStep] = useState(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  // const handleNext = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  // };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  // };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
+  const [sended, setSended] = useState("");
   const sendEmail = () => {
     axios
       .post(API_BASE_URL)
       .then(function (response) {
         if (response.status === 200) {
-          handleNext();
+          setSended("لینک تغییر رمز به ایمیل شما فرستاده شد");
         }
       })
       .catch(function (error) {
-        console.log(error);
-        handleNext();
+        setPassErr("پسورد صحیح را وارد کنید !");
       });
   };
+
+  const regex_email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  function validatoremail(value) {
+    setEmail(value);
+    let errors = "";
+    if (!regex_email.test(String(value).toLowerCase())) {
+      errors = " ایمیل صحیح را وارد نمایید !";
+    }
+    setEmailErr(errors);
+  }
+  const pattern = /^((?=.*[0-9]{1,})|(?=.*[!.@#$&*-_]{1,}))(?=.*[a-z]{1,}).{8,}$/;
+  function validatorpass(values) {
+    setPasswords({ ...passwords, password: values });
+    let errors = "";
+    if (!pattern.test(String(values).toLowerCase())) {
+      errors = "پسورد صحیح را وارد کنید !";
+    }
+    setPassErr(errors);
+  }
 
   return (
     <div className="d-flex justify-content-center background">
@@ -120,7 +138,7 @@ function Login(props) {
         <div className="card d-flex justify-content-center border-0 ">
           <Form className="m-md-5 m-3" noValidate onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label> نام کاربری</Form.Label>
+              <Form.Label> ایمیل</Form.Label>
               <InputGroup hasValidation>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend">
@@ -128,12 +146,13 @@ function Login(props) {
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
-                  type="text"
-                  name="emial"
+                  type="email"
+                  name="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  isValid={emailErr}
-                  placeholder="نام کاربری خود را واد نمایید  "
+                  onChange={(e) => validatoremail(e.target.value)}
+                  isInvalid={Boolean(emailErr)}
+                  placeholder="ایمیل خود را واد نمایید  "
+                  onBlur={(e) => validatoremail(e.target.value)}
                   // isInvalid={Boolean(emailErr)}
                   // errors={emailErr}
                 />
@@ -151,15 +170,16 @@ function Login(props) {
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
-                  type="text"
+                  type="password"
                   name="password"
-                  value={passwords}
-                  onChange={(e) => setPasswords(e.target.value)}
-                  isValid={passErr}
-                  placeholder="کلمه عبور را وارد کنید "
+                  placeholder="کلمه عبور را وارد نمایید"
+                  value={passwords.password}
+                  onChange={(e) => validatorpass(e.target.value)}
+                  isInvalid={Boolean(passErr)}
+                  onBlur={(e) => validatorpass(e.target.value)}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {passErr}{" "}
+                  {passErr}
                 </Form.Control.Feedback>
               </InputGroup>
               <span
@@ -207,6 +227,7 @@ function Login(props) {
                       placeholder="ایمیل خود را وارد کنید"
                     />
                   </div>
+                  <p>{sended}</p>
                 </form>
               </div>
               <div class="modal-footer d-flex justify-content-start">
@@ -222,9 +243,8 @@ function Login(props) {
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
-                  onClick={handleReset}
                 >
-                  انصراف
+                  بستن
                 </button>
               </div>
             </div>
