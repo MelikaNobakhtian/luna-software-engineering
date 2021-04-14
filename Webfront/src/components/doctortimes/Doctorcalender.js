@@ -12,9 +12,9 @@ import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup
 import TextField from '@material-ui/core/TextField';
 
 function Doctorcalender() {
-  const [hozoris, sethozoris] = useState([{id:0,time:"8:00"},{id:1,time:"8:20"},{id:2,time:"8:30"},{id:3,time:"9:00"},{id:4,time:"10:00"},{id:5,time:"11:00"},{id:6,time:"12:00"},{id:7,time:"13:00"},{id:8,time:"14:00"}]);
-  const [magazis, setmagazis] = useState([{id:0,time:"8:00"},{id:1,time:"8:20"}]);
- 
+  const [hozoris, sethozoris] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }, { id: 2, time: "8:30" }, { id: 3, time: "9:00" }, { id: 4, time: "10:00" }, { id: 5, time: "11:00" }, { id: 6, time: "12:00" }, { id: 7, time: "13:00" }, { id: 8, time: "14:00" }]);
+  const [magazis, setmagazis] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }]);
+
   const [selectedDayRange, setSelectedDayRange] = useState({
     from: null,
     to: null
@@ -30,8 +30,8 @@ function Doctorcalender() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
-  const sessionchange=(index)=>{
-      console.log("request back")
+  const sessionchange = (index) => {
+    console.log("request back")
   }
   return (
     <div >
@@ -65,7 +65,16 @@ function Doctorcalender() {
                 <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
               </div>
             </div>
-            <div class="shadow-3 mt-4" style={{}}>
+            <div class="input-group mb-3 mt-3 me-n2">
+              <input type="text" class="form-control" placeholder="30" aria-label="Username"></input>
+                <span class="input-group-text">:</span>
+                <input type="text" class="form-control" placeholder="8" aria-label="Server"></input>
+                <span class="input-group-text">-</span>
+                <input type="text" class="form-control" placeholder="00" aria-label="Username"></input>
+                <span class="input-group-text">:</span>
+                <input type="text" class="form-control" placeholder="8" aria-label="Server"></input>
+             </div>
+            {/* <div class="shadow-3 mt-4" style={{}}>
               <TextField
                 id="outlined-textarea"
                 label="بازه های نوبت های حضوری شما"
@@ -74,8 +83,8 @@ function Doctorcalender() {
                 variant="outlined"
               />
 
-            </div>
-            <Button class="btn btn-primary btn-sm mb-n1" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button>
+            </div> */}
+            {/* <Button class="btn btn-primary btn-sm mb-n1" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button> */}
             <div class="row   align-items-center col-auto mt-4 ">
               <div class="col-auto">
                 <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
@@ -89,7 +98,16 @@ function Doctorcalender() {
                 <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
               </div>
             </div>
-            <div class="shadow-3 mt-4" style={{}}>
+            <div class="input-group mb-3 mt-3 me-n2">
+              <input type="text" class="form-control" placeholder="30" aria-label="Username"></input>
+                <span class="input-group-text">:</span>
+                <input type="text" class="form-control" placeholder="8" aria-label="Server"></input>
+                <span class="input-group-text">-</span>
+                <input type="text" class="form-control" placeholder="00" aria-label="Username"></input>
+                <span class="input-group-text">:</span>
+                <input type="text" class="form-control" placeholder="8" aria-label="Server"></input>
+             </div>
+              {/* <div class="shadow-3 mt-4" style={{}}>
               <TextField
                 id="outlined-textarea"
                 // lang="fa"
@@ -100,109 +118,109 @@ function Doctorcalender() {
               />
 
             </div>
-            <Button class="btn btn-primary btn-sm mb-0" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button>
+            <Button class="btn btn-primary btn-sm mb-0" style={{ position: "relative", backgroundColor: "primary", borderColor: "lightgreen", justifySelft: "flex-start" }}>تایید</Button> */}
 
+            </div>
+
+
+
+
+
+            <div class="" style={{}}>
+              <Calendar
+
+                // backgroundColor="green"
+                // theme="dark"
+                // background-image="blue"
+                // style={{ backgroundColor: "green" }}
+
+                shouldHighlightWeekends="true"
+                calss="shadow-0 justify-content-center"
+                colorPrimary="#0fbcf9"
+                colorPrimaryLight="rgba(75, 207, 250, 0.4)"
+                calendarClassName="responsive-calendar"
+                value={selectedDayRange}
+                onChange={
+                  (value) => calenderchange(value)
+
+                }
+                // shouldHighlightWeekends
+                locale="fa" // add this
+              />
+            </div>
+
+            {/* </div> */}
           </div>
 
-
-
-
-
-          <div class="" style={{}}>
-            <Calendar
-
-              // backgroundColor="green"
-              // theme="dark"
-              // background-image="blue"
-              // style={{ backgroundColor: "green" }}
-
-              shouldHighlightWeekends="true"
-              calss="shadow-0 justify-content-center"
-              colorPrimary="#0fbcf9"
-              colorPrimaryLight="rgba(75, 207, 250, 0.4)"
-              calendarClassName="responsive-calendar"
-              value={selectedDayRange}
-              onChange={
-                (value) => calenderchange(value)
-
-              }
-              // shouldHighlightWeekends
-              locale="fa" // add this
-            />
-          </div>
-
-          {/* </div> */}
-        </div>
-
-       <div class="" style={{marginLeft:"2vw"}} ></div>
-        <div class="p-3 d-flex col-lg-4 col-xl-4 col-sm-4 col-xxl-4 col-md-4 flex-column border
+          <div class="" style={{ marginLeft: "2vw" }} ></div>
+          <div class="p-3 d-flex col-lg-4 col-xl-4 col-sm-4 col-xxl-4 col-md-4 flex-column border
          mt-sm-5 mt-lg-5 mt-xl-5 mt-xxl-5 mt-md-5   ms-sm-5 ms-lg-5 ms-xl-5 ms-xxl-5 ms-md-5
          ms-sm-n2 ms-lg-n2 ms-xl-n2 ms-xxln25 ms-md-n2
-         " style={{ borderRadius:10 }}>
-          <div class="border mb-3 p-2" style={{height:"26.5vh"}}>
-          {magazis.map((val)=>{
-            
-            {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */}
-            return(<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button" 
-            onClick={(val)=>{
-              sessionchange(val.id);
-              // setbuttoncolor("red")
-              }}
-             style={{margin:3,backgroundColor:"green"}}>{val.time}</Button>
-            )
-          })}
-         
-          </div>
-          
-          <div class="border p-2" style={{height:"26.5vh"}}>
-          {magazis.map((val)=>(
-            <Button type="button" class="btn btn-primary btn-sm col-2" data-bs-toggle="button"  style={{margin:3,backgroundColor:"#53BC48"}}>{val.time}</Button>
-          ))}
-         
-          </div>
+         " style={{ borderRadius: 10 }}>
+            <div class="border mb-3 p-2" style={{ height: "26.5vh" }}>
+              {magazis.map((val) => {
 
+                {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
+                return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                  onClick={(val) => {
+                    sessionchange(val.id);
+                    // setbuttoncolor("red")
+                  }}
+                  style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
+                )
+              })}
+
+            </div>
+
+            <div class="border p-2" style={{ height: "26.5vh" }}>
+              {magazis.map((val) => (
+                <Button type="button" class="btn btn-primary btn-sm col-2" data-bs-toggle="button" style={{ margin: 3, backgroundColor: "#53BC48" }}>{val.time}</Button>
+              ))}
+
+            </div>
+
+
+
+          </div>
 
 
         </div>
-
-
-      </div>
-      {/* <h1> سلام</h1>
+        {/* <h1> سلام</h1>
       
       <p className="sessionstime">
         برای انتخاب وقت های حضوری و یا مجازی خود ابتدا روز مورد نظر خود را از روی تقویم انتخاب کرده و سپس بازه ی زمانی ای که در آن میتوانید نوبت حضوری داشته باشید را در کادر بازه های نوبت حضوری و مدت زمانی را که میتونید در آن وقت مجازی داشته باشید در کادر بازه های نوبت مجازی وارد کنید
         </p> */}
 
-      {/* <div class="col-6 row-6" style={{ backgroundColor: "white", height: 300 }}>h </div> */}
-      <div class="row me-0 ms-0 align-items-center col-auto ">
-        <div class="col-auto">
-          <label for="hozori" class="col-auto ms-n3 sessionstime ">مدت زمان هر وقت حضوری شما؟</label>
+        {/* <div class="col-6 row-6" style={{ backgroundColor: "white", height: 300 }}>h </div> */}
+        <div class="row me-0 ms-0 align-items-center col-auto ">
+          <div class="col-auto">
+            <label for="hozori" class="col-auto ms-n3 sessionstime ">مدت زمان هر وقت حضوری شما؟</label>
+          </div>
+          {/* class="col-2 me-n3 " */}
+          <div class=" col-auto row"
+          // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+          >
+            {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+            {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+            <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+          </div>
         </div>
-        {/* class="col-2 me-n3 " */}
-        <div class=" col-auto row"
-        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-        >
-          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
-        </div>
-      </div>
 
-      <div class="row me-0 ms-0 align-items-center col-auto mt-4 ">
-        <div class="col-auto">
-          <label for="hozori" class="col-auto ms-n3 sessionstime ">مدت زمان هر وقت مجازی شما؟</label>
+        <div class="row me-0 ms-0 align-items-center col-auto mt-4 ">
+          <div class="col-auto">
+            <label for="hozori" class="col-auto ms-n3 sessionstime ">مدت زمان هر وقت مجازی شما؟</label>
+          </div>
+          {/* class="col-2 me-n3 " */}
+          <div class=" col-auto row"
+          // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+          >
+            {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+            {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+            <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+          </div>
         </div>
-        {/* class="col-2 me-n3 " */}
-        <div class=" col-auto row"
-        // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-        >
-          {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-          {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-          <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(20px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
-        </div>
-      </div>
 
-      {/* <div >
+        {/* <div >
           <div class="cal-3">j</div>
           <label for="hozori" class="col-form-label">مدت زمان هر وقت حضوری؟</label>
           <input type="text ratio" class="form-control" id="hozori" style={{ borderRadius: 100 }}></input>
@@ -211,22 +229,22 @@ function Doctorcalender() {
         <div>مدت زمان وقت مجازی شما؟
       <input></input>
         </div> */}
-      {/* <div class="d-flex p-2 bd-highlight" style={{position:"absolute", alignSelf:"flex-start",justifySelf:"flex-end",backgroundColor:"blue"}}> */}
+        {/* <div class="d-flex p-2 bd-highlight" style={{position:"absolute", alignSelf:"flex-start",justifySelf:"flex-end",backgroundColor:"blue"}}> */}
 
-      <RangeDatePicker></RangeDatePicker>
-      {/* </div> */}
-      {/* <div class="row">
+        <RangeDatePicker></RangeDatePicker>
+        {/* </div> */}
+        {/* <div class="row">
       
         {/* "calc(1em + 0.1vw)" */}
-      {/* <h3 class="col-2" */}
-      {/* //  style={{fontSize:"calc(0.8em + 0.1vw)"}}
+        {/* <h3 class="col-2" */}
+        {/* //  style={{fontSize:"calc(0.8em + 0.1vw)"}}
 //          >مدت زمان وقت مجازی شما چه قدر می باشد ؟؟؟</h3> */}
-      {/* //          <h3> HI </h3>
+        {/* //          <h3> HI </h3>
 //         <div class="col-6 me-n5" style={{backgroundColor:"blue"}}> jj</div>
 //         </div> */}
-      {/* // <div>dfkdflkdf;lkj</div> */}
+        {/* // <div>dfkdflkdf;lkj</div> */}
 
-    </div>
+      </div>
 
 
   )
