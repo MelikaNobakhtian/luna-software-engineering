@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-ro
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import login from './components/login/login';
 import signUp from './components/login/signUp';
+import editProfileDoctor from './components/editProfile-doctor/editProfile-doctor';
 
 
 
@@ -31,6 +32,8 @@ function App() {
           <Switch>
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
+            <Route path='/doctorProfile' component={editProfileDoctor} />
+
             <Route exact path='/' component={Navbar} />
        
           </Switch>
