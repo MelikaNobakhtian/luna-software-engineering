@@ -12,8 +12,9 @@ import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup
 import TextField from '@material-ui/core/TextField';
 
 function Doctorcalender() {
-  const [hozoris, sethozoris] = useState(["8:00","10:00","8:00","10:00","8:00","10:00","8:00","10:00","8:00","10:00"]);
-  const [magazis, setmagazis] = useState(["12:00,14:00,16:00,16:20"]);
+  const [hozoris, sethozoris] = useState([{id:0,time:"8:00"},{id:1,time:"8:20"},{id:2,time:"8:30"},{id:3,time:"9:00"},{id:4,time:"10:00"},{id:5,time:"11:00"},{id:6,time:"12:00"},{id:7,time:"13:00"},{id:8,time:"14:00"}]);
+  const [magazis, setmagazis] = useState([{id:0,time:"8:00"},{id:1,time:"8:20"}]);
+ 
   const [selectedDayRange, setSelectedDayRange] = useState({
     from: null,
     to: null
@@ -29,6 +30,9 @@ function Doctorcalender() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+  const sessionchange=(index)=>{
+      console.log("request back")
+  }
   return (
     <div >
       <Navbar></Navbar>
@@ -136,16 +140,25 @@ function Doctorcalender() {
          ms-sm-n2 ms-lg-n2 ms-xl-n2 ms-xxln25 ms-md-n2
          " style={{ borderRadius:10 }}>
           <div class="border mb-3 p-2" style={{height:"26.5vh"}}>
-          {hozoris.map((val)=>(
-            <Button type="button" class="btn btn-primary btn-sm col-2" style={{margin:3}}>{val}</Button>
-          ))}
+          {magazis.map((val)=>{
+            
+            {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */}
+            return(<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button" 
+            onClick={(val)=>{
+              sessionchange(val.id);
+              // setbuttoncolor("red")
+              }}
+             style={{margin:3,backgroundColor:"green"}}>{val.time}</Button>
+            )
+          })}
          
           </div>
           
-          <div class="border p-2"  style={{height:"26.5vh"}}>
+          <div class="border p-2" style={{height:"26.5vh"}}>
           {magazis.map((val)=>(
-            <Button type="button" class="btn btn-primary btn-sm col-2" >{val}</Button>
+            <Button type="button" class="btn btn-primary btn-sm col-2" data-bs-toggle="button"  style={{margin:3,backgroundColor:"#53BC48"}}>{val.time}</Button>
           ))}
+         
           </div>
 
 
