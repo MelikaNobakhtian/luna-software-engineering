@@ -2,106 +2,213 @@ import React, { Component } from "react";
 import { useState,useEffect} from "react";
 import { Toast, Button, Form, FormGroup, Label, Input, FormText,Col,InputGroup } from 'react-bootstrap';
 import { Link, Redirect, withRouter, useHistory } from 'react-router-dom';
+import { Avatar } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import {API_BASE_URL} from '../apiConstant/apiConstant';
+import Snackbar from '@material-ui/core/Snackbar';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
 
 function Editprofile(props) {
 
-    const [user, setUser] = useState({name:"saba",lastname:"rr ",username:"sabary",
-    file:" ",degree:" ",adderess:" ",fieldCity:" ",specialty:" "});
-  
-
-    useEffect(async () => {
-        fetch(API_BASE_URL, {
-          method: 'GET',
-          headers: {
-            "Authorization": "Token " + localStorage.getItem('loginToken')
-          }
-        })
-          .then((res) => {
-            if (res.status === 200) {
-              return res.json()
-            }
-          }
-          )
-          .then((data) => { if(data) 
-            {
-            setUser({name:data.name,lastname:data.lastname,username:data.username,file:data.file, 
-                degree:data.degree, adderess:data.adderess,fieldCity:data.fieldCity})}});
-            console.log("")
-      
-      }, []);
-
-
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", "Token " + localStorage.getItem('loginToken'));
-      let fd = new FormData();
-      fd.append('name',user.name )
-      fd.append('lastname', user.lastname);
-      fd.append('username', user.username);
-      fd.append('img', user.img);
-      fd.append('degree', user.degree);
-      fd.append('adress', user.adderess);
-      fd.append('fieldCity', user.fieldCity);
-      
-
-      var requestOptions = {
-        method: 'PUT',
-        headers: myHeaders,
-        body: fd,
-      };
-  
-      fetch(API_BASE_URL, requestOptions)
-        .then(async (response) => {
-          console.log('status', response.status)
-  
-          if (response.status === 200) 
-  
-          return response.json()
-        })
-        .catch(error => {
-          console.log('error', error)
-        });
-
-          
-      const handleChange =(e) => {
+    const [user , setUser] = useState({  token : "", userName : "", firstName : "",
+        lastName : "",email : "", picture : "", oldPass :"",  newPass:"", newPass2 : "",
+        addresses:[], specialty:"", sub_specialty:""
+     })
+     
+     const [type, setType] = useState('');
+     useEffect(() => {
+      if (user.token) {       
+          axios.get(API_BASE_URL + '/doctor/' + Cookies.get('doctorId'))
+              .then(function (response){
+                console.log(response);
+                setUser(prevState => ({ 
+                  ...prevState,
+                  userName: response.data.username,
+                  firstName:response.data.firstName,
+                  lastName:response.data.lastName,
+                  email: response.data.email,
+                  picture : API_BASE_URL +response.data.profile_photo,
+                  specialty:response.data.specialty,
+                  sub_specialty:response.data.sub_specialty,
+                  city:response.data.addresses.city,
+                  state:response.data.addresses.state,
+                  detail:response.data.addresses.detail
+                  }));
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+        }
+      },[] );
+      const handleChangeInfosClick = (e) => {
         e.preventDefault();
+  
+        const payload={
+              "username":user.userName,
+              "firstName":user.firstName,
+              "lastName":user.lastName
+        }
+        const back= JSON.stringify(payload)
+        axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile',
+        back,{
+            headers:{
+           "Content-Type":"application/json",
+           "Authorization":"Token "+Cookies.get("userToken")}
+            })
+                .then(function (response) {
+                console.log(response);
+                if(response.status === 200){
+                    console.log(response.status);
+                    setMassage('اطلاعات جدید با موفقیت جایگزین شد')
+                    setOpenSnack(true);
+                    Cookies.set('userName',user.userName);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                setMassage("نام کاربری از قبل وجود دارد")
+                setOpenSnack(true);
+            });
+    }
+
+  
+      const handleChange = (e) => {
         const {id , value} = e.target   
         setUser(prevState => ({
             ...prevState,
             [id] : value
         }))
     }
-          
-    function handleSubmit(event) {
-        event.preventDefault();
-        
+      
+     const [state , setState]=useState(
+      {
+          navigate:false,
+          file:null
       }
+    )
 
+    const handleChangePassClick = (e) => {
+      e.preventDefault();
+      if(user.oldPass.length&&user.newPass.length){
+          const payload={
+              "old_password": user.oldPass,
+              "new_password":user.newPass,
+          }
+          const back= JSON.stringify(payload);
+          console.log(back);
+  
+          axios.put( API_BASE_URL+ '/user/'+Cookies.get('userId')+'/change-password',
+           back
+           ,{
+            headers:{
+           "Content-Type":"application/json",
+          "Authorization":"Token "+Cookies.get("userToken")}
+           }
+  
+          ).then(function(response){
+              console.log(response);
+              setMassage('پسورد با موفقیت عوض شد')
+              setOpenSnack(true);
+  
+          })
+          .catch(function(error){
+              console.log(error);
+              setMassage("پسورد قبلی غلط است")
+              setOpenSnack(true);
+           })
+          
+      }
+      else { 
+       }
+  
+       setUser(prevState => ({
+        ...prevState,
+        oldPass : "",
+        newPass:""
+    })); 
+  
+  }
+    const uploadedImage = React.useRef(null);
+    const imageUploader = React.useRef(null);
+    const handleImageUpload = e => {
+      setState({file:e.target.files[0]});
+      const [file] = e.target.files;
+      if (file) {
+        const reader = new FileReader();
+        const { current } = uploadedImage;
+        current.file = file;
+        reader.onload = e => {
+          setUser(prevState => ({
+            ...prevState,
+            picture : e.target.result
+        }));
+    
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  
+
+    const [massage, setMassage]= useState(<br></br>);
+    const[openSnack,setOpenSnack]=useState(false);
+    const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+    return;
+    }
+    setOpenSnack(false);
+    };
+    
   return (
-    <div className="background d-flex justify-content-center ">
-    <div className="outer">
-    <div className="row justify-content-center">
-      <div className="col-xs-10 col-sm-9 col-md-6 col-lg-5 col-xl-4">
-        <div className="inner">
-
-    <Form noValidate onSubmit= {handleSubmit}>
-
-    <Form.Group >
+    <div className="main-content bg-dark">
+      <div className="container-fluid p-2">
+        <div className="d-flex flex-wrap">
+         <div className="col-12 col-md-4 ">
+          <div className="card border-light border-2 text-white p-2 m-1" style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}>
+            <div class="card-header d-flex justify-content-center">
+              <div className="text-center">
+                <Avatar src={user.picture} ref={uploadedImage} alt="عکس" className="" style={{width:120, height:120}}/>
+                <h5 className="username mt-2">{user.userName}</h5>
+                <h6 className="email">{user.email}</h6>
+              </div>
+            </div>
+            <div class="card-body">
+              <div className='btn btn-light btn-sm'>
+                <EditIcon></EditIcon>
+                ویرایش اطلاعات
+              </div>
+            </div>
+          </div>
+         </div>
+         <div className="col-12 col-md-8 ">
+          <div className="card border-light border-2 text-white p-2 m-1" style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}>
+            <div class="card-header d-flex">
+                <h4>اطلاعات شخصی</h4>
+            </div>
+            <div class="card-body">
+              <div>
+   <Form>
+  <form class="row g-3">  
+<div class="col-sm-4">
+    <Form.Group   controlId="formGridName"  >
           <Form.Label className="mt-3">نام</Form.Label>
           <InputGroup hasValidation>
           <Form.Control
             type="text"
             name="name"
-            value={user.name}
+            value={user.firstName}
             onChange={handleChange}
             onBlur={handleChange}
           />
           <Form.Control.Feedback type="invalid">{""} </Form.Control.Feedback>
           </InputGroup>
           </Form.Group>
-
-
-          <Form.Group >
+          </div>
+          <div class="col-sm-4 ">
+          <Form.Group  controlId="formGridLastname">
           <Form.Label className="mt-3">نام خانوادگی</Form.Label>
           <InputGroup hasValidation>
           <Form.Control
@@ -114,9 +221,11 @@ function Editprofile(props) {
           <Form.Control.Feedback type="invalid">{""} </Form.Control.Feedback>
           </InputGroup>
           </Form.Group>
+          </div>
 
-       <Form.Group>
-          <Form.Label> نام کاربری</Form.Label>
+          <div class="col-sm-4">
+       <Form.Group  controlId="">
+          <Form.Label className="mt-3"> نام کاربری</Form.Label>
           <InputGroup hasValidation>
           <Form.Control
             type="text"
@@ -124,53 +233,22 @@ function Editprofile(props) {
             value={user.username}
             onChange={handleChange}
             onBlur={handleChange}
-         
           />
     <Form.Control.Feedback type="invalid" >{""}</Form.Control.Feedback>
           </InputGroup>
           </Form.Group>
-
-
-          <Form.Group>
-          <Form.Label  className="mt-3"> کلمه عبور</Form.Label>
-          <InputGroup hasValidation>
-          <Form.Control 
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={handleChange}
-            onBlur={handleChange}
-          />
-    <Form.Control.Feedback type="invalid">{""}</Form.Control.Feedback>
-          </InputGroup>
-          </Form.Group>
-
-          <Form.Group >
-          <Form.Label  className="mt-3"> تایید کلمه عبور </Form.Label>
-          
-          <Form.Control
-            type="password"
-            name="confrim password"
-            value={user.confirmPass}
-            onChange={handleChange}
-            onBlur={handleChange}
-          />
-          <Form.Control.Feedback type="invalid">{""}</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group>
-               <div >
-                  <img src={user.file} alt="" id="img" className="img" />
-                   <Form.File id="uploadImg" accept="image/*" className="butChoose" onChange={handleChange} />
-               </div>
-
-           </Form.Group>
+         </div>
+          <div class="col-sm-4">
         <Form.Group controlId="formBasicSelect">
         <Form.Label> تخصص خود را انتخاب کنید :</Form.Label>
         <Form.Control as={Col} controlId="formGridState"
           as="select"
-          defaultValue=" choose...."
+        //   defaultValue=" choose...."
           value={user.specialty}
-          onChange={handleChange}
+          onChange={e => {
+            console.log("e.target.value", e.target.value);
+            setUser({...user,specialty:e.target.value});
+          }}
         >
             <option value='ﭼﺸﻢ ﭘﺰﺷﮑﯽ'>
             ﭼﺸﻢ ﭘﺰﺷﮑﯽ</option> 
@@ -193,17 +271,105 @@ function Editprofile(props) {
             ﻋﻤﻮﻣﯽ</option> 
         </Form.Control>
       </Form.Group>
-     
-  
-      <Button  className="mt-3" block  type="submit" variant="success">ذخیره تغییرات</Button>
+      </div>
 
+      <div class="col-sm-4">
+      <Form.Group>
+          <Form.Label>تخصص</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control
+            type="text"
+            name="username"
+            placeholder="تخصص"
+            value={user.sub_specialty}
+            onChange={handleChange}
+         
+          />
+          </InputGroup>
+          </Form.Group>
+          </div>
+          <div class="col-12 ">
+          <Form.Group>
+          <InputGroup hasValidation>
+          <Form.Control
+            type="file" accept="image/*" 
+            onChange={handleImageUpload} 
+            ref={imageUploader} 
+            style={{ display: "none",color:"white" }} />
+            <div className="btn btn-outline-light " onClick={() => imageUploader.current.click()}>
+
+            <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
+                     انتخاب عکس جدید
+                   </div>
+                </InputGroup>
+                </Form.Group>
+                </div>
+                <div class="col-12 ">
+                    <button type="submit" class="btn btn-outline-light">ذخیره تغییرات</button>
+                    </div>
+                  <hr></hr>
+        <div class="col-sm-4">
+         <Form.Group>
+          <Form.Label  className=""> رمز فعلی</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control 
+             type="password"
+             id="oldPass"
+            value={user.oldPass}
+            onChange={handleChange}
+            />
+            </InputGroup>
+            </Form.Group>
+            </div>
+            <div class="col-sm-4">
+            <Form.Group>
+          <Form.Label  className="">رمز جدید</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control 
+             type="password"
+             id="newPass"
+             value={user.newPass} 
+            onChange={handleChange}
+            />
+            </InputGroup>
+            </Form.Group>
+            </div>
+            <div class="col-sm-4">
+            <Form.Group>
+          <Form.Label  className="">تکرار رمز جدید</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control 
+             type="password"
+             id="newPass2"
+             value={user.newPass2} 
+            onChange={handleChange}
+            />
+            </InputGroup>
+            </Form.Group>
+                  </div>
+                  <div class="col-12">
+                  <button type="submit" class="btn btn-outline-light" onClick={handleChangePassClick}>
+                    <CheckCircleIcon></CheckCircleIcon>
+                    تغییر رمز</button>
+                    </div>
+    </form>
     </Form>
-
-    </div>
-    </div>
-    </div>
-</div>
-</div>
+  </div>
+              
+              </div>
+            </div>
+           </div>
+           <Snackbar
+          anchorOrigin={{ vertical:'bottom', horizontal:'center'}}
+          open={openSnack}
+          autoHideDuration={2500}
+          onClose={handleCloseSnack}
+          message={<div style={{fontSize:17}}>{massage}</div>}
+          />
+          </div>
+        </div>
+        
+      </div>
 );
 }
 export default withRouter(Editprofile);
