@@ -364,9 +364,17 @@ function SignUp(props) {
               </Form.Control.Feedback>
             </Form.Group>
 
+            <div>
             <Button className="mt-3" block type="submit" variant="success">
               ثبت نام
             </Button>
+            <span className="btn mt-3" onClick={() => redirectToLogin()}>
+                قبلاً ثبت‌نام نکرده‌اید؟
+            </span>
+
+            </div>
+
+            
           </Form>
         </div>
       </div>
