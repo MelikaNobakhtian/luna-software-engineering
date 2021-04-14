@@ -135,7 +135,7 @@ class UpdateUserProfileView(generics.UpdateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+        return Response({'failure':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 class UserProfileView(APIView):
 
