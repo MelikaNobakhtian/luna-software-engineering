@@ -4,6 +4,10 @@ from django.test import TestCase, Client
 from rest_framework.test import APIClient 
 from django.urls import reverse
 from .models import *
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+import io
+
 
 client = Client()
 
@@ -95,6 +99,14 @@ class UpdateUserProfileViewTest(TestCase):
         self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
         self.user.set_password(self.password)
         self.user.save()
+
+    def generate_photo_file(self):
+        file = io.BytesIO()
+        image = Image.new('RGBA', size=(100, 100), color=(155, 0, 0))
+        image.save(file, 'png')
+        file.name = 'test.png'
+        file.seek(0)
+        return file
         
 
     def test_update_profile_user(self):
@@ -124,6 +136,11 @@ class UpdateUserProfileViewTest(TestCase):
         self.assertEqual(updated_user.username,new_username)
         self.assertEqual(updated_user.first_name,new_firstname)
         self.assertEqual(updated_user.last_name,new_lastname)
+
+        #update profile photo
+        response = new_client.put(reverse('update-profile',kwargs={'pk' : user_id}),
+            data={'profile_photo':self.generate_photo_file()},format='multipart',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
         
     
         
