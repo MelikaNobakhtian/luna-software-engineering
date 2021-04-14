@@ -96,7 +96,9 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
         fields = ['id','user','specialty','sub_specialty','addresses']
 
     def get_addresses(self,obj):
-        return Address.objects.filter(doc=obj)
+        add_list = Address.objects.filter(doc=obj)
+        adds = AddressSerializer(add_list,many=True)
+        return adds.data
 
 class UpdateDoctorProfileSerializer(serializers.ModelSerializer):
 
@@ -111,7 +113,7 @@ class UpdateDoctorAddressSerializer(serializers.ModelSerializer):
         fields = ['state','city','detail']
 
 class AddressSerializer(serializers.ModelSerializer):
-    doc = DoctorProfileSerializer(read_only=True)
+    #doc = DoctorProfileSerializer(read_only=True)
     class Meta:
         model = Address
         fields = ['state','doc','city','detail']

@@ -144,18 +144,15 @@ class SetDoctorAddressView(APIView):
         
         doc = DoctorUser.objects.get(pk=pk)
         count = request.data.get("count")
-        print(request.data)
-        print(count)
+
         counter = 0
         while counter < count:
             add = request.data.get('addresses')[counter]
-            print("+++++++++++++++")
-            print(add)
             new_add = Address(state=add['state'],doc=doc,city=add['city'],detail=add['detail'])
             new_add.save()
             counter+=1
-        #doc_add = Address.objects.filter(doc=doc)
-        #add_list = AddressSerializer(doc_add,many=True)
-        #doc_info = DoctorProfileSerializer(doc)
-        return Response({"message":"You submit your addresses successfully!"})
-       
+            
+        doc_add = Address.objects.filter(doc=doc)
+        add_list = AddressSerializer(doc_add,many=True)
+        doc_info = DoctorProfileSerializer(doc)
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
