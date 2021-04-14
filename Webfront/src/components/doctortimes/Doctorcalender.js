@@ -41,130 +41,135 @@ function Doctorcalender() {
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
       <div class="d-flex p-2 flex-row col-11 my-1 mx-auto bd-highlight justify-self-center mt-md-3 mt-2" style={{ backgroundColor: "lightblue", alignSelf: "center" }}>
-        <div>
-          {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-          <div class="d-flex flex-column flex-sm-row col-lg-7 align-items-center  col-md-9 col-sm-11 col-9">
+        <div class="order-1  col-lg-7 col-md-9 col-sm-12 col-12" style={{backgroundColor:"darkgoldenrod"}}>
+          <div>
+            {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
+            <div class="d-flex flex-column flex-sm-row align-items-center  col-sm-auto col-9">
 
 
-            <div class="row  align-items-center col-auto ms-4">
-              <div class="col-auto">
-                <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+              <div class="row  align-items-center col-auto ms-4">
+                <div class="col-auto">
+                  <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+                </div>
+                {/* class="col-2 me-n3 " */}
+                <div class=" col-auto row align-items-center"
+                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+                >
+                  {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+                  {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+                  <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                </div>
               </div>
-              {/* class="col-2 me-n3 " */}
-              <div class=" col-auto row align-items-center"
-              // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-              >
-                {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-                {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+
+              {/* تا sm */}
+              <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
+                <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
+
+                <div class="input-group   input-group-sm " dir="ltr">
+                  <input type="number" class="form-control " placeholder="8" aria-label="Username"></input>
+                  <span class="input-group-text">:</span>
+                  <input type="number" class="form-control" placeholder="00" aria-label="Server"></input>
+                  <span class="input-group-text">-</span>
+                  <input type="numebr" class="form-control" placeholder="8" aria-label="Username"></input>
+                  <span class="input-group-text">:</span>
+                  <input type="number" class="form-control" placeholder="30" aria-label="Server"></input>
+                </div>
               </div>
+
+
             </div>
-
-            {/* تا sm */}
-            <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
-              <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
-
-              <div class="input-group   input-group-sm " dir="ltr">
-                <input type="number" class="form-control " placeholder="8" aria-label="Username"></input>
-                <span class="input-group-text">:</span>
-                <input type="number" class="form-control" placeholder="00" aria-label="Server"></input>
-                <span class="input-group-text">-</span>
-                <input type="numebr" class="form-control" placeholder="8" aria-label="Username"></input>
-                <span class="input-group-text">:</span>
-                <input type="number" class="form-control" placeholder="30" aria-label="Server"></input>
-              </div>
-            </div>
-
-
-          </div>
-          <div class="p-3 border d-flex col-lg-7 col-md-9 col-sm-11 col-11 flex-column border
-        mt-4 overflow-auto 
+            <div class="p-3 border d-flex col-sm-auto col-11 flex-column border
+             mt-4 overflow-auto 
          
          " style={{ borderRadius: 10, backgroundColor: "cyan", height: "30vh" }}>
 
-            <div class=" " style={{ height: "26.5vh" }}>
-              {magazis.map((val) => {
+              <div class=" " style={{ height: "26.5vh" }}>
+                {magazis.map((val) => {
 
-                {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
-                  onClick={(val) => {
-                    sessionchange(val.id);
-                    // setbuttoncolor("red")
-                  }}
-                  style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
-                )
-              })}
-
-
-            </div>
-          </div>
-
-          <div class="d-flex flex-column flex-sm-row col-lg-7 align-items-center mt-3 col-md-9 col-sm-11 col-9">
+                  {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
+                  return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                    onClick={(val) => {
+                      sessionchange(val.id);
+                      // setbuttoncolor("red")
+                    }}
+                    style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
+                  )
+                })}
 
 
-            <div class="row  align-items-center col-auto ms-4">
-              <div class="col-auto">
-                <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
-              </div>
-              {/* class="col-2 me-n3 " */}
-              {/* algin item mishe bardashte baraye balayi ham */}
-              <div class=" col-auto row algin-items-center"
-              // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
-              >
-                {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-                {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
               </div>
             </div>
 
-            {/* تا sm */}
-            <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
-              <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
+            <div class="d-flex flex-column flex-sm-row col-sm-auto col-9 align-items-center mt-3 ">
 
-              <div class="input-group   input-group-sm " dir="ltr">
-                <input type="number" class="form-control " placeholder="8" aria-label="Username"></input>
-                <span class="input-group-text">:</span>
-                <input type="number" class="form-control" placeholder="00" aria-label="Server"></input>
-                <span class="input-group-text">-</span>
-                <input type="numebr" class="form-control" placeholder="8" aria-label="Username"></input>
-                <span class="input-group-text">:</span>
-                <input type="number" class="form-control" placeholder="30" aria-label="Server"></input>
+
+              <div class="row  align-items-center col-auto ms-4">
+                <div class="col-auto">
+                  <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
+                </div>
+                {/* class="col-2 me-n3 " */}
+                {/* algin item mishe bardashte baraye balayi ham */}
+                <div class=" col-auto row algin-items-center"
+                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+                >
+                  {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+                  {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+                  <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                </div>
               </div>
+
+              {/* تا sm */}
+              <div class="d-flex flex-row mt-sm-0 align-items-center mt-3">
+                <BsPlusCircleFill class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
+
+                <div class="input-group   input-group-sm " dir="ltr">
+                  <input type="number" class="form-control " placeholder="8" aria-label="Username"></input>
+                  <span class="input-group-text">:</span>
+                  <input type="number" class="form-control" placeholder="00" aria-label="Server"></input>
+                  <span class="input-group-text">-</span>
+                  <input type="numebr" class="form-control" placeholder="8" aria-label="Username"></input>
+                  <span class="input-group-text">:</span>
+                  <input type="number" class="form-control" placeholder="30" aria-label="Server"></input>
+                </div>
+              </div>
+
+
             </div>
 
-
-          </div>
-
-          <div class="p-3 border d-flex col-lg-7 col-md-9 col-sm-11 col-11 flex-column border
-        mt-4 overflow-auto 
+            <div class="p-3 border d-flex  col-sm-auto col-11 flex-column border
+            mt-4 overflow-auto 
          
          " style={{ borderRadius: 10, backgroundColor: "cyan", height: "30vh" }}>
 
-            <div class=" " style={{ height: "26.5vh" }}>
-              {magazis.map((val) => {
+              <div class=" " style={{ height: "26.5vh" }}>
+                {magazis.map((val) => {
 
-                {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
-                  onClick={(val) => {
-                    sessionchange(val.id);
-                    // setbuttoncolor("red")
-                  }}
-                  style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
-                )
-              })}
+                  {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
+                  return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                    onClick={(val) => {
+                      sessionchange(val.id);
+                      // setbuttoncolor("red")
+                    }}
+                    style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
+                  )
+                })}
 
 
+              </div>
             </div>
+
+
+
+
+
+
+
+
           </div>
-
-
-
-
-
-
-
 
         </div>
+       
+        
       </div>
 
 
