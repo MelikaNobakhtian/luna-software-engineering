@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from rest_framework import generics, status, views, permissions
 from .serializers import *
 from rest_framework.response import Response
@@ -9,8 +9,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.shortcuts import redirect
 from django.http import HttpResponsePermanentRedirect
+from rest_framework.permissions import IsAuthenticated
 import os
 
 
@@ -46,7 +46,7 @@ class RegisterDoctorView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        new_doc = DoctorUser(user=user,doctor_number=request.data.get('doctor_number'))
+        new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
@@ -58,7 +58,7 @@ class RegisterDoctorView(generics.GenericAPIView):
                 'email_subject': 'Verify your email'}
 
         Util.send_email(data)
-        user_data['doctor_number'] = new_doc.doctor_number
+        user_data['degree']=new_doc.degree
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
@@ -86,83 +86,73 @@ class LoginAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class DoctorProfileView(APIView):
+    
+    def get_object(self, pk):
+        try:
+            return DoctorUser.objects.get(pk=pk)
+        except DoctorUser.DoesNotExist:
+            raise Http404
 
-# class RequestPasswordResetEmail(generics.GenericAPIView):
-#     serializer_class = ResetPasswordEmailRequestSerializer
+    def get(self, request, pk, format=None):
+        docprofile = self.get_object(pk)
+        serializer = DoctorProfileSerializer(docprofile)
+        return Response(serializer.data)
 
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
+class UpdateDoctorProfileView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = DoctorUser.objects.all()
 
-#         email = request.data.get('email', '')
+    def update(self,request,pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        doc = get_object_or_404(queryset,pk=pk)
+        self.check_object_permissions(self.request, doc)
 
-#         if User.objects.filter(email=email).exists():
-#             user = User.objects.get(email=email)
-#             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
-#             token = PasswordResetTokenGenerator().make_token(user)
-#             current_site = get_current_site(
-#                 request=request).domain
-#             relativeLink = reverse(
-#                 'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+        serializer = self.serializer_class(doc,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
 
-#             redirect_url = request.data.get('redirect_url', '')
-#             absurl = 'http://'+current_site + relativeLink
-#             email_body = 'Hello, \n Use link below to reset your password  \n' + \
-#                 absurl+"?redirect_url="+redirect_url
-#             data = {'email_body': email_body, 'to_email': user.email,
-#                     'email_subject': 'Reset your passsword'}
-#             Util.send_email(data)
-#         return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+class UpdateDoctorAddressView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorAddressSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = Address.objects.all()
 
-# class PasswordTokenCheckAPI(generics.GenericAPIView):
-#     serializer_class = SetNewPasswordSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset,pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
-#     def get(self, request, uidb64, token):
+    def update(self,request,doc_pk,add_pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        address = get_object_or_404(queryset,pk=add_pk)
+        doc = DoctorUser.objects.get(pk=doc_pk)
+        self.check_object_permissions(self.request, doc)
 
-#         redirect_url = request.GET.get('redirect_url')
+        serializer = self.serializer_class(address,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
 
-#         try:
-#             id = smart_str(urlsafe_base64_decode(uidb64))
-#             user = User.objects.get(id=id)
+class SetDoctorAddressView(APIView):
 
-#             if not PasswordResetTokenGenerator().check_token(user, token):
-#                 if len(redirect_url) > 3:
-#                     return CustomRedirect(redirect_url+'?token_valid=False')
-#                 else:
-#                     return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
+    def post(self,request,pk):
+        
+        doc = DoctorUser.objects.get(pk=pk)
+        count = request.data.get("count")
 
-#             if redirect_url and len(redirect_url) > 3:
-#                 return CustomRedirect(redirect_url+'?token_valid=True&message=Credentials Valid&uidb64='+uidb64+'&token='+token)
-#             else:
-#                 return CustomRedirect(os.environ.get('FRONTEND_URL', '')+'?token_valid=False')
-
-#         except DjangoUnicodeDecodeError as identifier:
-#             try:
-#                 if not PasswordResetTokenGenerator().check_token(user):
-#                     return CustomRedirect(redirect_url+'?token_valid=False')
-                    
-#             except UnboundLocalError as e:
-#                 return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# class SetNewPasswordAPIView(generics.GenericAPIView):
-#     serializer_class = SetNewPasswordSerializer
-
-#     def patch(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
-
-
-# class LogoutAPIView(generics.GenericAPIView):
-#     serializer_class = LogoutSerializer
-
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def post(self, request):
-
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+        counter = 0
+        while counter < count:
+            add = request.data.get('addresses')[counter]
+            new_add = Address(state=add['state'],doc=doc,city=add['city'],detail=add['detail'])
+            new_add.save()
+            counter+=1
+            
+        doc_add = Address.objects.filter(doc=doc)
+        add_list = AddressSerializer(doc_add,many=True)
+        doc_info = DoctorProfileSerializer(doc)
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
