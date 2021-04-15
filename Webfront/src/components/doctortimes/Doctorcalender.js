@@ -110,8 +110,9 @@ function Doctorcalender() {
                 </div>
                 
               </div>
-              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-1-lg col-1-sm  col-3 d-flex flex-row-reverse align-items-start d-block mb-3 d-sm-none d-md-block d-lg-none round-3  ">
-              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-md-7 col-9 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              {/* d-block mb-3 d-sm-none d-md-block d-lg-none  */}
+              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
               {/* <div class="align-self-center justify-self-center"> */} 
               تایید
               {/* {/* </div> */}
@@ -200,8 +201,9 @@ function Doctorcalender() {
                 </div>
               </div>
               {/* ms-auto me-auto nashod */}
-              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-1-lg col-1-sm  col-3 d-flex flex-row-reverse align-items-start d-block mb-3 d-sm-none d-md-block d-lg-none round-3  ">
-              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-md-7 col-9 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
+              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
               {/* <div class="align-self-center justify-self-center"> */} 
               تایید
               {/* {/* </div> */}
