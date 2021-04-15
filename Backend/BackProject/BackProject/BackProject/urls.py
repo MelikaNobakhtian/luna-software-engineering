@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from basicapp.views import *
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -26,4 +27,9 @@ urlpatterns = [
     path('register-doctor/', RegisterDoctorView.as_view(), name="register-doctor"),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),
     path('login/', LoginAPIView.as_view(), name="login"),
-]
+    path('user/<int:pk>/change-password', ChangePasswordView.as_view(), name='change-password'),
+    path('user/<int:pk>/update-profile', UpdateUserProfileView.as_view(), name='update-profile'),
+    path('user/<int:pk>',UserProfileView.as_view(),name='user-profile'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

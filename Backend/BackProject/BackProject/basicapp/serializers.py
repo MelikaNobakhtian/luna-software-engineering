@@ -17,7 +17,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','username','first_name','last_name','id_num','email', 'password','password2']
+        fields = ['id','username','first_name','last_name','email', 'password','password2']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -39,6 +39,9 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=68, min_length=6, write_only=True)
     tokens = serializers.SerializerMethodField()
+    is_doctor = serializers.BooleanField(read_only=True)
+    doctor_id = serializers.IntegerField(read_only=True)
+    user_id = serializers.IntegerField(read_only=True)
 
     def get_tokens(self, obj):
         user = User.objects.get(email=obj['email'])
@@ -50,7 +53,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'tokens']
+        fields = ['email', 'password', 'tokens','user_id','doctor_id','is_doctor']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -66,10 +69,38 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('Invalid credentials, try again')
         if not user.is_verified:
             raise AuthenticationFailed('Email is not verified')
+        is_doctor = False
+        user_id = user.id
+        doctor_id = 0
+        if DoctorUser.objects.filter(user=user).exists():
+            is_doctor = True
+            doctor_id = DoctorUser.objects.get(user=user).id
 
         return {
+            'user_id': user_id,
+            'doctor_id':doctor_id,
             'email': user.email,
-            'tokens': user.tokens
+            'tokens': user.tokens,
+            'is_doctor': is_doctor
         }
 
         return super().validate(attrs)
+
+class ChangePasswordSerializer(serializers.Serializer):
+
+    model = User
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+class UpdateUserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username','first_name','last_name','profile_photo']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
