@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { RangeDatePicker } from "jalali-react-datepicker";
@@ -90,7 +92,8 @@ function Doctorcalender() {
         <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column align-items-start  col-sm-auto col-11">
+            {/* flex-lg-row  flex-md-column flex-sm-row flex-column */}
+            <div class="d-flex flex-column  align-items-start  col-sm-auto col-11">
 
                    {/* mt - 2 وسط وسط نیست */}
               <div class="row  align-items-start col-auto ms-4">
@@ -121,7 +124,8 @@ function Doctorcalender() {
               <div>
                 {hfields.map((hfield, index) => (
                   <div key={index} >
-                    <div class="carousel-item-active d-block d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
+                  {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3 */}
+                    <div class="carousel-item-active d-block d-flex flex-row mt-3 align-items-center ">
                       <BsPlusCircleFill onClick={()=>handleaddhfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                     <AiFillMinusCircle onClick={()=>handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
@@ -177,8 +181,8 @@ function Doctorcalender() {
 
               </div>
             </div>
-
-            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column col-sm-auto col-11 align-items-start mt-3 ">
+            {/* //  flex-column flex-lg-row  */}
+            <div class="d-flex flex-column flex-column col-sm-auto col-11 align-items-start mt-3 ">
 
               <div class="d-flex flex-row  mt-2 col-auto ms-4 ">
               <div class="row  align-items-start">
@@ -208,7 +212,8 @@ function Doctorcalender() {
               <div class="d-flex flex-row">
               {mfields.map((mfield, index) => (
                   <div key={index} >
-              <div class="d-block d-flex flex-row mt-lg-2 mt-md-3 mt-sm-2 mt-3 align-items-center col-12 ">
+                  {/* mt-lg-2 mt-md-3 mt-sm-2 mt-3 */}
+              <div class="d-block d-flex flex-row mt-3 align-items-center col-12 ">
                 <BsPlusCircleFill onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                 <AiFillMinusCircle onClick={()=>handleremovemfield(index)}  class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                 <div class="input-group   input-group-sm " dir="ltr">
