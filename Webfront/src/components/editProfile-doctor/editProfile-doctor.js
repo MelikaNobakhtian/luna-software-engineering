@@ -28,8 +28,8 @@ function Editprofile(props) {
                 setUser(prevState => ({ 
                   ...prevState,
                   userName: response.data.username,
-                  firstName:response.data.firstName,
-                  lastName:response.data.lastName,
+                  firstName:response.data.first_name,
+                  lastName:response.data.last_name,
                   email: response.data.email,
                   picture : API_BASE_URL +response.data.profile_photo,
                   specialty:response.data.specialty,
@@ -49,8 +49,10 @@ function Editprofile(props) {
   
         const payload={
               "username":user.userName,
-              "firstName":user.firstName,
-              "lastName":user.lastName
+              "first_name":user.firstName,
+              "last_name":user.lastName,
+              "specialty":user.specialty,
+              "sub_specialty":user.sub_specialty
         }
         const back= JSON.stringify(payload)
         axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile',
@@ -101,7 +103,7 @@ function Editprofile(props) {
           const back= JSON.stringify(payload);
           console.log(back);
   
-          axios.put( API_BASE_URL+ '/user/'+Cookies.get('userId')+'/change-password',
+          axios.put( API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/change-password',
            back
            ,{
             headers:{
@@ -238,7 +240,139 @@ function Editprofile(props) {
           </InputGroup>
           </Form.Group>
          </div>
-          <div class="col-sm-4">
+       <div class="col-sm-4">
+         <Form.Group >
+        <Form.Label>استان</Form.Label>
+        <Form.Control controlId="formGridState"
+          as="select"
+          defaultValue=" choose...."
+          value={user.state}
+          onChange={e => {
+            console.log("e.target.value", e.target.value);
+            setUser({...user,state:e.target.value});
+          }}
+        >
+          <option value="آذربایجان شرقی"> 
+          آذربایجان شرقی </option>
+            <option value="	آذربایجان غربی">
+            آذربایجان غربی
+            </option>
+            <option value="اردبیل">
+            اردبیل
+            </option>
+            <option value="اصفهان">
+            اصفهان
+            </option>
+            <option value="البرز">
+            البرز
+            </option>
+            <option value="ایلام">
+            ایلام
+            </option>
+            <option value="بوشهر">
+            بوشهر
+            </option>
+            <option value="تهران">
+            تهران
+            </option>
+            <option value="چهارمحال و بختیاری">
+            چهارمحال و بختیاری
+            </option>
+            <option value="خراسان جنوبی">
+            خراسان جنوبی
+            </option>
+            <option value="خراسان رضوی">
+            خراسان رضوی
+            </option>
+            <option value="خراسان شمالی	">
+            خراسان شمالی	
+            </option>
+            <option value="خوزستان">
+            خوزستان
+            </option>
+            <option value="	زنجان">
+            زنجان
+            </option>
+            <option value="سمنان">
+            سمنان
+            </option>
+            <option value="سیستان و بلوچستان	">
+            سیستان و بلوچستان	
+            </option>
+            <option value="فارس">
+            فارس
+            </option>
+            <option value="قزوین">
+            قزوین
+            </option>
+            <option value="	قم">
+            قم
+              </option>
+              <option value="	کردستان">
+              کردستان
+              </option>
+              <option value="کرمان">
+              کرمان
+              </option>
+              <option value="کرمانشاه">
+              کرمانشاه
+              </option>
+              <option value="کهگیلویه و بویراحمد">
+              کهگیلویه و بویراحمد
+              </option>
+              <option value="	گلستان">
+              گلستان
+              </option>
+              <option value="گیلان">
+              گیلان
+              </option>
+              <option value="لرستان">
+              لرستان
+              </option>
+              <option value="	مازندران">
+              مازندران
+              </option>
+              <option value="مرکزی">
+              مرکزی
+              </option>
+              <option value="	هرمزگان">
+              هرمزگان
+              </option>
+              <option value="	همدان">
+              همدان
+              </option>
+              <option value="یزد">
+              یزد
+              </option>
+        </Form.Control>
+      </Form.Group>
+     </div>
+      <div class="col-sm-4">
+      <Form.Group>
+          <Form.Label>شهر</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control
+                    type="text"
+                    //  placeholder="شهر"
+                    value={user.addresses.city}
+                     onChange={handleChange}/>
+                     </InputGroup>
+                     </Form.Group>
+                  </div>
+      <div class="col-sm-4">
+      <Form.Group>
+          <Form.Label>آدرس</Form.Label>
+          <InputGroup hasValidation>
+          <Form.Control
+                    type="text"
+                    // placeholder="آدرس"
+                    value={user.addresses.detail}
+                    onChange={handleChange}
+                     />
+                     </InputGroup>
+                     </Form.Group>
+                  </div>
+                  <div class="col-sm-4">
         <Form.Group controlId="formBasicSelect">
         <Form.Label> تخصص خود را انتخاب کنید :</Form.Label>
         <Form.Control as={Col} controlId="formGridState"
@@ -280,7 +414,7 @@ function Editprofile(props) {
           <Form.Control
             type="text"
             name="username"
-            placeholder="تخصص"
+            // placeholder="تخصص"
             value={user.sub_specialty}
             onChange={handleChange}
          
@@ -288,6 +422,7 @@ function Editprofile(props) {
           </InputGroup>
           </Form.Group>
           </div>
+
           <div class="col-12 ">
           <Form.Group>
           <InputGroup hasValidation>
@@ -352,9 +487,9 @@ function Editprofile(props) {
                     <CheckCircleIcon></CheckCircleIcon>
                     تغییر رمز</button>
                     </div>
-    </form>
-    </Form>
-  </div>
+                   </form>
+                </Form>
+                </div>
               
               </div>
             </div>
