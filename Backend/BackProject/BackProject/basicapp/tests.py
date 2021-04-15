@@ -46,7 +46,6 @@ class DoctorProfileViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
         #test profile details
-        #self.assertEqual(self.doc.user,response.data['user'])
         self.assertEqual(self.doc.specialty,response.data['specialty'])
         self.assertEqual(self.doc.sub_specialty,response.data['sub_specialty'])
 
@@ -138,15 +137,12 @@ class SetDoctorAddressViewTest(TestCase):
             "city":"Sari",
             "detail":"Farhang St."
         }]}),
-            content_type='application/json',headers =auth_headers)
+            content_type='application/json')
 
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
-        #test profile details
-        # #self.assertEqual(self.doc.user,response.data['user'])
-        # self.assertEqual(self.doc.specialty,response.data['specialty'])
-        # self.assertEqual(self.doc.sub_specialty,response.data['sub_specialty'])
+        
 
 class UpdateDoctorAddressViewTest(TestCase):
     
@@ -185,21 +181,21 @@ class UpdateDoctorAddressViewTest(TestCase):
 
         access_token = response_login.data['tokens']['access']
         doc_id = response_login.data['doctor_id']
-        add_id = AddressSerializer(DoctorProfileSerializer(self.doc).data['addresses'][0]).data['id']
+        my_doc = DoctorUser.objects.get(pk=doc_id)
+        first_address = Address.objects.filter(doc=my_doc)[0].id
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
         new_city = "Babol"
         new_detail = "Farmandari"
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
-        response = new_client.put(reverse('update-doctor-address',kwargs={'doc_pk' : doc_id,'add_pk' : add_id}),
+        response = new_client.put(reverse('update-doctor-address',kwargs={'doc_pk' : doc_id,'add_pk' : first_address}),
             data=json.dumps({'city':new_city,'detail':new_detail}),
             content_type='application/json',headers =auth_headers)
 
         
-        updated_doc = DoctorProfileSerializer(DoctorUser.objects.get(user=self.user)).data
-        
+
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         #check updated info
-        self.assertEqual(updated_doc['addresses'][0].city,new_city)
-        self.assertEqual(updated_doc['addresses'][0].detail,new_detail)
+        self.assertEqual(response.data['city'],new_city)
+        self.assertEqual(response.data['detail'],new_detail)
