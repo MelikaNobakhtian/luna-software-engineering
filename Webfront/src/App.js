@@ -12,6 +12,7 @@ import editProfileDoctor from './components/editProfile-doctor/editProfile-docto
 
 
 
+
 function App() {
 
   
@@ -33,7 +34,6 @@ function App() {
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
             <Route path='/doctorProfile' component={editProfileDoctor} />
-
             <Route exact path='/' component={Navbar} />
        
           </Switch>

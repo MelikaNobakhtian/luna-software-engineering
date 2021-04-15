@@ -16,8 +16,15 @@ function Editprofile(props) {
 
     const [user , setUser] = useState({  token : "", userName : "", firstName : "",
         lastName : "",email : "", picture : "", oldPass :"",  newPass:"", newPass2 : "",
-        addresses:[], specialty:"", sub_specialty:""
+        specialty:"", sub_specialty:""
      })
+     {console.log("lll"+user.lastName)}
+     const [address, setAddress] = useState({
+        state:"",city:"" ,detail:""
+     })
+     ;
+    
+     const [variable, setvar] = useState('false');
      
      const [type, setType] = useState('');
      useEffect(() => {
@@ -34,28 +41,31 @@ function Editprofile(props) {
                   picture : API_BASE_URL +response.data.profile_photo,
                   specialty:response.data.specialty,
                   sub_specialty:response.data.sub_specialty,
-                  city:response.data.addresses.city,
-                  state:response.data.addresses.state,
-                  detail:response.data.addresses.detail
+                
                   }));
+                  setAddress({city:response.data.addresses[0].city,
+                    state:response.data.addresses[0].state,
+                    detail:response.data.addresses[0].detail})
+                    ;
+                  if (response.data.addresses.length>0)
+                  setvar("true") ;
               })
               .catch(function (error) {
                   console.log(error);
               });
         }
       },[] );
+      
       const handleChangeInfosClick = (e) => {
         e.preventDefault();
-  
+      
         const payload={
               "username":user.userName,
               "first_name":user.firstName,
               "last_name":user.lastName,
-              "specialty":user.specialty,
-              "sub_specialty":user.sub_specialty
         }
         const back= JSON.stringify(payload)
-        axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile',
+        axios.put(API_BASE_URL+ '/user/'+Cookies.get('userId')+'/update-profile',
         back,{
             headers:{
            "Content-Type":"application/json",
@@ -65,8 +75,6 @@ function Editprofile(props) {
                 console.log(response);
                 if(response.status === 200){
                     console.log(response.status);
-                    setMassage('اطلاعات جدید با موفقیت جایگزین شد')
-                    setOpenSnack(true);
                     Cookies.set('userName',user.userName);
                 }
             })
@@ -75,7 +83,86 @@ function Editprofile(props) {
                 setMassage("نام کاربری از قبل وجود دارد")
                 setOpenSnack(true);
             });
-    }
+    
+
+    const special={
+      "specialty":user.specialty,
+      "sub_specialty":user.sub_specialty
+}
+const backend= JSON.stringify(special)
+axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile',
+backend,{
+    headers:{
+   "Content-Type":"application/json",
+   "Authorization":"Token "+Cookies.get("userToken")}
+    })
+        .then(function (response) {
+        console.log(response);
+        if(response.status === 200){
+            console.log(response.status);
+            setMassage('اطلاعات جدید با موفقیت جایگزین شد')
+            setOpenSnack(true);
+           
+        }
+    })
+    .catch(function (error) {
+        console.log(error);
+       
+    });
+  
+
+  const info={
+    "state":address.state,
+    "city":address.city,
+    "detail":address.detail,
+}
+const backinfo= JSON.stringify(info)
+axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-address'+'1',
+backinfo,{
+  headers:{
+ "Content-Type":"application/json",
+ "Authorization":"Token "+Cookies.get("userToken")}
+  })
+      .then(function (response) {
+      console.log(response);
+      if(response.status === 200){
+          console.log(response.status);
+         
+      }
+  })
+  .catch(function (error) {
+      console.log(error);
+    
+  });
+
+  if(variable===true){
+    const payloadcity={
+      "state":address.state,
+      "city":address.city,
+      "detail":address.detail,
+   
+  }
+  const backcity= JSON.stringify(payloadcity)
+  axios.post(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/set-address',
+  backcity,{
+    headers:{
+   "Content-Type":"application/json",
+   "Authorization":"Token "+Cookies.get("userToken")}
+    })
+        .then(function (response) {
+        console.log(response);
+        if(response.status === 200){
+            console.log(response.status);
+          
+        }
+    })
+    .catch(function (error) {
+        console.log(error);
+        
+    });
+  
+  }
+}
 
   
       const handleChange = (e) => {
@@ -85,6 +172,13 @@ function Editprofile(props) {
             [id] : value
         }))
     }
+    const handleChangeaddress = (e) => {
+      const {id, value} = e.target   
+      setAddress(prevState => ({
+          ...prevState,
+          [id] : value
+      }))
+  }
       
      const [state , setState]=useState(
       {
@@ -194,18 +288,20 @@ function Editprofile(props) {
               <div>
    <Form>
   <form class="row g-3">  
-<div class="col-sm-4">
-    <Form.Group   controlId="formGridName"  >
-          <Form.Label className="mt-3">نام</Form.Label>
+  
+<div class="col-sm-4 ">
+          <Form.Group  controlId="formGridFirstName">
+          <Form.Label className="mt-3">نام </Form.Label>
           <InputGroup hasValidation>
           <Form.Control
             type="text"
-            name="name"
+            name="firstName"
+            id="firstName"
             value={user.firstName}
             onChange={handleChange}
             onBlur={handleChange}
           />
-          <Form.Control.Feedback type="invalid">{""} </Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{"formGridFirstname"} </Form.Control.Feedback>
           </InputGroup>
           </Form.Group>
           </div>
@@ -215,24 +311,26 @@ function Editprofile(props) {
           <InputGroup hasValidation>
           <Form.Control
             type="text"
-            name="last name"
-            value={user.lastname}
+            name="lastname"
+            id="lastName"
+            value={user.lastName}
             onChange={handleChange}
             onBlur={handleChange}
           />
-          <Form.Control.Feedback type="invalid">{""} </Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">{"formGridLastname"} </Form.Control.Feedback>
           </InputGroup>
           </Form.Group>
           </div>
-
+   
           <div class="col-sm-4">
-       <Form.Group  controlId="">
+       <Form.Group  controlId="grid">
           <Form.Label className="mt-3"> نام کاربری</Form.Label>
           <InputGroup hasValidation>
           <Form.Control
             type="text"
-            name="username"
-            value={user.username}
+            name="userName"
+            id="userName"
+            value={user.userName}
             onChange={handleChange}
             onBlur={handleChange}
           />
@@ -246,14 +344,16 @@ function Editprofile(props) {
         <Form.Control controlId="formGridState"
           as="select"
           defaultValue=" choose...."
-          value={user.state}
+          id="state"
+          value={address.state}
           onChange={e => {
             console.log("e.target.value", e.target.value);
-            setUser({...user,state:e.target.value});
+            setAddress({...address,state:e.target.value});
           }}
         >
           <option value="آذربایجان شرقی"> 
-          آذربایجان شرقی </option>
+          آذربایجان شرقی
+           </option>
             <option value="	آذربایجان غربی">
             آذربایجان غربی
             </option>
@@ -354,10 +454,12 @@ function Editprofile(props) {
           <Form.Control
                     type="text"
                     //  placeholder="شهر"
-                    value={user.addresses.city}
-                     onChange={handleChange}/>
+                    id="city"
+                    value={address.city}
+                     onChange={handleChangeaddress}/>
                      </InputGroup>
                      </Form.Group>
+                    
                   </div>
       <div class="col-sm-4">
       <Form.Group>
@@ -366,8 +468,9 @@ function Editprofile(props) {
           <Form.Control
                     type="text"
                     // placeholder="آدرس"
-                    value={user.addresses.detail}
-                    onChange={handleChange}
+                    id="detail"
+                    value={address.detail}
+                    onChange={handleChangeaddress}
                      />
                      </InputGroup>
                      </Form.Group>
@@ -377,7 +480,8 @@ function Editprofile(props) {
         <Form.Label> تخصص خود را انتخاب کنید :</Form.Label>
         <Form.Control as={Col} controlId="formGridState"
           as="select"
-        //   defaultValue=" choose...."
+         defaultValue=" choose...."
+          id="specialty"
           value={user.specialty}
           onChange={e => {
             console.log("e.target.value", e.target.value);
@@ -413,8 +517,9 @@ function Editprofile(props) {
           <InputGroup hasValidation>
           <Form.Control
             type="text"
-            name="username"
-            // placeholder="تخصص"
+            name="sub_specialty"
+            id="sub_specialty"
+            //  placeholder="تخصص"
             value={user.sub_specialty}
             onChange={handleChange}
          
@@ -422,6 +527,7 @@ function Editprofile(props) {
           </InputGroup>
           </Form.Group>
           </div>
+          {console.log("lll"+user.sub_specialty)}
 
           <div class="col-12 ">
           <Form.Group>
@@ -440,8 +546,10 @@ function Editprofile(props) {
                 </Form.Group>
                 </div>
                 <div class="col-12 ">
-                    <button type="submit" class="btn btn-outline-light">ذخیره تغییرات</button>
-                    </div>
+                    <button type="submit" class="btn btn-outline-light" onClick={handleChangeInfosClick}>
+                      <CheckCircleIcon></CheckCircleIcon>
+                      ذخیره تغییرات</button>
+                      </div>
                   <hr></hr>
         <div class="col-sm-4">
          <Form.Group>
