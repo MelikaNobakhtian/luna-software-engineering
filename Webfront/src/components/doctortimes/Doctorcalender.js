@@ -114,8 +114,8 @@ function Doctorcalender() {
                 {hfields.map((hfield, index) => (
                   <div key={index} >
                     <div class="carousel-item-active d-block d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
-                      <BsPlusCircleFill onClick={()=>handleaddhfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
-                    <AiFillMinusCircle onClick={()=>handleremovehfield(index)}></AiFillMinusCircle>
+                      <BsPlusCircleFill onClick={()=>handleaddhfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                    <AiFillMinusCircle onClick={()=>handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
                         <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control " placeholder="8" aria-label="Username"></input>
@@ -193,8 +193,8 @@ function Doctorcalender() {
               {mfields.map((mfield, index) => (
                   <div key={index} >
               <div class="d-block d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
-                <BsPlusCircleFill onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(30px,10vh,30px)", width: "clamp(30px,10vw,30px)" }}></BsPlusCircleFill>
-                <AiFillMinusCircle onClick={()=>handleremovemfield(index)}></AiFillMinusCircle>
+                <BsPlusCircleFill onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                <AiFillMinusCircle onClick={()=>handleremovemfield(index)}  class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                 <div class="input-group   input-group-sm " dir="ltr">
                   <input type="number" name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
                     class="form-control " placeholder="8" aria-label="Username"></input>
