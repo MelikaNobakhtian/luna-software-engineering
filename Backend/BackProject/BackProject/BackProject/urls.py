@@ -31,9 +31,15 @@ urlpatterns = [
     path('doctor/<int:pk>/update-profile/',UpdateDoctorProfileView.as_view(), name="update-doctor-profile"),
     path('doctor/<doc_pk>/update-address/<add_pk>/',UpdateDoctorAddressView.as_view(), name="update-doctor-address"),
     path('doctor/<int:pk>/set-address/',SetDoctorAddressView.as_view(), name="set-doctor-address"),
-    path('user/<int:pk>/change-password', ChangePasswordView.as_view(), name='change-password'),
-    path('user/<int:pk>/update-profile', UpdateUserProfileView.as_view(), name='update-profile'),
-    path('user/<int:pk>',UserProfileView.as_view(),name='user-profile'),
+    path('user/<int:pk>/change-password/', ChangePasswordView.as_view(), name='change-password'),
+    path('user/<int:pk>/update-profile/', UpdateUserProfileView.as_view(), name='update-profile'),
+    path('user/<int:pk>/',UserProfileView.as_view(),name='user-profile'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('request-reset-email/', RequestPasswordResetEmail.as_view(),
+         name="request-reset-email"),
+    path('password-reset/<uidb64>/<token>/',
+         PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
+    path('password-reset-complete/', SetNewPasswordAPIView.as_view(),
+         name='password-reset-complete'),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
