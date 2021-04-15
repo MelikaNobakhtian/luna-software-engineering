@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from rest_framework import generics, status, views, permissions
 from .serializers import *
 from rest_framework.response import Response
@@ -9,8 +9,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.shortcuts import redirect
 from django.http import HttpResponsePermanentRedirect
+from rest_framework.permissions import IsAuthenticated
 import os
 
 
@@ -85,3 +85,74 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DoctorProfileView(APIView):
+    
+    def get_object(self, pk):
+        try:
+            return DoctorUser.objects.get(pk=pk)
+        except DoctorUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        docprofile = self.get_object(pk)
+        serializer = DoctorProfileSerializer(docprofile)
+        return Response(serializer.data)
+
+class UpdateDoctorProfileView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = DoctorUser.objects.all()
+
+    def update(self,request,pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        doc = get_object_or_404(queryset,pk=pk)
+        self.check_object_permissions(self.request, doc)
+
+        serializer = self.serializer_class(doc,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateDoctorAddressView(generics.UpdateAPIView):
+    serializer_class = UpdateDoctorAddressSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = Address.objects.all()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset,pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self,request,doc_pk,add_pk,*args,**kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        address = get_object_or_404(queryset,pk=add_pk)
+        doc = DoctorUser.objects.get(pk=doc_pk)
+        self.check_object_permissions(self.request, doc)
+
+        serializer = self.serializer_class(address,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+
+class SetDoctorAddressView(APIView):
+
+    def post(self,request,pk):
+        
+        doc = DoctorUser.objects.get(pk=pk)
+        count = request.data.get("count")
+
+        counter = 0
+        while counter < count:
+            add = request.data.get('addresses')[counter]
+            new_add = Address(state=add['state'],doc=doc,city=add['city'],detail=add['detail'])
+            new_add.save()
+            counter+=1
+            
+        doc_add = Address.objects.filter(doc=doc)
+        add_list = AddressSerializer(doc_add,many=True)
+        doc_info = DoctorProfileSerializer(doc)
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})

@@ -40,7 +40,7 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=68, min_length=6, write_only=True)
     tokens = serializers.SerializerMethodField()
-    is_doctor = serializers.BooleanField()
+    is_doctor = serializers.BooleanField(read_only=True)
     doctor_id = serializers.IntegerField(read_only=True)
     user_id = serializers.IntegerField(read_only=True)
 
@@ -87,3 +87,33 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
+class DoctorProfileSerializer(serializers.ModelSerializer):
+    addresses = serializers.SerializerMethodField()
+    #user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = DoctorUser
+        fields = ['id','user','specialty','sub_specialty','addresses']
+
+    def get_addresses(self,obj):
+        add_list = Address.objects.filter(doc=obj)
+        adds = AddressSerializer(add_list,many=True)
+        return adds.data
+
+class UpdateDoctorProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DoctorUser
+        fields = ['specialty','sub_specialty']
+
+class UpdateDoctorAddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = ['state','city','detail']
+
+class AddressSerializer(serializers.ModelSerializer):
+    #doc = DoctorProfileSerializer(read_only=True)
+    class Meta:
+        model = Address
+        fields = ['state','doc','city','detail','id']
