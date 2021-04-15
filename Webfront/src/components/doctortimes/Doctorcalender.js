@@ -33,13 +33,13 @@ function Doctorcalender() {
     sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
   }
   const handleremovehfield=(index)=>{
-    
-   if(hfields.length>1){   
+
+   if(hfields.length>1){
     const values=[...hfields];
     values.splice(index,1);
     sethfields(values);
    }
-    
+
 
   }
 
@@ -47,7 +47,7 @@ function Doctorcalender() {
     const values=[...mfields];
     values[index][event.target.name]=event.target.value;
     setmfields(values);
-   
+
   }
 
   const handleaddmfield=()=>{
@@ -90,21 +90,29 @@ function Doctorcalender() {
         <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column align-items-start  col-sm-auto col-9">
+            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column align-items-start  col-sm-auto col-11">
 
-
-              <div class="row  align-items-center col-auto ms-4">
+                   {/* mt - 2 وسط وسط نیست */}
+              <div class="row  align-items-start col-auto ms-4">
                 <div class="col-auto">
                   <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
                 </div>
                 {/* class="col-2 me-n3 " */}
                 <div class=" col-auto row align-items-center"
-                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}}
                 >
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
                   <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
+                
+              </div>
+              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)"}} class="col-1-lg col-1-sm  col-2 d-flex flex-row-reverse align-items-end d-block mb-2 d-sm-none d-md-block d-lg-none round-3 ">
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-12 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              {/* <div class="align-self-center justify-self-center"> */} 
+              تایید
+              {/* {/* </div> */}
+              </Button>
               </div>
 
               {/* تا sm */}
@@ -149,8 +157,8 @@ function Doctorcalender() {
 
             </div>
             <div class="p-3 border d-flex col-sm-auto col-12 flex-column border
-             mt-4 overflow-auto 
-         
+             mt-4 overflow-auto
+
          " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
@@ -170,29 +178,37 @@ function Doctorcalender() {
               </div>
             </div>
 
-            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column col-sm-auto col-9 align-items-start mt-3 ">
+            <div class="d-flex flex-column flex-lg-row  flex-md-column flex-sm-row flex-column col-sm-auto col-11 align-items-start mt-3 ">
 
-
-              <div class="row  align-items-start col-auto ms-4">
+              <div class="d-flex flex-row  mt-2 col-auto ms-4 ">
+              <div class="row  align-items-start">
                 <div class="col-auto">
                   <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
                 </div>
                 {/* class="col-2 me-n3 " */}
                 {/* algin item mishe bardashte baraye balayi ham */}
                 <div class=" col-auto row algin-items-center"
-                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}} 
+                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}}
                 >
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
                   <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
               </div>
-
+              {/* ms-auto me-auto nashod */}
+              <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)"}} class="col-1-lg col-1-sm  col-2 d-flex flex-row-reverse align-items-end d-block mb-2 d-sm-none d-md-block d-lg-none round-3 ">
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-2 col-12 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              {/* <div class="align-self-center justify-self-center"> */} 
+              تایید
+              {/* {/* </div> */}
+              </Button>
+              </div>
+              </div>
               {/* تا sm */}
-              <div>  
+              <div class="d-flex flex-row">
               {mfields.map((mfield, index) => (
                   <div key={index} >
-              <div class="d-block d-flex flex-row mt-lg-0 mt-md-3 mt-sm-0 mt-3 align-items-center ">
+              <div class="d-block d-flex flex-row mt-lg-2 mt-md-3 mt-sm-2 mt-3 align-items-center col-12 ">
                 <BsPlusCircleFill onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                 <AiFillMinusCircle onClick={()=>handleremovemfield(index)}  class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                 <div class="input-group   input-group-sm " dir="ltr">
@@ -208,17 +224,20 @@ function Doctorcalender() {
                   <input type="number" name="endd" value={mfield.endd} onChange={(event) => handlemstartchange(index, event)}
                     class="form-control" placeholder="30" aria-label="Server"></input>
                 </div>
+
               </div>
+
               </div>))}
+
               </div>
-              
+
 
 
             </div>
 
             <div class="p-3 border d-flex  col-sm-auto col-12 flex-column border
-            mt-4 overflow-auto 
-         
+            mt-4 overflow-auto
+
          " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
