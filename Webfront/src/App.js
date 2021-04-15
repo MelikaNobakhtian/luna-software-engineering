@@ -33,7 +33,7 @@ function App() {
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
             <Route exact path='/' component={Navbar} />
-            <Route path='/doctorcal' component={Doctorcalender} />
+            <Route path='/doctorcal' ><Navbar></Navbar><Doctorcalender></Doctorcalender> </Route>
        
           </Switch>
           </div>

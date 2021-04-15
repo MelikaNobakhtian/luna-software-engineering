@@ -47,11 +47,11 @@ function Navbar() {
       <ul className="navbar-nav  "  style={{backgroundColor:"#E2FBF9"}} >
       <li className="nav-item dropdown" data-bs-toggle="collapse" dir ="ltr"  >
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-           مهندس هستید؟
+           پزشک هستید؟
           </a>
           <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a className="dropdown-item" href="#">ثبت نام مهندس</a></li>
-            <li><a className="dropdown-item" href="#">ورود مهندس</a></li>
+            <li><a className="dropdown-item" href="#">ثبت نام پزشک</a></li>
+            <li><a className="dropdown-item" href="#">ورود پزشک</a></li>
         
           </ul>
         </li>

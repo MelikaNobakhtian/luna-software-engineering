@@ -82,7 +82,7 @@ function Doctorcalender() {
   }
   return (
     <div >
-      <Navbar></Navbar>
+     
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
