@@ -9,6 +9,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import login from './components/login/login';
 import signUp from './components/login/signUp';
 import editProfileDoctor from './components/editProfile-doctor/editProfile-doctor';
+import UserProfile from './components/userProfile/userProfile'
 
 
 
@@ -31,10 +32,12 @@ function App() {
     <Router>
        <div className="text-right" style={{direction:"rtl"}}>
           <Switch>
+            <Route exact path='/' component={Navbar} />
             <Route path='/signup' component={signUp} />
             <Route path='/login' component={login} />
             <Route path='/doctorProfile' component={editProfileDoctor} />
-            <Route exact path='/' component={Navbar} />
+            <Route path='/userProfile' component={UserProfile} />
+            
        
           </Switch>
           </div>

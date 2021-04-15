@@ -89,7 +89,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
 class DoctorProfileSerializer(serializers.ModelSerializer):
     addresses = serializers.SerializerMethodField()
-    #user = UserProfileSerializer(read_only=True)
+    user = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = DoctorUser
@@ -117,3 +117,21 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ['state','doc','city','detail','id']
+
+class ChangePasswordSerializer(serializers.Serializer):
+
+    model = User
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+class UpdateUserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username','first_name','last_name','profile_photo']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = '__all__'

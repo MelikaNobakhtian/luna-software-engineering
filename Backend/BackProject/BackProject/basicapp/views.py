@@ -10,8 +10,10 @@ from django.urls import reverse
 import jwt
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
-from rest_framework.permissions import IsAuthenticated
 import os
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 
 
 class RegisterView(generics.GenericAPIView):
@@ -156,3 +158,64 @@ class SetDoctorAddressView(APIView):
         add_list = AddressSerializer(doc_add,many=True)
         doc_info = DoctorProfileSerializer(doc)
         return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
+
+class ChangePasswordView(generics.UpdateAPIView):
+
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self,queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self,request,pk,*args,**kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password" : ["Wrong Password"]},status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            response = {
+                'status' : 'success',
+                'message' : 'Password updated succesfully!',
+            }
+
+            return Response(response,status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateUserProfileView(generics.UpdateAPIView):
+    serializer_class = UpdateUserProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = get_object_or_404(queryset,pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def update(self,request,pk,*args,**kwargs):
+        user = self.get_object()
+        serializer = self.serializer_class(user,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'failure':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+
+class UserProfileView(APIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    
+    def get_object(self, pk):
+        obj = get_object_or_404(self.queryset,pk=pk)
+        return obj
+
+    def get(self, request, pk, format=None):
+        userprofile = self.get_object(pk)
+        serializer = self.serializer_class(userprofile)
+        return Response(serializer.data)
