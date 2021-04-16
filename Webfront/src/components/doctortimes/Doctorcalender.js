@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { RangeDatePicker } from "jalali-react-datepicker";
@@ -18,11 +16,13 @@ import { AiFillMinusCircle } from "react-icons/ai";
 
 //  بعدا بین md , sm هم فرق و تقویم نشون
 function Doctorcalender() {
-  const [hozoris, sethozoris] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }, { id: 2, time: "8:30" }, { id: 3, time: "9:00" }, { id: 4, time: "10:00" }, { id: 5, time: "11:00" }, { id: 6, time: "12:00" }, { id: 7, time: "13:00" }, { id: 8, time: "14:00" }]);
-  const [magazis, setmagazis] = useState([{ id: 0, time: "8:00" }, { id: 1, time: "8:20" }]);
+  const [hozoris, sethozoris] = useState([]);
+  const [magazis, setmagazis] = useState([]);
   const [tmagazi, settmagazi] = useState("");
   const [hfields, sethfields] = useState([{ start: "", startt: "", end: "", endd: "" }])
   const [mfields, setmfields] = useState([{ start: "", startt: "", end: "", endd: "" }])
+  const [hduration,sethduration]=useState("");
+  const [mduration,setmduration]=useState("");
   const handlehstartchange = (index, event) => {
     const values=[...hfields];
     values[index][event.target.name]=event.target.value;
@@ -32,7 +32,56 @@ function Doctorcalender() {
     // console.log(event + " event")
   }
   const handleaddhfield=()=>{
-    sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
+    var time=parseInt(hfields[0].start);
+    console.log(time+" start")
+    var timee=parseInt(hfields[0].startt);   
+    const endt=parseInt(hfields[0].end); 
+    const enddt=parseInt(hfields[0].endd)
+    const duration=parseInt(hduration)
+  
+    var values=[...hozoris];
+    var finish=false;
+    var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
+     for(var i=time;!finish;i+=(duration/60)){ 
+      var check=parseInt(duration+timee)
+      var timecopy=time 
+      var time2=check
+      console.log(time2+"time2")
+      if(time2>=60){
+        var plus=Math.floor(time2/60)
+         time2=time2%60
+         console.log(time2+" time2 2")
+        timecopy+=plus
+      }
+      var noww=timecopy+":"+time2
+      var dur="00:"+duration
+      if(moment(noww,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
+      finish=true;
+      break;
+      }
+      console.log(i+"i")
+       console.log("to for")
+       if(timee===0)
+         var thenn=time+":"+timee+"0"
+        else
+        var thenn=time+":"+timee
+         if(timee>=60){
+           var plus=Math.floor(timee/60)
+           timee=timee-60
+           time+=plus
+         }  
+         if(timee===0)
+         var thistime=time+":"+timee+"0"
+        else
+        var thistime=time+":"+timee   
+        values.push({time:thistime})
+        console.log(parseInt(duration+timee)+" parseInt")
+        timee=parseInt(duration+timee)
+        var now=time+":"+timee
+     }
+     
+     sethozoris(values)
+    // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
   }
   const handleremovehfield=(index)=>{
 
@@ -53,7 +102,57 @@ function Doctorcalender() {
   }
 
   const handleaddmfield=()=>{
-    setmfields([...mfields,{ start: "", startt: "", end: "", endd: "" }]);
+   
+      var time=parseInt(mfields[0].start);
+      console.log(time+" start")
+      var timee=parseInt(mfields[0].startt);   
+      const endt=parseInt(mfields[0].end); 
+      const enddt=parseInt(mfields[0].endd)
+      const duration=parseInt(hduration)
+    
+      var values=[...magazis];
+      var finish=false;
+      var mend=parseInt(mfields[0].end)+":"+parseInt(mfields[0].endd);
+       for(var i=time;!finish;i+=(duration/60)){ 
+        var check=parseInt(duration+timee)
+        var timecopy=time 
+        var time2=check
+        console.log(time2+"time2")
+        if(time2>=60){
+          var plus=Math.floor(time2/60)
+           time2=time2%60
+           console.log(time2+" time2 2")
+          timecopy+=plus
+        }
+        var noww=timecopy+":"+time2
+        var dur="00:"+duration
+        if(moment(noww,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
+        finish=true;
+        break;
+        }
+        console.log(i+"i")
+         console.log("to for")
+         if(timee===0)
+           var thenn=time+":"+timee+"0"
+          else
+          var thenn=time+":"+timee
+           if(timee>=60){
+             var plus=Math.floor(timee/60)
+             timee=timee-60
+             time+=plus
+           }  
+           if(timee===0)
+           var thistime=time+":"+timee+"0"
+          else
+          var thistime=time+":"+timee   
+          values.push({time:thistime})
+          console.log(parseInt(duration+timee)+" parseInt")
+          timee=parseInt(duration+timee)
+          var now=time+":"+timee
+       }
+       
+       setmagazis(values)
+    
   }
   const handleremovemfield=(index)=>{
      if(mfields.length>1){
@@ -88,7 +187,7 @@ function Doctorcalender() {
       {/* وقت absolute dige flex end o ina taghiri ijad na */}
       {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
+      <div class="d-flex mb-3 p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
         <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
           <div>
             {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
@@ -106,7 +205,7 @@ function Doctorcalender() {
                 >
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                  <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                  <input id="hozori" value={hduration} onChange={(event)=>sethduration(event.target.value)} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
                 
               </div>
@@ -127,7 +226,7 @@ function Doctorcalender() {
                   <div key={index} >
                   {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3 */}
                     <div class="carousel-item-active d-block d-flex flex-row mt-3 align-items-center ">
-                      <BsPlusCircleFill onClick={()=>handleaddhfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <BsPlusCircleFill onClick={()=>handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                     <AiFillMinusCircle onClick={()=>handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
                         <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
@@ -167,7 +266,7 @@ function Doctorcalender() {
          " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
-                {magazis.map((val) => {
+                {hozoris!=[]?hozoris.map((val,index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
                   return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
@@ -177,7 +276,7 @@ function Doctorcalender() {
                     }}
                     style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
                   )
-                })}
+                }):null}
 
 
               </div>
@@ -197,7 +296,7 @@ function Doctorcalender() {
                 >
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                  <input id="hozori" class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                  <input id="hozori" value={mduration} onChange={(val)=>setmduration(val.target.value)} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
               </div>
               {/* ms-auto me-auto nashod */}
@@ -313,8 +412,9 @@ function Doctorcalender() {
         </div>
 
 
-
+        
       </div>
+   
 
 
 
