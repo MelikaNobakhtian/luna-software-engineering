@@ -7,7 +7,7 @@ import moment from 'moment-jalaali'
 import Navbar from "../../Navbar"
 import "./Doctortimes.css";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import DatePicker, { Calendar } from "react-modern-calendar-datepicker";
+import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import { BsPlusCircleFill } from "react-icons/bs";
@@ -209,6 +209,7 @@ function Doctorcalender() {
   const sessionchange = (index) => {
     console.log("request back")
   }
+  
   return (
     <div >
      
@@ -425,6 +426,8 @@ function Doctorcalender() {
             calss="mb-3"
             borderColor="green"
             colorPrimary="#0fbcf9"
+            isPersian={true}
+            minimumDate={utils("fa").getToday()}
             calendarTodayClassName="custom-today-day"
             colorPrimaryLight="rgba(75, 207, 250, 0.4)"
             calendarClassName="responsive-calendar custom-calendar"
