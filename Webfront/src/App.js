@@ -11,6 +11,7 @@ import editProfileDoctor from './components/editProfile-doctor/editProfile-docto
 import UserProfile from './components/userProfile/userProfile'
 import ForgotPassword from './components/login/forgotPassword';
 import Verification from  './components/login/verification';
+import Doctorcalender from './components/doctortimes/Doctorcalender';
  
 
 
@@ -40,6 +41,8 @@ function App() {
             <Route path='/userProfile' component={UserProfile} />
             <Route path='/forgotPassword/:tokenId/:token' component={ForgotPassword} />
             <Route path='/verification/:tokenId' component={Verification} />
+            <Route path='/doctorcal' ><Navbar></Navbar><Doctorcalender></Doctorcalender> </Route>
+
        
           </Switch>
         </div>
