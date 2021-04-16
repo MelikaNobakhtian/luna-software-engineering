@@ -126,6 +126,12 @@ class SetNewPasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)
 
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class DoctorProfileSerializer(serializers.ModelSerializer):
     addresses = serializers.SerializerMethodField()
     user = UserProfileSerializer(read_only=True)
@@ -169,8 +175,3 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username','first_name','last_name','profile_photo']
 
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = '__all__'

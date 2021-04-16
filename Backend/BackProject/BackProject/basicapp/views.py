@@ -12,7 +12,7 @@ from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 import os
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
+#from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
@@ -31,9 +31,10 @@ class RegisterView(generics.GenericAPIView):
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
         token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+        #current_site = get_current_site(request).domain
+        current_site = 'localhost:3000'
+        #relativeLink = reverse('verification')
+        absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.username + \
             ' Use the link below to verify your email \n' + absurl
         data = {'email_body': email_body, 'to_email': user.email,
@@ -54,9 +55,10 @@ class RegisterDoctorView(generics.GenericAPIView):
         new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+        #current_site = get_current_site(request).domain
+        current_site = 'localhost:3000'
+        #relativeLink = reverse('verification')
+        absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.first_name+' '+user.last_name + \
             ' Use the link below to verify your email \n' + absurl
         data = {'email_body': email_body, 'to_email': user.email,
@@ -119,7 +121,7 @@ class UpdateDoctorProfileView(generics.UpdateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+        return Response({'failure':True,'message':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateDoctorAddressView(generics.UpdateAPIView):
     serializer_class = UpdateDoctorAddressSerializer
@@ -159,6 +161,7 @@ class SetDoctorAddressView(APIView):
             counter+=1
             
         doc_add = Address.objects.filter(doc=doc)
+        doc.save()
         add_list = AddressSerializer(doc_add,many=True)
         doc_info = DoctorProfileSerializer(doc)
         return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
@@ -231,16 +234,16 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
 
         email = request.data.get('email', '')
-
+        print(email)
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            current_site = get_current_site(
-                request=request).domain
-            relativeLink = reverse(
-                'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
-            absurl = 'http://'+current_site + relativeLink
+            # current_site = get_current_site(
+            #     request=request).domain
+            # relativeLink = reverse(
+            #     'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+            absurl = 'http://localhost:3000/forgotpassword/' + uidb64 +'/'+token
             email_body = 'Hello, \n Use link below to reset your password  \n' + \
                 absurl
             data = {'email_body': email_body, 'to_email': user.email,
@@ -273,6 +276,7 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):
+        print(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)

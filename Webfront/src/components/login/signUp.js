@@ -46,25 +46,49 @@ function SignUp(props) {
   //const [number, setNumber] = useState("");
   const [fileErr, setFileErr] = useState(null);
   const [isDoctor, setIsDoctor] = useState(0);
-
+  const [state, setState] = useState({
+    navigate: false,
+    file: null,
+  });
+  const uploadedImage = React.useRef(null);
+  const imageUploader = React.useRef(null);
+  const handleImageUpload = (e) => {
+    setState({ file: e.target.files[0] });
+    const [file] = e.target.files;
+    if (file) {
+      const reader = new FileReader();
+      // const { current } = uploadedImage;
+      // current.file = file;
+      
+      reader.readAsDataURL(file);
+    }
+  };
   function handleSubmit(event) {
     event.preventDefault();
     setEmailErr("");
     setPassErr("");
-
+    let formd = new FormData();
     if (isDoctor % 2 === 1) {
-      const payload = {
-        username: username,
-        email: email,
-        password: passwords.password,
-        password2: passwords.confirmPassword,
-        first_name: name,
-        last_name: lastname,
-        file: selectedFile,
-      };
-      const back = JSON.stringify(payload);
+      
+      formd.append("username",username)
+      formd.append("email",email)
+      formd.append("password",passwords.password)
+      formd.append("password2",passwords.confirmPassword)
+      formd.append("first_name",name)
+      formd.append("last_name",lastname)
+      formd.append("degree",state.file)
+      // const payload = {
+      //   username: username,
+      //   email: email,
+      //   password: passwords.password,
+      //   password2: passwords.confirmPassword,
+      //   first_name: name,
+      //   last_name: lastname,
+      //   degree: selectedFile,
+      // };
+      //const back = JSON.stringify(payload);
       axios
-        .post(API_BASE_URL + "/register-doctor/", back, {
+        .post(API_BASE_URL + "/register-doctor/", formd, {
           headers: { "content-type": "application/json" },
         })
         .then(function (response) {
@@ -345,24 +369,23 @@ function SignUp(props) {
                 من پزشک هستم
               </label>
             </div>
-            <Form.Group>
-              <Form.File
-                className="position-relative"
-                type="file"
-                required
-                isInvalid={Boolean(fileErr)}
-                name="file"
-                label="مدرک پزشک "
-                value={selectedFile}
-                onChange={(e) => validatorfile(e.target.value)}
-                onBlur={(e) => validatorfile(e.target.value)}
-                feedback={fileErr}
-              />
-
-              <Form.Control.Feedback type="invalid">
-                {fileErr}
-              </Form.Control.Feedback>
-            </Form.Group>
+            <div class="col-12 ">
+                      <input
+                        class="form-control"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        ref={imageUploader}
+                        style={{ display: "none", color: "white" }}
+                      />
+                      <div
+                        className="btn btn-outline-light "
+                        onClick={() => imageUploader.current.click()}
+                      >
+                        
+                        انتخاب عکس 
+                      </div>
+                    </div>
 
             <div>
             <Button className="mt-3" block type="submit" variant="success">
