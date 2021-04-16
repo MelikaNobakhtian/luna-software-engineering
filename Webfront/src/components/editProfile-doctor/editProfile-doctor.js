@@ -43,15 +43,16 @@ function Editprofile(props) {
                   sub_specialty:response.data.sub_specialty,
                 
                   }));
+                  if(response.data.addresses.length != 0){
                   setAddress(prevState => ({ 
                     ...prevState,city:response.data.addresses[0].city,
                     state:response.data.addresses[0].state,
                     detail:response.data.addresses[0].detail}));
-                    
+                  }  
                     
                   if (response.data.addresses.length>0)
                   setvar("true") ;
-                  console.log(response.data.addresses[0].city)
+                  //console.log(response.data.addresses[0].city)
 
               })
               .catch(function (error) {
@@ -68,7 +69,8 @@ function Editprofile(props) {
         formdata.append("username", user.userName);
         formdata.append("first_name", user.firstName);
         formdata.append("last_name", user.lastName);
-        formdata.append("profile_photo", state.file);
+        if(state.file != null)
+          formdata.append("profile_photo", state.file);
         console.log(formdata);
         // const payload={
         //       "username":user.userName,
@@ -120,12 +122,17 @@ backend,{
        
     });
   
-
-  const info={
-    "state":address.state,
-    "city":address.city,
-    "detail":address.detail,
-}
+if (variable === false){
+  var info=[]
+  if (address.state != null)
+    info.push({"state":address.state})
+  if (address.city != null)
+    info.push({"city":address.city})
+  if (address.detail != null)
+    info.push({"detail":address.detail})
+    
+    
+if (info.length != 0 ){
 const backinfo= JSON.stringify(info)
 axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-address/'+'48/',
 backinfo,{
@@ -145,14 +152,15 @@ backinfo,{
       console.log(error);
     
   });
-
-  if(variable===true){
+}
+}
+if(variable===true){
     const payloadcity={
       "state":address.state,
       "city":address.city,
       "detail":address.detail,
-   
-  }
+    }
+  
   const backcity= JSON.stringify(payloadcity)
   axios.post(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/set-address/',
   backcity,{
@@ -173,6 +181,7 @@ backinfo,{
     });
   
   }
+
 }
 
   

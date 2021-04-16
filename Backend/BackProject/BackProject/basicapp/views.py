@@ -55,9 +55,10 @@ class RegisterDoctorView(generics.GenericAPIView):
         new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+        #current_site = get_current_site(request).domain
+        current_site = 'localhost:3000'
+        #relativeLink = reverse('verification')
+        absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.first_name+' '+user.last_name + \
             ' Use the link below to verify your email \n' + absurl
         data = {'email_body': email_body, 'to_email': user.email,

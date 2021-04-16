@@ -49,16 +49,18 @@ function UserProfile(props) {
     formdata.append("username", user.userName);
     formdata.append("first_name", user.firstName);
     formdata.append("last_name", user.lastName);
-    formdata.append("profile_photo", state.file);
+    if(state.file != null)
+      formdata.append("profile_photo", state.file);
+    
     console.log(formdata);
     axios
       .put(
-        API_BASE_URL + "/user/" + Cookies.get("userId") + "/update-profile",
+        API_BASE_URL + "/user/" + Cookies.get("userId") + "/update-profile/",
         formdata,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Token " + Cookies.get("userToken"),
+            Authorization: "Bearer " + Cookies.get("userTokenA"),
           },
         }
       )
@@ -77,8 +79,7 @@ function UserProfile(props) {
       })
       .catch(function (error) {
         console.log(error);
-        setMassage("نام کاربری از قبل وجود دارد");
-        setOpenSnack(true);
+        
       });
   };
 
@@ -116,12 +117,12 @@ function UserProfile(props) {
 
       axios
         .put(
-          API_BASE_URL + "/user/" + Cookies.get("userId") + "/change-password",
+          API_BASE_URL + "/user/" + Cookies.get("userId") + "/change-password/",
           back,
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + Cookies.get("userBearer"),
+              Authorization: "Bearer " + Cookies.get("userTokenA"),
             },
           }
         )
@@ -181,13 +182,13 @@ function UserProfile(props) {
   };
 
   return (
-    <div className="main-content">
+    <div className="main-content bg-dark">
       <div className="container-fluid p-2">
         <div className="d-flex flex-wrap">
           <div className="col-12 col-md-4 ">
             <div
-              className="card border-dark border-2 text-white p-2 m-1"
-              style={{ backgroundColor: "#5F725C" }}
+              className="card border-light border-2 text-white p-2 m-1"
+              style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}
             >
               <div class="card-header d-flex justify-content-center">
                 <div className="text-center">
@@ -212,8 +213,8 @@ function UserProfile(props) {
           </div>
           <div className="col-12 col-md-8 ">
             <div
-              className="card border-dark border-2 text-white p-2 m-1"
-              style={{ backgroundColor: "#4A9C97" }}
+              className="card border-light border-2 text-white p-2 m-1"
+              style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}
             >
               <div class="card-header d-flex">
                 <h4>اطلاعات شخصی</h4>
