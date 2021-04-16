@@ -69,7 +69,22 @@ function Login(props) {
         console.log(error);
       });
   }
-
+      function validatorusername(value){
+        setUserName(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کردن نام کاربری ضروری است  !";
+        setUsernameErr(errors)
+      }
+     
+      function validatorpass(value){
+        setPasswords(value);
+        let errors=""
+        if(value.length === 0)
+        errors ="پر کردن کلمه عبور ضروری است  !";
+        setPassErr(errors)
+      }
+     
   const redirectToRegister = () => {
     props.history.push("/signup");
   };
@@ -129,6 +144,7 @@ function Login(props) {
     }
     setPassErr(errors);
   }
+
 
   return (
     <div className="d-flex justify-content-center background">

@@ -11,6 +11,7 @@ import editProfileDoctor from './components/editProfile-doctor/editProfile-docto
 import UserProfile from './components/userProfile/userProfile'
 import ForgotPassword from './components/login/forgotPassword';
 
+ 
 
 
 
@@ -34,11 +35,10 @@ function App() {
           <Switch>
             <Route path='/' component={Navbar} exact={true}/>
             <Route path='/signup' component={signUp} />
-            <Route path='/login' component={login} />
+            <Route path='/login' component={login} /> 
             <Route path='/doctorProfile' component={editProfileDoctor} />
             <Route path='/userProfile' component={UserProfile} />
             <Route path='/forgotPassword/:tokenId' component={ForgotPassword} />
-            
        
           </Switch>
         </div>
