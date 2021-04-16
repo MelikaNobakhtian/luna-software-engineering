@@ -12,7 +12,7 @@ from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
 import os
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
+#from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
@@ -31,9 +31,10 @@ class RegisterView(generics.GenericAPIView):
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
         token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('email-verify')
-        absurl = 'http://'+current_site+relativeLink+"?token="+str(token)
+        #current_site = get_current_site(request).domain
+        current_site = 'localhost:3000'
+        #relativeLink = reverse('verification')
+        absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.username + \
             ' Use the link below to verify your email \n' + absurl
         data = {'email_body': email_body, 'to_email': user.email,

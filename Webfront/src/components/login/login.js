@@ -55,9 +55,10 @@ function Login(props) {
         headers: { "content-type": "application/json" },
       })
       .then(function (response) {
+        console.log(response)
         if (response.status === 200) {
-          Cookies.set("userTokenR", response.data.token.refresh);
-          Cookies.set("userTokenA", response.data.token.access);
+          Cookies.set("userTokenR", response.data.tokens.refresh);
+          Cookies.set("userTokenA", response.data.tokens.access);
           Cookies.set("userId", response.data.user_id);
           Cookies.set("doctorId", response.data.doctor_id);
           //redirectToHome();
@@ -70,11 +71,11 @@ function Login(props) {
       });
   }
       function validatorusername(value){
-        setUserName(value);
+        setEmail(value);
         let errors=""
         if(value.length === 0)
-        errors ="پر کردن نام کاربری ضروری است  !";
-        setUsernameErr(errors)
+        errors ="پر کردن ایمیل ضروری است  !";
+        setEmailErr(errors)
       }
      
       function validatorpass(value){
@@ -137,7 +138,7 @@ function Login(props) {
   }
   const pattern = /^((?=.*[0-9]{1,})|(?=.*[!.@#$&*-_]{1,}))(?=.*[a-z]{1,}).{8,}$/;
   function validatorpass(values) {
-    setPasswords({ ...passwords, password: values });
+    setPasswords(values);
     let errors = "";
     if (!pattern.test(String(values).toLowerCase())) {
       errors = "پسورد صحیح را وارد کنید !";
@@ -214,7 +215,7 @@ function Login(props) {
                 data-bs-target="#staticBackdrop"
                 style={{ color: "tomato" }}
               >
-                رمز خود را ٝراموش کرده‌اید؟
+                رمز خود را فراموش کرده‌اید؟
               </span>
             </Form.Group>
 

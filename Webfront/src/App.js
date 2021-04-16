@@ -10,7 +10,7 @@ import signUp from './components/login/signUp';
 import editProfileDoctor from './components/editProfile-doctor/editProfile-doctor';
 import UserProfile from './components/userProfile/userProfile'
 import ForgotPassword from './components/login/forgotPassword';
-
+import Verification from  './components/login/verification';
  
 
 
@@ -39,6 +39,7 @@ function App() {
             <Route path='/doctorProfile' component={editProfileDoctor} />
             <Route path='/userProfile' component={UserProfile} />
             <Route path='/forgotPassword/:tokenId' component={ForgotPassword} />
+            <Route path='/verification/:tokenId' component={Verification} />
        
           </Switch>
         </div>
