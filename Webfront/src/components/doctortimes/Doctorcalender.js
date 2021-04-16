@@ -405,7 +405,7 @@ function Doctorcalender() {
               </div>
               {/* d-block mb-3 d-sm-none d-md-block d-lg-none  */}
               <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"#05668D",borderRadius:100,borderColor:"#05668D",position:"relative"}}>
               {/* <div class="align-self-center justify-self-center"> */} 
               تایید
               {/* {/* </div> */}
@@ -418,10 +418,10 @@ function Doctorcalender() {
               <div>
                 {hfields.map((hfield, index) => (
                   <div key={index} >
-                  {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3 */}
-                    <div class="carousel-item-active d-block d-flex flex-row mt-3 align-items-center ">
-                      <BsPlusCircleFill onClick={()=>handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                    <AiFillMinusCircle onClick={()=>handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
+                  {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3      col-lg-11 mx-auto*/}
+                    <div class="carousel-item-active  d-block d-flex flex-row mt-3 align-items-center ">
+                      <BsPlusCircleFill color="gray" onClick={()=>handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></BsPlusCircleFill>
+                    <AiFillMinusCircle   color="gray" onClick={()=>handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
                         <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control " placeholder="8" aria-label="Username"></input>
@@ -457,18 +457,18 @@ function Doctorcalender() {
             <div class="p-3 border d-flex col-sm-auto col-12 flex-column border
              mt-4 overflow-auto
 
-         " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
+         " style={{ borderRadius: 10, backgroundColor:"#F8F8F0", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
                 {hozoris!=[]?hozoris.map((val,index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button key={index} type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                  return (<Button key={index} type="button" class="bt btn-sm col-2" style={{backgroundColor:"#00A896"}} data-bs-toggle="button"
                     onClick={(val) => {
                       sessionchange(val.id);
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
+                    style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
                   )
                 }):null}
 
@@ -496,7 +496,7 @@ function Doctorcalender() {
               {/* ms-auto me-auto nashod */}
               {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
               <div style={{backgroundColor:"white",position:"absolute",marginRight:"clamp(50px,60vw,255px)",marginTop:"-0.25rem"}} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"green",borderRadius:100,borderColor:"green",position:"relative"}}>
+              <Button  type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{backgroundColor:"#05668D",borderRadius:100,borderColor:"#05668D",position:"relative"}}>
               {/* <div class="align-self-center justify-self-center"> */} 
               تایید
               {/* {/* </div> */}
@@ -509,8 +509,8 @@ function Doctorcalender() {
                   <div key={index} >
                   {/* mt-lg-2 mt-md-3 mt-sm-2 mt-3 */}
               <div class="d-block d-flex flex-row mt-3 align-items-center col-12 ">
-                <BsPlusCircleFill onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                <AiFillMinusCircle onClick={()=>handleremovemfield(index)}  class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
+                <BsPlusCircleFill  color="gray" onClick={()=>handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                <AiFillMinusCircle  color="gray" onClick={()=>handleremovemfield(index)}  class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                 <div class="input-group   input-group-sm " dir="ltr">
                   <input type="number" name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
                     class="form-control " placeholder="8" aria-label="Username"></input>
@@ -538,18 +538,18 @@ function Doctorcalender() {
             <div class="p-3 border d-flex  col-sm-auto col-12 flex-column border
             mt-4 overflow-auto
 
-         " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
+         " style={{ borderRadius: 10, backgroundColor: "#F8F8F0", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
                 {magazis.map((val,index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button key={index} type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                  return (<Button key={index} type="button" class="btn btn-success btn-success btn-sm col-2"  data-bs-toggle="button"
                     onClick={(val) => {
                       sessionchange(val.id);
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: "green" }}>{val.time}</Button>
+                    style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
                   )
                 })}
 
@@ -571,47 +571,55 @@ function Doctorcalender() {
         {/* engar chon toye flex */}
         {/* dir="ltr-md rtl" nemishe */}
         {/* cal age andaze width calendar mishe ms auto */}
-        <div class="order-md-2 mb-lg-auto mb-3 order-1 col-auto me-md-auto   " style={{
-          backgroundColor: "white"
+        <div class="order-md-2 mb-lg-auto mb-4   order-1 col-auto me-md-auto me-4    " style={{ borderRadius:20,
+         
+         
+          // backgroundColor: "white"
           // ,position:"absolute",justifyContent:"flex-end"
           // justify-content: flex-end !important;
         }}>
 
           {/* <div class="border rounded-3 shadow-3 col-auto w-auto h-auto "> */}
+          {/* <div class="custom-calendar w-auto h-auto" style={{borderRadius:20}}> */}
           <Calendar
 
             // backgroundColor="green"
             // theme="dark"
             // background-image="blue"
-
+           
             style={{ borderColor: "green" }}
             // style={{marginLeft:100}}
 
             shouldHighlightWeekends="true"
             calss="mb-3"
             borderColor="green"
-            colorPrimary="#0fbcf9"
+            colorPrimary="#02A27F"
             isPersian={true}
             minimumDate={utils("fa").getToday()}
             calendarTodayClassName="custom-today-day"
-            colorPrimaryLight="rgba(75, 207, 250, 0.4)"
+            colorPrimaryLight="rgba(2, 195, 154, 0.4)"
+            shouldHighlightWeekends
             calendarClassName="responsive-calendar custom-calendar"
             value={selectedDayRange}
             onChange={
               (value) => calenderchange(value)
 
             }
-            // shouldHighlightWeekends
+            // colorPrimary="#02C39A"
+            // isPersian={true}
+            // minimumDate={utils("fa").getToday()}
+            // calendarTodayClassName="custom-today-day"
+            // colorPrimaryLight="rgba(240, 243, 189, 0.4)"
+         
             locale="fa" // add this
           />
+          {/* </div> */}
           {/* </div> */}
         </div>
 
 
         
       </div>
-   
-
 
 
     </div>
