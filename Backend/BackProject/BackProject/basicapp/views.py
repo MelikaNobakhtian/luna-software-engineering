@@ -232,16 +232,16 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
 
         email = request.data.get('email', '')
-
+        print(email)
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            current_site = get_current_site(
-                request=request).domain
-            relativeLink = reverse(
-                'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
-            absurl = 'http://'+current_site + relativeLink
+            # current_site = get_current_site(
+            #     request=request).domain
+            # relativeLink = reverse(
+            #     'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
+            absurl = 'localhost:3000/forgotpassword/' + uidb64 +'/'+token
             email_body = 'Hello, \n Use link below to reset your password  \n' + \
                 absurl
             data = {'email_body': email_body, 'to_email': user.email,

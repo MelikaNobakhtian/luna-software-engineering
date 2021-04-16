@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 //import Cookies from "js-cookie";
 import {
-  //Link,
-  //Redirect,
-  withRouter,
-  //useHistory
+  BrowserRouter as Router,
+    useRouteMatch,
+    useParams,
+    withRouter
 } from "react-router-dom";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 
@@ -21,7 +21,7 @@ function ForgotPassword(props) {
 
   useEffect(() => {
     axios
-      .get(API_BASE_URL + "/password-reset/" + props.tokenId)
+      .get(API_BASE_URL + "/password-reset/" + props.match.params.tokenId)
       .then(function (response) {
         if (response.data.success === true) {
           setUidb64(response.data.uidb64);
