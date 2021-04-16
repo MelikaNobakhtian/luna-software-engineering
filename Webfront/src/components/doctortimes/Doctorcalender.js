@@ -154,34 +154,18 @@ function Doctorcalender() {
              timee=timee-60
              time+=plus
            }  
-          //  if(timee===0)
-          //  var thistime=time+":"+timee+"0"
-          // else
-          // var thistime=time+":"+timee   
           console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
-          // if(!hozoris.some(time=>{ 
-          //   console.log(time.time22+" time.time22")
-          //   console.log(time.time+" time.time")
-          //   console.log(thistime+" thistime")
-          //   console.log(noww+" noww");
-          //   return(moment(time.time22,"HH:mm").format("HH:mm")>moment(thistime,"HH:mm").format("HH:mm") ||
-          //   moment(time.time,"HH:mm").format("HH:mm")>moment(noww,"HH:mm").format("HH:mm"))
-          // }
-          //   )){
+            
             console.log(values)
             console.log(noww+"noww")
-            const index=values.findIndex((item)=>{
-              console.log("*********************")
-              console.log(item.time+" item.time")
-              console.log(thistime+" thistime")
-              console.log(item.time22+" item.item22")
-              console.log(thenn +" noww")
-              console.log(item.time===thistime && item.time22===noww);
-              console.log("********************") 
-                    
-              return(item.time===thistime && item.time22===thenn)})
-            console.log(index + " index")
-            values.splice(index,1);
+            console.log(values)
+            // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
+            const index=values.findIndex((element)=>moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
+            moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))
+            console.log(index)
+            if(index!=-1)
+             values.splice(index,1);
+            sethozoris(values)
             // values.push({time:thistime,time22:noww})
             console.log(thistime+" thistime")
             console.log(values)
@@ -193,7 +177,7 @@ function Doctorcalender() {
           var now=time+":"+timee
        }
        
-       sethozoris(values)
+      
       // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
       }
   
@@ -304,14 +288,72 @@ function Doctorcalender() {
     
   }
   const handleremovemfield=(index)=>{
-    if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!="" && mduration!=""){
-     if(mfields.length>1){
-    const values=[...mfields];
-    values.splice(index,1);
-    setmfields(values);
-     }
-    }
-
+    if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!=""&&mduration!=""){
+      var time=parseInt(mfields[0].start);
+      console.log(time+" start")
+      var timee=parseInt(mfields[0].startt);   
+      const endt=parseInt(mfields[0].end); 
+      const enddt=parseInt(mfields[0].endd)
+      const duration=parseInt(mduration)
+    
+      var values=[...magazis];
+      var finish=false;
+      if(timee===0)
+      var thistime=time+":"+timee+"0"
+     else
+     var thistime=time+":"+timee  
+      var mend=parseInt(mfields[0].end)+":"+parseInt(mfields[0].endd);
+       for(var i=time;!finish;i+=(duration/60)){ 
+        var check=parseInt(duration+timee)
+        var timecopy=time 
+        var time2=check
+        console.log(time2+"time2")
+        if(time2>=60){
+          var plus=Math.floor(time2/60)
+           time2=time2%60
+           console.log(time2+" time2 2")
+          timecopy+=plus
+        }
+        var noww=timecopy+":"+time2
+        console.log(noww +" noww")
+        console.log(mend+" mend")
+        var dur="00:"+duration
+        if(moment(now,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
+        finish=true;
+        break;
+        }
+        console.log(i+"i")
+         console.log("to for")
+         if(timee===0)
+           var thenn=time+":"+timee+"0"
+          else
+          var thenn=time+":"+timee
+           if(timee>=60){
+             var plus=Math.floor(timee/60)
+             timee=timee-60
+             time+=plus
+           }  
+            // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
+            const index=values.findIndex((element)=>moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
+            moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))
+            console.log(index)
+            if(index!=-1)
+             values.splice(index,1);
+            setmagazis(values)
+            // values.push({time:thistime,time22:noww})
+            console.log(thistime+" thistime")
+            console.log(values)
+          // }
+          // else
+          // console.log("boodesh")
+          console.log(parseInt(duration+timee)+" parseInt")
+          timee=parseInt(duration+timee)
+          var now=time+":"+timee
+       }
+       
+      
+      // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
+      }
   }
 
   const [selectedDayRange, setSelectedDayRange] = useState({
