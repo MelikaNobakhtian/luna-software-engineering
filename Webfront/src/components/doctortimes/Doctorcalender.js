@@ -76,8 +76,21 @@ function Doctorcalender() {
          var thistime=time+":"+timee+"0"
         else
         var thistime=time+":"+timee   
-        if(!hozoris.some(time=>time.time===thistime&&time.time22===now)){
-          values.push({time:thistime,time22:now})
+        console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
+        if(!hozoris.some(time=>{ 
+          console.log(time.time22+" time.time22")
+          console.log(time.time+" time.time")
+          console.log(thistime+" thistime")
+          console.log(noww+" noww");
+          return(moment(time.time22,"HH:mm").format("HH:mm")>moment(thistime,"HH:mm").format("HH:mm") ||
+          moment(time.time,"HH:mm").format("HH:mm")>moment(noww,"HH:mm").format("HH:mm"))
+        }
+          )){
+          console.log(values)
+          console.log(noww+"noww")
+          values.push({time:thistime,time22:noww})
+          console.log(thistime+" thistime")
+          console.log(values)
         }
         else
         console.log("boodesh")
@@ -95,37 +108,65 @@ function Doctorcalender() {
     var time=parseInt(hfields[0].start);
     console.log(time+" start")
     var timee=parseInt(hfields[0].startt);   
-    const endt=parseInt(hfields[0].end); 
-    const enddt=parseInt(hfields[0].endd)
+    var endt=parseInt(hfields[0].end); 
+    var enddt=parseInt(hfields[0].endd)
     const duration=parseInt(hduration)
-    var thistime=time+":"+timee;
-    var now= endt+":"+enddt
+    // if(enddt===0)
+    // enddt="0"+enddt
+    // if(timee===0)
+    // timee="0"+timee
+    if(timee===0)
+    var thistime=time+":"+timee+"0"
+   else
+   var thistime=time+":"+timee  
+ 
+    console.log(thistime+" thistime");
+    if(enddt===0)
+    var now=endt+":"+enddt+"0"
+   else
+   var now=endt+":"+enddt  
+   
   
     var values=[...hozoris];
     var finish=false;
-    var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
+    var mend=endt+":"+enddt;
     
      for(var i=time;!finish;i+=(duration/60)){ 
       console.log(now +" now")
       console.log(mend+" mend")
+      console.log(timee+" timee")
       var check=parseInt(duration+timee)
+      console.log(check+"check")
       var timecopy=time 
       var time2=check
       console.log(time2+"time2")
       if(time2>=60){
         var plus=Math.floor(time2/60)
+        console.log(plus+" plus")
+        console.log(40/16)
          time2=time2%60
          console.log(time2+" time2 2")
+         console.log(timecopy +"tc1")
         timecopy+=plus
+        console.log(timecopy +"tc2")
       }
-      var noww=timecopy+":"+time2
+      if(time2===0){
+      var noww=timecopy+":"+"0"+time2
+      }
+      else{
+        var noww = timecopy + ":"+time2
+      }
+      console.log(noww+" noww")
       var dur="00:"+duration
-      if(moment(noww,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
+      if(moment(thistime,"HH:mm").format("HH:mm")>moment(now,"HH:mm").format("HH:mm")){
       finish=true;
       break;
       }
-      const index=values.indexOf({time:thistime,time22:now})
+      const index=values.indexOf({time:thistime,time22:noww})
+      console.log(values )
       values.splice(index,1)
+      console.log(values)
+      sethozoris(values);
 
       finish=true;
       break;
@@ -212,8 +253,17 @@ function Doctorcalender() {
           // if(!magazis.some(time=>(!magazis.some((tim)=>moment(tim.time,"HH:mm").format("HH:mm")<(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm"))) || !magazis.some((tim)=>moment(tim.time22,"HH:mm").format("HH:mm")>(moment(time.time,"HH:mm").format("HH:mm") >moment(now,"HH:mm").format("HH:mm")))))
 
 
-          if(!magazis.some(time=>time.time===thistime&&time.time22===now)){
-            values.push({time:thistime,time22:now})
+          console.log(magazis.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
+        if(!magazis.some(time=>{ 
+          console.log(time.time22+" time.time22")
+          console.log(time.time+" time.time")
+          console.log(thistime+" thistime")
+          console.log(noww+" noww");
+          return(moment(time.time22,"HH:mm").format("HH:mm")>moment(thistime,"HH:mm").format("HH:mm") ||
+          moment(time.time,"HH:mm").format("HH:mm")>moment(noww,"HH:mm").format("HH:mm"))
+        }
+          )){
+            values.push({time:thistime,time22:noww})
           }
           else
           console.log("boodesh")
