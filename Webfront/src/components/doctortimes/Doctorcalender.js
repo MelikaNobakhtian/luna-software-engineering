@@ -32,6 +32,7 @@ function Doctorcalender() {
     // console.log(event + " event")
   }
   const handleaddhfield=()=>{
+    if(hfields[0].start!="" &&hfields[0].startt!=""&&hfields[0].end!=""&&hfields[0].endd!=""&&hduration!=""){
     var time=parseInt(hfields[0].start);
     console.log(time+" start")
     var timee=parseInt(hfields[0].startt);   
@@ -54,6 +55,7 @@ function Doctorcalender() {
         timecopy+=plus
       }
       var noww=timecopy+":"+time2
+     
       var dur="00:"+duration
       if(moment(noww,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
       finish=true;
@@ -86,16 +88,57 @@ function Doctorcalender() {
      
      sethozoris(values)
     // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
+    }
   }
   const handleremovehfield=(index)=>{
+    if(hfields[0].start!="" &&hfields[0].startt!=""&&hfields[0].end!=""&&hfields[0].endd!=""&&hduration!=""){
+    var time=parseInt(hfields[0].start);
+    console.log(time+" start")
+    var timee=parseInt(hfields[0].startt);   
+    const endt=parseInt(hfields[0].end); 
+    const enddt=parseInt(hfields[0].endd)
+    const duration=parseInt(hduration)
+    var thistime=time+":"+timee;
+    var now= endt+":"+enddt
+  
+    var values=[...hozoris];
+    var finish=false;
+    var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
+    
+     for(var i=time;!finish;i+=(duration/60)){ 
+      console.log(now +" now")
+      console.log(mend+" mend")
+      var check=parseInt(duration+timee)
+      var timecopy=time 
+      var time2=check
+      console.log(time2+"time2")
+      if(time2>=60){
+        var plus=Math.floor(time2/60)
+         time2=time2%60
+         console.log(time2+" time2 2")
+        timecopy+=plus
+      }
+      var noww=timecopy+":"+time2
+      var dur="00:"+duration
+      if(moment(noww,"HH:mm").format("HH:mm")>moment(mend,"HH:mm").format("HH:mm")){
+      finish=true;
+      break;
+      }
+      const index=values.indexOf({time:thistime,time22:now})
+      values.splice(index,1)
 
-   if(hfields.length>1){
-    const values=[...hfields];
-    values.splice(index,1);
-    sethfields(values);
-   }
+      finish=true;
+      break;
+     }
 
 
+
+  //  if(hfields.length>1){
+  //   const values=[...hfields];
+  //   values.splice(index,1);
+  //   sethfields(values);
+  //  }
+    }
   }
 
   const handlemstartchange = (index, event) => {
@@ -106,7 +149,7 @@ function Doctorcalender() {
   }
 
   const handleaddmfield=()=>{
-      
+    if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!=""&&mduration!=""){
       var time=parseInt(mfields[0].start);
       console.log(time+" start")
       var timee=parseInt(mfields[0].startt);   
@@ -180,14 +223,17 @@ function Doctorcalender() {
        }
        
        setmagazis(values)
+      }
     
   }
   const handleremovemfield=(index)=>{
+    if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!="" && mduration!=""){
      if(mfields.length>1){
     const values=[...mfields];
     values.splice(index,1);
     setmfields(values);
      }
+    }
 
   }
 
