@@ -21,8 +21,9 @@ function ForgotPassword(props) {
 
   useEffect(() => {
     axios
-      .get(API_BASE_URL + "/password-reset/" + props.match.params.tokenId)
+      .get(API_BASE_URL + "/password-reset/" + props.match.params.tokenId+"/"+props.match.params.token)
       .then(function (response) {
+        console.log(response)
         if (response.data.success === true) {
           setUidb64(response.data.uidb64);
           setToken(response.data.token);
@@ -65,7 +66,10 @@ function ForgotPassword(props) {
       };
       const back = JSON.stringify(payload);
       axios
-        .post(API_BASE_URL + "/password-reset-complete", back)
+        .post(API_BASE_URL + "/password-reset-complete/", back,
+        {
+          headers: { "content-type": "application/json" },
+        })
         .then(function (response) {
           if (response.status === 401) {
             setState((prevState) => ({
@@ -77,12 +81,16 @@ function ForgotPassword(props) {
               ...prevState,
               backError: "رمز شما با موفقیت عوض شد",
             }));
+            redirectToLogin()
           }
         })
         .catch(function (error) {
           console.log(error);
         });
     }
+  };
+  const redirectToLogin = () => {
+    props.history.push("/login");
   };
 
   return (

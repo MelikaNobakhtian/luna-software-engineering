@@ -57,8 +57,8 @@ function SignUp(props) {
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
-      const { current } = uploadedImage;
-      current.file = file;
+      // const { current } = uploadedImage;
+      // current.file = file;
       
       reader.readAsDataURL(file);
     }

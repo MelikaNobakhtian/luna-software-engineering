@@ -111,11 +111,13 @@ function Login(props) {
       email: email,
     };
     const back = JSON.stringify(payload);
+    console.log(back)
     axios
-      .post(API_BASE_URL + "request-reset-email/", back, {
+      .post(API_BASE_URL + "/request-reset-email/", back, {
         headers: { "content-type": "application/json" },
       })
       .then(function (response) {
+        console.log(response)
         if (response.status === 200) {
           setSended("لینک تغییر رمز به ایمیل شما ٝرستاده شد");
         } else if (response.status === 404) {
@@ -123,6 +125,7 @@ function Login(props) {
         }
       })
       .catch(function (error) {
+        console.log(error)
         setSended("حسابی با این ایمیل وجود ندارد");
       });
   };

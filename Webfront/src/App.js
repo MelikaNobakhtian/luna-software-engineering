@@ -38,7 +38,7 @@ function App() {
             <Route path='/login' component={login} /> 
             <Route path='/doctorProfile' component={editProfileDoctor} />
             <Route path='/userProfile' component={UserProfile} />
-            <Route path='/forgotPassword/:tokenId' component={ForgotPassword} />
+            <Route path='/forgotPassword/:tokenId/:token' component={ForgotPassword} />
             <Route path='/verification/:tokenId' component={Verification} />
        
           </Switch>

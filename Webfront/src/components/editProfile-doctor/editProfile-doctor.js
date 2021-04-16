@@ -28,48 +28,59 @@ function Editprofile(props) {
      
      const [type, setType] = useState('');
      useEffect(() => {
-      if (user.token) {       
+      if (Cookies.get('doctorId')) {     
           axios.get(API_BASE_URL + '/doctor/' + Cookies.get('doctorId'))
               .then(function (response){
                 console.log(response);
                 setUser(prevState => ({ 
                   ...prevState,
-                  userName: response.data.username,
-                  firstName:response.data.first_name,
-                  lastName:response.data.last_name,
-                  email: response.data.email,
-                  picture : API_BASE_URL +response.data.profile_photo,
+                  userName: response.data.user.username,
+                  firstName:response.data.user.first_name,
+                  lastName:response.data.user.last_name,
+                  email: response.data.user.email,
+                  picture : API_BASE_URL +response.data.user.profile_photo,
                   specialty:response.data.specialty,
                   sub_specialty:response.data.sub_specialty,
                 
                   }));
-                  setAddress({city:response.data.addresses[0].city,
+                  setAddress(prevState => ({ 
+                    ...prevState,city:response.data.addresses[0].city,
                     state:response.data.addresses[0].state,
-                    detail:response.data.addresses[0].detail})
-                    ;
+                    detail:response.data.addresses[0].detail}));
+                    
+                    
                   if (response.data.addresses.length>0)
                   setvar("true") ;
+                  console.log(response.data.addresses[0].city)
+
               })
               .catch(function (error) {
                   console.log(error);
               });
         }
-      },[] );
+      },[Cookies.get('doctorId')] );
       
       const handleChangeInfosClick = (e) => {
         e.preventDefault();
       
-        const payload={
-              "username":user.userName,
-              "first_name":user.firstName,
-              "last_name":user.lastName,
-        }
-        const back= JSON.stringify(payload)
-        axios.put(API_BASE_URL+ '/user/'+Cookies.get('userId')+'/update-profile',
-        back,{
+        e.preventDefault();
+        var formdata = new FormData();
+        formdata.append("username", user.userName);
+        formdata.append("first_name", user.firstName);
+        formdata.append("last_name", user.lastName);
+        formdata.append("profile_photo", state.file);
+        console.log(formdata);
+        // const payload={
+        //       "username":user.userName,
+        //       "first_name":user.firstName,
+        //       "last_name":user.lastName,
+        // }
+        // const back= JSON.stringify(payload)
+        axios.put(API_BASE_URL+ '/user/'+Cookies.get('userId')+'/update-profile/',
+        formdata,{
             headers:{
            "Content-Type":"application/json",
-           "Authorization":"Token "+Cookies.get("userToken")}
+           "Authorization":"Bearer "+Cookies.get("userTokenA")}
             })
                 .then(function (response) {
                 console.log(response);
@@ -80,8 +91,7 @@ function Editprofile(props) {
             })
             .catch(function (error) {
                 console.log(error);
-                setMassage("نام کاربری از قبل وجود دارد")
-                setOpenSnack(true);
+                
             });
     
 
@@ -90,11 +100,11 @@ function Editprofile(props) {
       "sub_specialty":user.sub_specialty
 }
 const backend= JSON.stringify(special)
-axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile',
+axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-profile/',
 backend,{
     headers:{
    "Content-Type":"application/json",
-   "Authorization":"Token "+Cookies.get("userToken")}
+   "Authorization":"Bearer "+Cookies.get("userTokenA")}
     })
         .then(function (response) {
         console.log(response);
@@ -117,16 +127,17 @@ backend,{
     "detail":address.detail,
 }
 const backinfo= JSON.stringify(info)
-axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-address'+'1',
+axios.put(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/update-address/'+'48/',
 backinfo,{
   headers:{
  "Content-Type":"application/json",
- "Authorization":"Token "+Cookies.get("userToken")}
+ "Authorization":"Bearer "+Cookies.get("userTokenA")}
   })
       .then(function (response) {
       console.log(response);
       if(response.status === 200){
           console.log(response.status);
+          
          
       }
   })
@@ -143,11 +154,11 @@ backinfo,{
    
   }
   const backcity= JSON.stringify(payloadcity)
-  axios.post(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/set-address',
+  axios.post(API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/set-address/',
   backcity,{
     headers:{
    "Content-Type":"application/json",
-   "Authorization":"Token "+Cookies.get("userToken")}
+   "Authorization":"Bearer "+Cookies.get("userTokenA")}
     })
         .then(function (response) {
         console.log(response);
@@ -189,45 +200,61 @@ backinfo,{
 
     const handleChangePassClick = (e) => {
       e.preventDefault();
-      if(user.oldPass.length&&user.newPass.length){
-          const payload={
-              "old_password": user.oldPass,
-              "new_password":user.newPass,
-          }
+      if (
+        user.oldPass.length === 0 ||
+        user.newPass.length === 0 ||
+        user.newPass2.length === 0
+      ) {
+        setMassage("لطفا همه را وارد کنید");
+        setOpenSnack(true);
+      } else if (user.newPass !== user.newPass2) {
+        setMassage("تکرار رمز اشتباه است");
+        setOpenSnack(true);
+      } else {
+        const payload = {
+          old_password: user.oldPass,
+          new_password: user.newPass,
+        };
           const back= JSON.stringify(payload);
           console.log(back);
   
-          axios.put( API_BASE_URL+ '/doctor/'+Cookies.get('doctorId')+'/change-password',
-           back
-           ,{
-            headers:{
-           "Content-Type":"application/json",
-          "Authorization":"Token "+Cookies.get("userToken")}
-           }
-  
-          ).then(function(response){
-              console.log(response);
-              setMassage('پسورد با موفقیت عوض شد')
+          axios
+          .put(
+            API_BASE_URL + "/user/" + Cookies.get("userId") + "/change-password/",
+            back,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + Cookies.get("userTokenA"),
+              },
+            }
+          )
+          .then(function (response) {
+            console.log(response);
+            if (response.status === 200) {
+              console.log(response.status);
+              setMassage("پسورد با موفقیت عوض شد");
               setOpenSnack(true);
-  
+            } else if (response.status === 401) {
+              console.log(response.status);
+              setMassage("پسورد قبلی غلط است");
+              setOpenSnack(true);
+            }
           })
-          .catch(function(error){
-              console.log(error);
-              setMassage("پسورد قبلی غلط است")
-              setOpenSnack(true);
-           })
-          
+          .catch(function (error) {
+            console.log(error);
+            setMassage("پسورد قبلی غلط است");
+            setOpenSnack(true);
+          });
       }
-      else { 
-       }
   
-       setUser(prevState => ({
+      setUser((prevState) => ({
         ...prevState,
-        oldPass : "",
-        newPass:""
-    })); 
-  
-  }
+        oldPass: "",
+        newPass: "",
+        newPass2: "",
+      }));
+    };
     const uploadedImage = React.useRef(null);
     const imageUploader = React.useRef(null);
     const handleImageUpload = e => {
