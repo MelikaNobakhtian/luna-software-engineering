@@ -74,7 +74,11 @@ function Doctorcalender() {
          var thistime=time+":"+timee+"0"
         else
         var thistime=time+":"+timee   
-        values.push({time:thistime})
+        if(!hozoris.some(time=>time.time===thistime&&time.time22===now)){
+          values.push({time:thistime,time22:now})
+        }
+        else
+        console.log("boodesh")
         console.log(parseInt(duration+timee)+" parseInt")
         timee=parseInt(duration+timee)
         var now=time+":"+timee
@@ -102,13 +106,13 @@ function Doctorcalender() {
   }
 
   const handleaddmfield=()=>{
-   
+      
       var time=parseInt(mfields[0].start);
       console.log(time+" start")
       var timee=parseInt(mfields[0].startt);   
       const endt=parseInt(mfields[0].end); 
       const enddt=parseInt(mfields[0].endd)
-      const duration=parseInt(hduration)
+      const duration=parseInt(mduration)
     
       var values=[...magazis];
       var finish=false;
@@ -132,8 +136,8 @@ function Doctorcalender() {
         }
         console.log(i+"i")
          console.log("to for")
-         if(timee===0)
-           var thenn=time+":"+timee+"0"
+         if(timee.toString().length===1)
+           var thenn=time+":"+"0"+timee
           else
           var thenn=time+":"+timee
            if(timee>=60){
@@ -141,14 +145,38 @@ function Doctorcalender() {
              timee=timee-60
              time+=plus
            }  
-           if(timee===0)
-           var thistime=time+":"+timee+"0"
+           if(timee.toString().length===1)
+           var thistime=time+":"+"0"+timee
           else
-          var thistime=time+":"+timee   
-          values.push({time:thistime})
-          console.log(parseInt(duration+timee)+" parseInt")
+          var thistime=time+":"+timee  
           timee=parseInt(duration+timee)
-          var now=time+":"+timee
+          if(timee>=60){
+            var plus=Math.floor(timee/60)
+            timee=timee-60
+            time+=plus
+          } 
+          if(timee.toString().length===1)
+          var now=time+":"+"0"+timee
+         else
+         var now=time+":"+timee  
+         
+          console.log(magazis.includes({time:thistime},0)+" include")
+          console.log(thistime+" time    ...")
+          console.log(now+" timee    ...")
+          // !magazis.some(time=>time.time===thistime&&time.time22===now)||
+          //overlap nakone
+          // console.log(!magazis.some(time=>(!magazis.some((tim)=>moment(tim.time,"HH:mm").format("HH:mm")<(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm"))) || !magazis.some((tim)=>moment(tim.time22,"HH:mm").format("HH:mm")>(moment(time.time,"HH:mm").format("HH:mm") >moment(now,"HH:mm").format("HH:mm")))))+"somee")
+          // if(!magazis.some(time=>(!magazis.some((tim)=>moment(tim.time,"HH:mm").format("HH:mm")<(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm"))) || !magazis.some((tim)=>moment(tim.time22,"HH:mm").format("HH:mm")>(moment(time.time,"HH:mm").format("HH:mm") >moment(now,"HH:mm").format("HH:mm")))))
+
+
+          if(!magazis.some(time=>time.time===thistime&&time.time22===now)){
+            values.push({time:thistime,time22:now})
+          }
+          else
+          console.log("boodesh")
+          
+          console.log(parseInt(duration+timee)+" parseInt")
+         
        }
        
        setmagazis(values)
@@ -269,7 +297,7 @@ function Doctorcalender() {
                 {hozoris!=[]?hozoris.map((val,index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                  return (<Button key={index} type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
                     onClick={(val) => {
                       sessionchange(val.id);
                       // setbuttoncolor("red")
@@ -347,10 +375,10 @@ function Doctorcalender() {
          " style={{ borderRadius: 10, backgroundColor: "white", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
-                {magazis.map((val) => {
+                {magazis.map((val,index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
+                  return (<Button key={index} type="button" class="btn btn-success btn-sm col-2" data-bs-toggle="button"
                     onClick={(val) => {
                       sessionchange(val.id);
                       // setbuttoncolor("red")
