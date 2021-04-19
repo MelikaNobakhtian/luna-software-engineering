@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
@@ -49,9 +49,8 @@ function UserProfile(props) {
     formdata.append("username", user.userName);
     formdata.append("first_name", user.firstName);
     formdata.append("last_name", user.lastName);
-    if(state.file != null)
-      formdata.append("profile_photo", state.file);
-    
+    if (state.file != null) formdata.append("profile_photo", state.file);
+
     console.log(formdata);
     axios
       .put(
@@ -79,7 +78,6 @@ function UserProfile(props) {
       })
       .catch(function (error) {
         console.log(error);
-        
       });
   };
 
@@ -182,14 +180,11 @@ function UserProfile(props) {
   };
 
   return (
-    <div className="main-content bg-dark">
+    <div className="main-content ">
       <div className="container-fluid p-2">
         <div className="d-flex flex-wrap">
           <div className="col-12 col-md-4 ">
-            <div
-              className="card border-light border-2 text-white p-2 m-1"
-              style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}
-            >
+            <div className="card border-dark border-2 text-white p-2 m-1 App-color4">
               <div class="card-header d-flex justify-content-center">
                 <div className="text-center">
                   <Avatar
@@ -204,7 +199,7 @@ function UserProfile(props) {
                 </div>
               </div>
               <div class="card-body">
-                <div className="btn btn-light btn-sm">
+                <div className="btn btn-outline-light btn-sm">
                   <EditIcon></EditIcon>
                   ویرایش اطلاعات
                 </div>
@@ -212,10 +207,7 @@ function UserProfile(props) {
             </div>
           </div>
           <div className="col-12 col-md-8 ">
-            <div
-              className="card border-light border-2 text-white p-2 m-1"
-              style={{backgroundColor:'rgba(70, 70, 60, 0.8)'}}
-            >
+            <div className="card border-dark border-2 text-white p-2 m-1 App-color4">
               <div class="card-header d-flex">
                 <h4>اطلاعات شخصی</h4>
               </div>
