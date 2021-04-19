@@ -192,7 +192,7 @@ class SetDoctorAddressView(APIView):
         counter = 0
         while counter < count:
             add = request.data.get('addresses')[counter]
-            new_add = Address(state=add['state'],doc=doc,city=add['city'],detail=add['detail'])
+            new_add = Address(state=states[(int)add['state']],doc=doc,city=add['city'],detail=add['detail'])
             new_add.save()
             counter+=1
             
