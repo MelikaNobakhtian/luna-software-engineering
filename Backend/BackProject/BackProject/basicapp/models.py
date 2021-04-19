@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
+from django_jalali.db import models as jmodels
 
 class UserManager(BaseUserManager):
 
@@ -77,3 +78,12 @@ class Address(models.Model):
     doc = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
     city = models.CharField(max_length=50)
     detail = models.TextField()
+
+class Appointment(models.Model):
+    
+    patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
+    doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
+    duration = models.IntegerField()
+    start_datetime = jmodels.jDateTimeField()
+    end_datetime = jmodels.jDateTimeField()
+    is_online = models.BooleanField(default=True)

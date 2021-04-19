@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from datetime import timedelta
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -174,4 +175,24 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username','first_name','last_name','profile_photo']
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    
+    doc_id = serializers.IntegerField()
+    
+    class Meta:
+        model = Appointment
+        fields = ['duration','start_datetime','doc_id']
+
+    def validate(self,attrs):
+
+        doc_id = attrs.get('doc_id', '')
+        duration= attrs.get('duration', '')
+        start_datetime = attrs.get('start_datetime', '')
+        end_datetime = start_datetime + timedelta(minutes=duration)
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = Appointment(duration=duration,doctor=doc,start_datetime=start_datetime,end_datetime=end_datetime)
+        apt.save()
+
+        return attrs
 
