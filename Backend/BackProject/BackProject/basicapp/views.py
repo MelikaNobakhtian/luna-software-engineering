@@ -114,11 +114,11 @@ class VerifyEmail(views.APIView):
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Activation Expired'}, status=status.HTTP_200_OK)
         except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Invalid token'}, status=status.HTTP_200_OK)
 
 
 class LoginAPIView(generics.GenericAPIView):
@@ -126,8 +126,9 @@ class LoginAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            return Response({"data":serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
 
 
 class DoctorProfileView(APIView):
@@ -156,8 +157,8 @@ class UpdateDoctorProfileView(generics.UpdateAPIView):
         serializer = self.serializer_class(doc,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':True,'message':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({'failure':True,'message':serializer.errors},status=status.HTTP_200_OK)
 
 class UpdateDoctorAddressView(generics.UpdateAPIView):
     serializer_class = UpdateDoctorAddressSerializer
@@ -179,8 +180,9 @@ class UpdateDoctorAddressView(generics.UpdateAPIView):
         serializer = self.serializer_class(address,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+
+        return Response({'failure':True},status=status.HTTP_200_OK)
 
 class SetDoctorAddressView(APIView):
 
@@ -200,7 +202,7 @@ class SetDoctorAddressView(APIView):
         doc.save()
         add_list = AddressSerializer(doc_add,many=True)
         doc_info = DoctorProfileSerializer(doc)
-        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data},status=status.status.HTTP_200_OK)
 
 class ChangePasswordView(generics.UpdateAPIView):
 
@@ -218,7 +220,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         if serializer.is_valid():
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password" : ["Wrong Password"]},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message" : ["Wrong Password"]},status=status.HTTP_200_OK)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
@@ -228,7 +230,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
             return Response(response,status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
 
 class UpdateUserProfileView(generics.UpdateAPIView):
     serializer_class = UpdateUserProfileSerializer
@@ -246,8 +248,8 @@ class UpdateUserProfileView(generics.UpdateAPIView):
         serializer = self.serializer_class(user,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({'failure':serializer.errors},status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
 
@@ -261,7 +263,7 @@ class UserProfileView(APIView):
     def get(self, request, pk, format=None):
         userprofile = self.get_object(pk)
         serializer = self.serializer_class(userprofile)
-        return Response(serializer.data)
+        return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
@@ -285,9 +287,9 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
-            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+            return Response({'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         else:
-            return Response({'failure': 'There is no account with this email!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'There is no account with this email!'}, status=status.HTTP_200_OK)
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
 
@@ -297,16 +299,16 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
             id = smart_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=id)
             if not PasswordResetTokenGenerator().check_token(user,token):
-                    return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
             return Response({'success':True,'message':'Credentials Valid','uidb64':uidb64,'token':token},status=status.HTTP_200_OK)
 
         except DjangoUnicodeDecodeError as identifier:
             try:
                 if not PasswordResetTokenGenerator().check_token(user,token):
-                    return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
                     
             except UnboundLocalError as e:
-                return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
