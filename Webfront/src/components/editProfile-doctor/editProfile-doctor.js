@@ -526,7 +526,7 @@ function Editprofile(props) {
 
                       <div class="col-sm-4">
                         <Form.Group>
-                          <Form.Label>تخصص</Form.Label>
+                          <Form.Label>فوق تخصص</Form.Label>
                           <InputGroup hasValidation>
                             <Form.Control
                               type="text"
