@@ -18,7 +18,43 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
+states = {}
+states["0"]="آذربایجان شرقی"
+states["1"]="آذربایجان غربی"
+states["2"]="اردبیل"
+states["3"]="اصفهان"
+states["4"]="البرز"
+states["5"]="ایلام"
+states["6"]="بوشهر"
+states["7"]="تهران"
+states["8"]="چهارمحال و بختیاری"
+states["9"]="خراسان جنوبی"
+states["10"]="خراسان رضوی"
+states["11"]="خراسان شمالی"
+states["12"]="خوزستان"
+states["13"]="زنجان"
+states["14"]="سمنان"
+states["15"]="سیستان و بلوچستان"
+states["16"]="فارس"
+states["17"]="قزوین"
+states["18"]="قم"
+states["19"]="کردستان"
+states["20"]="کرمان"
+states["22"]="کرمانشاه"
+states["23"]="کهگلویه و بویر احمد"
+states["24"]="گلستان"
+states["25"]="گیلان"
+states["26"]="لرستان"
+states["27"]="مازندران"
+states["28"]="مرکزی"
+states["29"]="هرمزگان"
+states["30"]="همدان"
+states["31"]="یزد"
 
+class Check(APIView):
+    def get(self,request):
+        return Response(states)
+        
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
