@@ -64,7 +64,12 @@ function App() {
             <Navbar />
             <Doctorcalender />
           </Route>
-          
+
+          <Route path="*">
+              <div class="alert alert-warning" role="alert">
+                صفحه وجود ندارد
+              </div>
+            </Route>
         </Switch>
       </div>
     </Router>
