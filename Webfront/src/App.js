@@ -19,6 +19,7 @@ import ForgotPassword from "./components/login/forgotPassword";
 import Verification from "./components/login/verification";
 import Doctorcalender from "./components/doctortimes/Doctorcalender";
 import Cookies from "js-cookie";
+import Home from "./components/home/home";
 
 function App() {
   function PrivateRoute({ component: Component, ...rest }) {
@@ -26,7 +27,8 @@ function App() {
       <Route
         {...rest}
         render={(props) =>
-          !!Cookies.get("userTokenA") ? (
+          // !!Cookies.get("userTokenA")
+          true ? (
             <div>
               <Navbar></Navbar>
               <Component {...props} />
@@ -44,20 +46,25 @@ function App() {
     <Router>
       <div className="text-right" style={{ direction: "rtl" }}>
         <Switch>
-          <Route path="/" component={Navbar} exact={true} />
+          <Route path="/" exact={true}>
+            <Navbar />
+            <Home />
+          </Route>
+
           <Route path="/signup" component={signUp} />
           <Route path="/login" component={login} />
+
           <PrivateRoute path="/doctorProfile" component={editProfileDoctor} />
-          <Route path="/userProfile" component={UserProfile} />
-          <Route
-            path="/forgotPassword/:tokenId/:token"
-            component={ForgotPassword}
-          />
+          <PrivateRoute path="/userProfile" component={UserProfile} />
+
+          <Route path="/forgotPassword/:tokenId/:token"component={ForgotPassword}/>
           <Route path="/verification/:tokenId" component={Verification} />
+
           <Route path="/doctorcal">
-            <Navbar></Navbar>
-            <Doctorcalender></Doctorcalender>{" "}
+            <Navbar />
+            <Doctorcalender />
           </Route>
+          
         </Switch>
       </div>
     </Router>

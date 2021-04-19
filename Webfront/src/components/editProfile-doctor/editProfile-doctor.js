@@ -326,7 +326,7 @@ function Editprofile(props) {
       <div className="container-fluid p-2">
         <div className="d-flex flex-wrap">
           <div className="col-12 col-md-4 ">
-            <div className="card border-dark border-2 text-white p-2 m-1 App-color4">
+            <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
               <div class="card-header d-flex justify-content-center">
                 <div className="text-center">
                   <Avatar
@@ -349,7 +349,7 @@ function Editprofile(props) {
             </div>
           </div>
           <div className="col-12 col-md-8 ">
-            <div className="card border-dark border-2 text-white p-2 m-1 App-color4">
+            <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
               <div class="card-header d-flex">
                 <h4>اطلاعات شخصی</h4>
               </div>

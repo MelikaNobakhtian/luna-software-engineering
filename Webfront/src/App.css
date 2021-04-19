@@ -10,10 +10,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'PT Sans', sans-serif;
+  font-family: "PT Sans", sans-serif;
 }
-
-
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -45,18 +43,18 @@
   }
 }
 
-.App-color1{
+.App-color1 {
   background-color: #f0f3bd;
 }
-.App-color2{
+.App-color2 {
   background-color: #02c39a;
 }
-.App-color3{
+.App-color3 {
   background-color: #00a896;
 }
-.App-color4{
+.App-color4 {
   background-color: #028090;
 }
-.App-color5{
+.App-color5 {
   background-color: #05668d;
 }
