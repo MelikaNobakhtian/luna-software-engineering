@@ -22,7 +22,7 @@ function UserProfile(props) {
   });
 
   useEffect(() => {
-    if (!Cookies.get("userTokenA")) {
+    if (Cookies.get("userTokenA")) {
       axios
         .get(API_BASE_URL + "/user/" + Cookies.get("userId"))
         .then(function (response) {
@@ -43,7 +43,7 @@ function UserProfile(props) {
   }, []);
 
   const handleChange = (e) => {
-    console.log(user);
+    //console.log(user);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
@@ -85,7 +85,7 @@ function UserProfile(props) {
             console.log(response.status);
             setMassage("اطلاعات جدید با موفقیت جایگزین شد");
             setOpenSnack(true);
-            Cookies.set("userName", user.userName);
+            //Cookies.set("userName", user.userName);
           } else if (response.status === 401) {
             console.log(response.status);
             setMassage("نشست شما منقضی شده است. لطفا دوباره وارد شوید");
@@ -203,7 +203,7 @@ function UserProfile(props) {
   return (
     <div className="main-content ">
       <div className="container-fluid p-2">
-        {Cookies.get("userTokenA") ? (
+        {Cookies.get("doctorId") !== 0 ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">

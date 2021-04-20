@@ -27,7 +27,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 function Editprofile(props) {
   const [user, setUser] = useState({
-    token: "",
+    //token: "",
     userName: "",
     firstName: "",
     lastName: "",
@@ -39,7 +39,7 @@ function Editprofile(props) {
     specialty: "",
     sub_specialty: "",
   });
-  console.log("lll" + user.lastName);
+  //console.log("lll" + user.lastName);
   const [address, setAddress] = useState({
     state: "",
     city: "",
@@ -49,7 +49,7 @@ function Editprofile(props) {
 
   //const [type, setType] = useState("");
   useEffect(() => {
-    if (Cookies.get("doctorId")) {
+    if (Cookies.get("userTokenA")) {
       axios
         .get(API_BASE_URL + "/doctor/" + Cookies.get("doctorId"))
         .then(function (response) {
@@ -64,7 +64,7 @@ function Editprofile(props) {
             specialty: response.data.specialty,
             sub_specialty: response.data.sub_specialty,
           }));
-          if (response.data.addresses.length !== 0) {
+          if (response.data.addresses.length > 0) {
             setAddress((prevState) => ({
               ...prevState,
               city: response.data.addresses[0].city,
@@ -90,7 +90,6 @@ function Editprofile(props) {
     formdata.append("username", user.userName);
     formdata.append("first_name", user.firstName);
     formdata.append("last_name", user.lastName);
-    if (state.file != null) formdata.append("profile_photo", state.file);
     console.log(formdata);
     // const payload={
     //       "username":user.userName,
@@ -217,6 +216,7 @@ function Editprofile(props) {
   };
 
   const handleChange = (e) => {
+    console.log(user);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
@@ -230,11 +230,6 @@ function Editprofile(props) {
       [id]: value,
     }));
   };
-
-  const [state, setState] = useState({
-    navigate: false,
-    file: null,
-  });
 
   const handleChangePassClick = (e) => {
     e.preventDefault();
@@ -293,10 +288,12 @@ function Editprofile(props) {
       newPass2: "",
     }));
   };
+
+  //get image from user
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
-    setState({ file: e.target.files[0] });
+    //setState({ file: e.target.files[0] });
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
@@ -312,6 +309,7 @@ function Editprofile(props) {
     }
   };
 
+  //snackbar
   const [massage, setMassage] = useState(<br></br>);
   const [openSnack, setOpenSnack] = useState(false);
   const handleCloseSnack = (event, reason) => {
@@ -319,6 +317,14 @@ function Editprofile(props) {
       return;
     }
     setOpenSnack(false);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("userId");
+    Cookies.remove("doctorId");
+    Cookies.remove("userTokenR");
+    Cookies.remove("userTokenA");
+    props.history.push("/login");
   };
 
   return (
@@ -340,8 +346,14 @@ function Editprofile(props) {
                   <h6 className="email">{user.email}</h6>
                 </div>
               </div>
-              <div class="card-body">
-                <div className="btn btn-light btn-sm">
+              <div class="card-body flex row g-2">
+                <div
+                  className="btn btn-outline-light btn-sm"
+                  onClick={handleLogout}
+                >
+                  خروج از حساب
+                </div>
+                <div className="btn btn-outline-light btn-sm">
                   <EditIcon></EditIcon>
                   ویرایش اطلاعات
                 </div>
@@ -539,7 +551,6 @@ function Editprofile(props) {
                           </InputGroup>
                         </Form.Group>
                       </div>
-                      {console.log("lll" + user.sub_specialty)}
 
                       <div class="col-12 ">
                         <Form.Group>
