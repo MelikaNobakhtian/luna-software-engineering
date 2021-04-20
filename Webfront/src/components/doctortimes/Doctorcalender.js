@@ -26,6 +26,8 @@ function Doctorcalender() {
   const [mduration,setmduration]=useState("");
   const [hmhconflictmessage,sethmhconflictmessage]=useState(undefined);
   const [hmmconflictmessage,sethmmconflictmessage]=useState(undefined);
+  const [emptyhduration,setemptyhduration]=useState(undefined);
+  const [emptymduration,setemptymduration]=useState(undefined);
   const[openSnack,setOpenSnack]=useState(false);
     const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -47,7 +49,13 @@ function Doctorcalender() {
     
   }
   const handleaddhfield=()=>{
+    if(hduration===""){
+      setemptymduration(undefined)
+      setemptyhduration("لطفا بازه ی زمانی نوبت های حضوری خود را پر کنید")
+      setOpenSnack(true);
+    }
     if(hfields[0].start!="" &&hfields[0].startt!=""&&hfields[0].end!=""&&hfields[0].endd!=""&&hduration!=""){
+
     var time=parseInt(hfields[0].start);
     console.log(time+" start")
     var timee=parseInt(hfields[0].startt);   
@@ -266,6 +274,11 @@ function Doctorcalender() {
   }
 
   const handleaddmfield=()=>{
+    if(mduration===""){
+      setemptyhduration(undefined)
+      setemptymduration("لطفا بازه ی زمانی نوبت های مجازی خود را پر کنید")
+      setOpenSnack(true);
+    }
     if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!=""&&mduration!=""){
       var time=parseInt(mfields[0].start);
       console.log(time+" start")
@@ -724,7 +737,14 @@ function Doctorcalender() {
           open={openSnack}
           autoHideDuration={2500}
           onClose={handleCloseSnack}
-          message={hmmconflictmessage!=undefined?<div style={{fontSize:14}}>{hmmconflictmessage}</div>:<div style={{fontSize:14}}>{hmhconflictmessage}</div>}
+          message={
+            <div>
+            {hmmconflictmessage!=undefined?<div style={{fontSize:14}}>{hmmconflictmessage}</div>:<div style={{fontSize:14}}>{hmhconflictmessage}</div>}
+            {emptyhduration!=undefined?<div>{emptyhduration}</div>:null}
+            {emptymduration!=undefined?<div>{emptymduration}</div>:null}
+            </div>
+            
+            }
           />
         {/* justifu nemishod baraye hamin ms me */}
         {/* engar chon toye flex */}
