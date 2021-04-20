@@ -31,6 +31,11 @@ function Doctorcalender() {
     // console.log(event.target.name + "fs;kdhf")
     // console.log(event + " event")
   }
+
+
+  const checkforhmconflict=(horm)=>{
+    
+  }
   const handleaddhfield=()=>{
     if(hfields[0].start!="" &&hfields[0].startt!=""&&hfields[0].end!=""&&hfields[0].endd!=""&&hduration!=""){
     var time=parseInt(hfields[0].start);
@@ -87,15 +92,41 @@ function Doctorcalender() {
           console.log(thistime+" thistime")
           console.log(noww+" noww");
           console.log("++++++++++")
-          return((moment(noww,"HH:mm").format("HH:mm")>moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))<(moment(time.time22,"HH:mm").format("HH:mm")))
+          //
+          return(((moment(noww,"HH:mm").format("HH:mm")>moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))<(moment(time.time22,"HH:mm").format("HH:mm")))||
+          ((moment(noww,"HH:mm").format("HH:mm")<moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))>(moment(time.time22,"HH:mm").format("HH:mm")))
+          )
          
         }
           )){
+            var finish2=false;
+            var tconflict="nabood";
+            var t2conflict="nabood";
+           
+              if(magazis.some(time=>{
+                if((((moment(noww,"HH:mm").format("HH:mm")>moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))<(moment(time.time22,"HH:mm").format("HH:mm")))||
+                ((moment(noww,"HH:mm").format("HH:mm")<moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))>(moment(time.time22,"HH:mm").format("HH:mm")))
+              )){
+                tconflict=time.time;
+                t2conflict=time.time22;
+                return true;
+              }
+              else{
+                return false;
+              }
+              })){
+              console.log("ERROR ERROR ERROR")
+              finish=true;
+              }
+              else{
+      
+            
             console.log(values)
             console.log(noww+"noww")
             values.push({time:thistime,time22:noww})
             console.log(thistime+" thistime")
             console.log(values)
+              }
            
         }
         else{
@@ -307,7 +338,34 @@ function Doctorcalender() {
           
         }
           )){
+            var finish2=false;
+            var tconflict="nabood";
+            var t2conflict="nabood";
+           
+              if(hozoris.some(time=>{
+                if((((moment(noww,"HH:mm").format("HH:mm")>moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))<(moment(time.time22,"HH:mm").format("HH:mm")))||
+                ((moment(noww,"HH:mm").format("HH:mm")<moment(time.time,"HH:mm").format("HH:mm"))&&(moment(thistime,"HH:mm").format("HH:mm"))>(moment(time.time22,"HH:mm").format("HH:mm")))
+              )){
+                tconflict=time.time;
+                t2conflict=time.time22;
+                return true;
+              }
+              else{
+                return false;
+              }
+              })){
+              console.log("ERROR ERROR ERROR")
+              finish=true;
+              }
+              else{
+      
+            
+            console.log(values)
+            console.log(noww+"noww")
             values.push({time:thistime,time22:noww})
+            console.log(thistime+" thistime")
+            console.log(values)
+              }
           }
           else
           console.log("boodesh")
