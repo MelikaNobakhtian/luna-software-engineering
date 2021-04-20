@@ -12,6 +12,7 @@ import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup
 import TextField from '@material-ui/core/TextField';
 import { BsPlusCircleFill } from "react-icons/bs";
 import { AiFillMinusCircle } from "react-icons/ai";
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -23,6 +24,15 @@ function Doctorcalender() {
   const [mfields, setmfields] = useState([{ start: "", startt: "", end: "", endd: "" }])
   const [hduration,sethduration]=useState("");
   const [mduration,setmduration]=useState("");
+  const [hmhconflictmessage,sethmhconflictmessage]=useState(undefined);
+  const [hmmconflictmessage,sethmmconflictmessage]=useState(undefined);
+  const[openSnack,setOpenSnack]=useState(false);
+    const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+    return;
+    }
+    setOpenSnack(false);
+    };
   const handlehstartchange = (index, event) => {
     const values=[...hfields];
     values[index][event.target.name]=event.target.value;
@@ -109,9 +119,13 @@ function Doctorcalender() {
               )){
                 tconflict=time.time;
                 t2conflict=time.time22;
+                sethmmconflictmessage(undefined)
+                sethmhconflictmessage("بازه ی انتخابی شما در ساعت "+" " +t2conflict+"_"+tconflict+" "+"با بازه های مجازی شما تداخل دارد")
+                setOpenSnack(true);
                 return true;
               }
               else{
+                sethmhconflictmessage(undefined);
                 return false;
               }
               })){
@@ -348,9 +362,13 @@ function Doctorcalender() {
               )){
                 tconflict=time.time;
                 t2conflict=time.time22;
+                sethmhconflictmessage(undefined)
+                sethmmconflictmessage("بازه ی انتخابی شما در ساعت "+" "+t2conflict+"_"+tconflict+" "+"با بازه های حضوری شما تداخل دارد")
+                setOpenSnack(true);
                 return true;
               }
               else{
+                sethmmconflictmessage(undefined)
                 return false;
               }
               })){
@@ -594,6 +612,7 @@ function Doctorcalender() {
                     style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
                   )
                 }):null}
+                {hmhconflictmessage!=undefined?<div>{hmhconflictmessage}</div>:null}
 
 
               </div>
@@ -675,6 +694,16 @@ function Doctorcalender() {
                     style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
                   )
                 })}
+                
+                {/* {hmmconflictmessage!=undefined?
+                  <div>  <Snackbar
+          anchorOrigin={{ vertical:'bottom', horizontal:'center'}}
+          open={openSnack}
+          autoHideDuration={2500}
+          onClose={handleCloseSnack}
+          message={<div style={{fontSize:17}}>{hmmconflictmessage}</div>}
+          /></div>
+                     :null} */}
 
 
               </div>
@@ -690,6 +719,13 @@ function Doctorcalender() {
           </div>
 
         </div>
+        <Snackbar
+          anchorOrigin={{ vertical:'bottom', horizontal:'center'}}
+          open={openSnack}
+          autoHideDuration={2500}
+          onClose={handleCloseSnack}
+          message={hmmconflictmessage!=undefined?<div style={{fontSize:14}}>{hmmconflictmessage}</div>:<div style={{fontSize:14}}>{hmhconflictmessage}</div>}
+          />
         {/* justifu nemishod baraye hamin ms me */}
         {/* engar chon toye flex */}
         {/* dir="ltr-md rtl" nemishe */}
@@ -738,11 +774,12 @@ function Doctorcalender() {
           />
           {/* </div> */}
           {/* </div> */}
+        
         </div>
-
-
+       
         
       </div>
+    
 
 
     </div>
