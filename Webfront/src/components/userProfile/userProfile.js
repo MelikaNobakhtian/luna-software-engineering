@@ -11,7 +11,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 function UserProfile(props) {
   const [user, setUser] = useState({
-    token: Cookies.get("userToken"),
     userName: "",
     firstName: "",
     lastName: "",
@@ -89,10 +88,7 @@ function UserProfile(props) {
     }));
   };
 
-  const [state, setState] = useState({
-    navigate: false,
-    file: null,
-  });
+  
   const handleChangePassClick = (e) => {
     e.preventDefault();
     if (
@@ -150,6 +146,12 @@ function UserProfile(props) {
     }));
   };
 
+
+  //get image from user
+  const [state, setState] = useState({
+    navigate: false,
+    file: null,
+  });
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
@@ -170,6 +172,7 @@ function UserProfile(props) {
     }
   };
 
+  //snackbar
   const [massage, setMassage] = useState(<br></br>);
   const [openSnack, setOpenSnack] = useState(false);
   const handleCloseSnack = (event, reason) => {
@@ -178,6 +181,14 @@ function UserProfile(props) {
     }
     setOpenSnack(false);
   };
+
+  const handleLogout =()=>{
+    Cookies.remove("userId");
+    Cookies.remove("doctorId");
+    Cookies.remove("userTokenR");
+    Cookies.remove("userTokenA");
+    props.history.push('/login');
+  }
 
   return (
     <div className="main-content ">
@@ -198,7 +209,10 @@ function UserProfile(props) {
                   <h6 className="email">{user.email}</h6>
                 </div>
               </div>
-              <div class="card-body">
+              <div class="card-body flex row g-2">
+              <div className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+                خروج از حساب
+                </div>
                 <div className="btn btn-outline-light btn-sm">
                   <EditIcon></EditIcon>
                   ویرایش اطلاعات

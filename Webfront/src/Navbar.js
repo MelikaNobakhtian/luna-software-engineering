@@ -32,7 +32,7 @@ function Navbar(props) {
   };
 
   return (
-    <div className="App-color1">
+    <div className="" style={{backgroundColor:"#EBFCFF"}}>
       <nav
         className="navbar navbar-expand-lg navbar-light"
         dir="rtl"
