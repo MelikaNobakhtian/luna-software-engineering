@@ -42,50 +42,60 @@ function UserProfile(props) {
     }
   }, []);
 
-  const handleChangeInfosClick = (e) => {
-    e.preventDefault();
-    var formdata = new FormData();
-    formdata.append("username", user.userName);
-    formdata.append("first_name", user.firstName);
-    formdata.append("last_name", user.lastName);
-    if (state.file != null) formdata.append("profile_photo", state.file);
-
-    console.log(formdata);
-    axios
-      .put(
-        API_BASE_URL + "/user/" + Cookies.get("userId") + "/update-profile/",
-        formdata,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + Cookies.get("userTokenA"),
-          },
-        }
-      )
-      .then(function (response) {
-        console.log(response);
-        if (response.status === 200) {
-          console.log(response.status);
-          setMassage("اطلاعات جدید با موفقیت جایگزین شد");
-          setOpenSnack(true);
-          Cookies.set("userName", user.userName);
-        } else if (response.status === 401) {
-          console.log(response.status);
-          setMassage("نشست شما منقضی شده است. لطفا دوباره وارد شوید");
-          setOpenSnack(true);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
   const handleChange = (e) => {
+    console.log(user);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+  };
+
+  const handleChangeInfosClick = (e) => {
+    e.preventDefault();
+    if (
+      user.firstName.length === 0 ||
+      user.lastName.length === 0 ||
+      user.userName.length === 0
+    ) {
+      setMassage("لطفا همه را وارد کنید");
+      setOpenSnack(true);
+    } else {
+      var formdata = new FormData();
+      formdata.append("username", user.userName);
+      formdata.append("first_name", user.firstName);
+      formdata.append("last_name", user.lastName);
+      formdata.append("profile_photo", user.picture);
+      //if (state.file != null) formdata.append("profile_photo", state.file);
+      console.log(formdata);
+      axios
+        .put(
+          API_BASE_URL + "/user/" + Cookies.get("userId") + "/update-profile/",
+          formdata,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + Cookies.get("userTokenA"),
+            },
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+          if (response.status === 200) {
+            console.log(response.status);
+            setMassage("اطلاعات جدید با موفقیت جایگزین شد");
+            setOpenSnack(true);
+            Cookies.set("userName", user.userName);
+          } else if (response.status === 401) {
+            console.log(response.status);
+            setMassage("نشست شما منقضی شده است. لطفا دوباره وارد شوید");
+            setOpenSnack(true);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   const handleChangePassClick = (e) => {
@@ -100,6 +110,9 @@ function UserProfile(props) {
     } else if (user.newPass !== user.newPass2) {
       setMassage("تکرار رمز اشتباه است");
       setOpenSnack(true);
+    } else if (user.newPass.length < 8) {
+      setMassage("رمز باید بیشتر از ۸ کاراکتر باشد");
+      setOpenSnack(true);
     } else {
       const payload = {
         old_password: user.oldPass,
@@ -107,7 +120,6 @@ function UserProfile(props) {
       };
       const back = JSON.stringify(payload);
       console.log(back);
-
       axios
         .put(
           API_BASE_URL + "/user/" + Cookies.get("userId") + "/change-password/",
@@ -137,23 +149,23 @@ function UserProfile(props) {
         });
     }
 
-    setUser((prevState) => ({
-      ...prevState,
-      oldPass: "",
-      newPass: "",
-      newPass2: "",
-    }));
+    // setUser((prevState) => ({
+    //   ...prevState,
+    //   oldPass: "",
+    //   newPass: "",
+    //   newPass2: "",
+    // }));
   };
 
   //get image from user
-  const [state, setState] = useState({
-    navigate: false,
-    file: null,
-  });
+  // const [state, setState] = useState({
+  //   navigate: false,
+  //   file: null,
+  // });
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
-    setState({ file: e.target.files[0] });
+    //setState({ file: e.target.files[0] });
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
@@ -191,7 +203,7 @@ function UserProfile(props) {
   return (
     <div className="main-content ">
       <div className="container-fluid p-2">
-        {!Cookies.get("userTokenA") ? (
+        {Cookies.get("userTokenA") ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">
