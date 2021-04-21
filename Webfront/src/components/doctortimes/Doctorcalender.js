@@ -16,6 +16,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import randomColor from "randomcolor";
 
 
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -36,10 +37,11 @@ function Doctorcalender() {
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
     , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
-  const [durationmode, setdurationmode] = useState([{ name: "_", hdur: hduration }, { name: "پر کردن دندون", hdur: 20 }])
+  const [durationmode, setdurationmode] = useState([ { name: "پر کردن دندون", hdur: 20,color:"#028090" }])
   const [dm, setdm] = useState("_");
-  const [dmdur, setdmdur] = useState("_");
-  const [dmhdur, setdmhdur] = useState(hduration);
+  const [dmdur, setdmdur] = useState("نوع بازه ی زمانی");
+  const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})
+  const [dmhdur, setdmhdur] = useState("");
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -171,7 +173,8 @@ function Doctorcalender() {
             console.log(values)
             console.log(noww + "noww")
             
-            values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber ,duration:dmhdur,durationname:dmdur })
+            values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
+              ,duration:selectedduration.duration,durationname:selectedduration.name,durationnumber:selectedduration.color })
             console.log(thistime + " thistime")
             console.log(values)
           }
@@ -651,22 +654,28 @@ function Doctorcalender() {
 
                 {durationmode.length >= 1 ? <div class="dropdown me-5" dir="ltr" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {dm}
+                    {selectedduration.name}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
-
-                      return (value.hdur != "" ? <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setdm(value.name + " _ " + value.hdur)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li> :
-                        <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setdm(" _ ")} data-ref="one" >  {value.name}   </a></li>
+                  
+                      {/* value.hdur != "" ?  */}
+                      {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */}
+                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
                       )
                     })}
                     <div class="align-Items-center" style={{}}><div class="dropdown-item " data-ref="one" >
                       <BsPlusCircleFill color="gray" onClick={() => {
-                        setdmdur("");
-                        setdmhdur("");
-                        setdurationmode([...durationmode, { name: dmdur, hdur: dmhdur }])
+                        var col=randomColor()
+                        setselectedduration({name:dmdur,duration:dmhdur,color:col})
+                        setdmhdur("مدت زمان")
+                        setdmdur("نوع بازه ی زمانی")
+                         console.log(durationmode+" durationmode")
+                      //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
+                        setdurationmode([...durationmode,{name:dmdur,duration:dmhdur,color:col}])
+                        console.log(durationmode)
                       }} class="min-vw-20 min-vh-20 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <input value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
                       <input placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
@@ -704,7 +713,7 @@ function Doctorcalender() {
                       sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: "#008F81", borderColor: "#008F81" }}>{val.time}  ({val.addressnumber})</Button>
+                    style={{ margin: 3, backgroundColor: val.durationnumber , borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
