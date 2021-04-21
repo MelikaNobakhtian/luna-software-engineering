@@ -411,9 +411,45 @@ class SetNewPasswordAPIViewTest(TestCase):
 
     def test_set_password(self):
         new_password = '333333'
-        response = client.patch(reverse('password-reset-complete'),data=json.dumps({'password':new_password,'token':self.token[0],'uidb64':self.uidb64[0]}),
+        response = client.post(reverse('password-reset-complete'),data=json.dumps({'password':new_password,'token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        response = client.patch(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
+        response = client.post(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
         self.assertEqual(response.status_code,401)
+
+
+class OnlineAppointmentAPIViewTest(TestCase):
+
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+
+    def test_online_time(self):
+        doc_id = DoctorUser.objects.get(user=self.user).id
+        duration = 45
+        start_datetime = "1400-12-10 13:30:00"
+        response = client.post(reverse('online-apt',kwargs={'pk':doc_id}),
+        data=json.dumps([{'doc_id':doc_id,'duration':duration,'start_datetime':start_datetime}]),
+            content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        response = client.get(reverse('online-apt',kwargs={'pk':doc_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['duration'],duration)
+
+    
+
+        
+
