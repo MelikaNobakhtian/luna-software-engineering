@@ -142,7 +142,7 @@ class DoctorProfileView(APIView):
     def get(self, request, pk, format=None):
         docprofile = self.get_object(pk)
         serializer = DoctorProfileSerializer(docprofile)
-        return Response(serializer.data)
+        return Response({"data":serializer.data,"states":states},status=status.HTTP_200_OK)
 
 class UpdateDoctorProfileView(generics.UpdateAPIView):
     serializer_class = UpdateDoctorProfileSerializer
@@ -194,7 +194,7 @@ class SetDoctorAddressView(APIView):
         counter = 0
         while counter < count:
             add = request.data.get('addresses')[counter]
-            new_add = Address(state=states[(int)add['state']],doc=doc,city=add['city'],detail=add['detail'])
+            new_add = Address(state=states[add['state']],doc=doc,city=add['city'],detail=add['detail'])
             new_add.save()
             counter+=1
             
@@ -202,7 +202,7 @@ class SetDoctorAddressView(APIView):
         doc.save()
         add_list = AddressSerializer(doc_add,many=True)
         doc_info = DoctorProfileSerializer(doc)
-        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data},status=status.status.HTTP_200_OK)
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data},status=status.HTTP_200_OK)
 
 class ChangePasswordView(generics.UpdateAPIView):
 

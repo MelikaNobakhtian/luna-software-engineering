@@ -161,7 +161,7 @@ class AddressSerializer(serializers.ModelSerializer):
     #doc = DoctorProfileSerializer(read_only=True)
     class Meta:
         model = Address
-        fields = ['state','doc','city','detail','id']
+        fields = ['id','state','doc','city','detail']
 
 class ChangePasswordSerializer(serializers.Serializer):
 
