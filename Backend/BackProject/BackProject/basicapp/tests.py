@@ -468,7 +468,7 @@ class InPersonAppointmentAPIViewTest(TestCase):
         add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
         add.save()
 
-    def test_online_time(self):
+    def test_inperson_time(self):
         doc_id = DoctorUser.objects.get(user=self.user).id
         address_id = Address.objects.get(doc=self.doc).id
         duration = 45
@@ -476,13 +476,13 @@ class InPersonAppointmentAPIViewTest(TestCase):
         address_number = 1
         duration_number = 'green'
         start_datetime = "1400-12-10 13:30:00"
-        response = client.post(reverse('inperson-apt',kwargs={'doc_id':doc_id , 'address_id': address_id}),
+        response = client.post(reverse('inperson-apt',kwargs={'doc_id':doc_id }),
         data=json.dumps([{'doc_id':doc_id,'duration':duration,'start_datetime':start_datetime,
                         'address_id':address_id,'time_type':time_type,'address_number':address_number,'duration_number':duration_number}]),
             content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-        response = client.get(reverse('inperson-apt',kwargs={'doc_id':doc_id , 'address_id': address_id}))
+        response = client.get(reverse('inperson-apt',kwargs={'doc_id':doc_id }))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['time_type'],time_type)
     

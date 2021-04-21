@@ -42,7 +42,7 @@ urlpatterns = [
     path('password-reset-complete/', SetNewPasswordAPIView.as_view(),
          name='password-reset-complete'),
     path('appointment/<int:pk>/online/', OnlineAppointmentView.as_view(), name='online-apt'),
-    path('appointment/<int:doc_id>/in-person/<int:address_id>/', InPersonAppointmentView.as_view(), name='inperson-apt'),
+    path('appointment/<int:doc_id>/in-person/', InPersonAppointmentView.as_view(), name='inperson-apt'),
     path('update-appointment/<int:pk>/online/', UpdateOnlineAppointmentView.as_view(), name='onapt-up'),
     path('update-appointment/<int:pk>/in-person/', UpdateInPersonAppointmentView.as_view(), name='inapt-up'),
     
