@@ -29,11 +29,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         username = attrs.get('username', '')
 
         if attrs.get('password', '') != attrs.get('password2', ''):
-            raise serializers.ValidationError(self.default_error_messages['password'])
+            return{ "message":self.default_error_messages['password'],"status":200}
 
         if not username.isalnum():
-            raise serializers.ValidationError(
-                self.default_error_messages['username'])
+            return{ "message":self.default_error_messages['username'],"status":200}
         return attrs
 
     def create(self, validated_data):
@@ -66,14 +65,14 @@ class LoginSerializer(serializers.ModelSerializer):
         filtered_user_by_email = User.objects.filter(email=email)
         user = auth.authenticate(email=email, password=password)
 
+        mes = 'Please continue your login using ' + filtered_user_by_email[0].auth_provider
         if filtered_user_by_email.exists() and filtered_user_by_email[0].auth_provider != 'email':
-            raise AuthenticationFailed(
-                detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
+            return{"message":mes,"status":200}
 
         if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
+            return{"message":'Invalid credentials, try again',"status":200}
         if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+            return{"message":'Email is not verified',"status":200}
         is_doctor = False
         user_id = user.id
         doctor_id = 0
@@ -116,14 +115,14 @@ class SetNewPasswordSerializer(serializers.Serializer):
             id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=id)
             if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('The reset link is invalid', 401)
+                return{"message":'The reset link is invalid',"status":200}
 
             user.set_password(password)
             user.save()
 
             return (user)
         except Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 401)
+            return{"message":'The reset link is invalid',"status":200}
         return super().validate(attrs)
 
 class UserProfileSerializer(serializers.ModelSerializer):

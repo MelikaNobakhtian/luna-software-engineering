@@ -88,7 +88,10 @@ class RegisterDoctorView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
+        degree = request.FILES['degree']
+        print(degree)
+        print(request.data)
+        new_doc = DoctorUser(user=user,degree=degree)
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
         #current_site = get_current_site(request).domain
@@ -153,7 +156,7 @@ class UpdateDoctorProfileView(generics.UpdateAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         doc = get_object_or_404(queryset,pk=pk)
         self.check_object_permissions(self.request, doc)
-
+        print(request)
         serializer = self.serializer_class(doc,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -246,6 +249,7 @@ class UpdateUserProfileView(generics.UpdateAPIView):
     def update(self,request,pk,*args,**kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user,data=request.data, partial=True)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data":serializer.data},status=status.HTTP_200_OK)
