@@ -17,6 +17,9 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import randomColor from "randomcolor";
+import Cookies from "js-cookie";
+import { API_BASE_URL } from "../apiConstant/apiConstant";
+import axios from "axios";
 
 
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -32,6 +35,7 @@ function Doctorcalender() {
   const [hmmconflictmessage, sethmmconflictmessage] = useState(undefined);
   const [emptyhduration, setemptyhduration] = useState(undefined);
   const [emptymduration, setemptymduration] = useState(undefined);
+  const [selecteddate,setselecteddate]=useState("");
   const[col,setcol]=useState(randomColor())
   
   const [openSnack, setOpenSnack] = useState(false);
@@ -43,6 +47,7 @@ function Doctorcalender() {
   const [dmdur, setdmdur] = useState("");
   const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:hduration,color:"#008F81"})
   const [dmhdur, setdmhdur] = useState("");
+  const [snackbarerror,setsnackbarerror]=useState("");
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -60,6 +65,43 @@ function Doctorcalender() {
 
 
   const checkforhmconflict = (horm) => {
+
+  }
+  const sendmagazis=()=>{
+    var values=[];
+    var doctorid=Cookies.get("doctorid");
+    console.log(doctorid+" doctorid");
+    if(selecteddate===""){
+      // setemptymduration(undefined)
+      setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      setOpenSnack(true);
+    }
+
+    for(var i=0;i<magazis.length;i++){
+      var start=selecteddate+" "+magazis[i].time
+      values.push({duration:mduration,start_datetime:start,doc_id:doctorid});
+    }
+    console.log(values)
+    console.log(" all the magazis values :)")
+
+    axios.post(API_BASE_URL + "/appoinment/"+doctorid+"/online/", JSON.stringify(values), {
+          headers: { "content-type": "application/json" },
+        })
+        .then(function (response) {
+          console.log(response)   
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
+  }
+  const sendhozori=()=>{
+    if(selecteddate===""){
+      // setemptymduration(undefined)
+      setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      setOpenSnack(true);
+    }
 
   }
   const handleaddhfield = () => {
@@ -567,6 +609,7 @@ function Doctorcalender() {
   const calenderchange = (value) => {
     console.log("hi")
     console.log(value + "value")
+    setselecteddate(value.from.year+"-"+value.from.month+"-"+value.from.day)
     console.log(value.from.year + "year" + value.from.month + "month" + value.from.day + " _ " + value.to)
     setSelectedDayRange(value)
   }
@@ -622,7 +665,7 @@ function Doctorcalender() {
               </div>
               {/* d-block mb-3 d-sm-none d-md-block d-lg-none  */}
               <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                <Button type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
+                <Button onClick={()=>sendhozori()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                   {/* <div class="align-self-center justify-self-center"> */}
               تایید
               {/* {/* </div> */}
@@ -775,7 +818,7 @@ function Doctorcalender() {
                 {/* ms-auto me-auto nashod */}
                 {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
                 <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                  <Button type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
+                  <Button onClick={()=>sendmagazis()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                     {/* <div class="align-self-center justify-self-center"> */}
               تایید
               {/* {/* </div> */}
@@ -866,6 +909,7 @@ function Doctorcalender() {
               {hmmconflictmessage != undefined ? <div style={{ fontSize: 14 }}>{hmmconflictmessage}</div> : <div style={{ fontSize: 14 }}>{hmhconflictmessage}</div>}
               {emptyhduration != undefined ? <div>{emptyhduration}</div> : null}
               {emptymduration != undefined ? <div>{emptymduration}</div> : null}
+              {snackbarerror!=""?<div>{snackbarerror}</div> :null}
             </div>
 
           }
