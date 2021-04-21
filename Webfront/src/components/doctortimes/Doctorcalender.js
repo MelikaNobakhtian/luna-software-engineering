@@ -13,6 +13,9 @@ import TextField from '@material-ui/core/TextField';
 import { BsPlusCircleFill } from "react-icons/bs";
 import { AiFillMinusCircle } from "react-icons/ai";
 import Snackbar from '@material-ui/core/Snackbar';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -29,6 +32,9 @@ function Doctorcalender() {
   const [emptyhduration,setemptyhduration]=useState(undefined);
   const [emptymduration,setemptymduration]=useState(undefined);
   const[openSnack,setOpenSnack]=useState(false);
+  const [add,setadd]=useState("... برای آدرس");
+  const [haddresses,sethaddresses]=useState([{add1:"آدرس 1",durationmodel:[{name:"دندون پر کردن",duration:20},{name:"ارتودنسی",duration:10}]}
+  ,{add1:"آدرس 2",durationmodel:[{name:"دندون پر کردن",duration:20},{name:"ارتودنسی",duration:10}]}]);
     const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
     return;
@@ -605,12 +611,28 @@ function Doctorcalender() {
 
               </div>
 
-              <div class="dropdown">
+              {haddresses.length>1?<div class="dropdown" dir="ltr" >
+  <a class="btn btn-secondary dropdown-toggle"  role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+   {add}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end me-auto"  aria-labelledby="dropdownMenuLink">
+  <li><a class="dropdown-item " onClick={()=>setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li>
+ {haddresses.map((value,index)=>{
+   var indexx=index+1;
+ return(  <li class="row" style={{alignItems:"center"}}><a  class="dropdown-item " onClick={()=>setadd(value.add1+"("+indexx+")")} data-ref="one" >{value.add1}       ({indexx}) </a>
+ 
+ </li>)
+ })}
+ </ul>
+</div>:null}
+
+
+ <div class="dropdown">
   <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
     Dropdown link
   </a>
 
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+  <ul class="dropdown-menu me-auto" aria-labelledby="dropdownMenuLink">
     <li><a class="dropdown-item" data-ref="one" href="#">Action</a></li>
     <li><a class="dropdown-item" data-ref="two" href="#">Another action</a></li>
     <li><a class="dropdown-item" data-ref="three" href="#">Something else here</a></li>
