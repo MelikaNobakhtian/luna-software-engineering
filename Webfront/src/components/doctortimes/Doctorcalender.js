@@ -35,6 +35,8 @@ function Doctorcalender() {
   const [add,setadd]=useState("... برای آدرس");
   const [haddresses,sethaddresses]=useState([{add1:"آدرس 1",durationmodel:[{name:"دندون پر کردن",duration:20},{name:"ارتودنسی",duration:10}]}
   ,{add1:"آدرس 2",durationmodel:[{name:"دندون پر کردن",duration:20},{name:"ارتودنسی",duration:10}]}]);
+  const[durationmode,setdurationmode]=useState([{name:"_",hdur:hduration},{name:"پر کردن دندون",hdur:20}])
+  const [dm,setdm]=useState("_");
     const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
     return;
@@ -622,6 +624,23 @@ function Doctorcalender() {
  return(  <li class="row" style={{alignItems:"center"}}><a  class="dropdown-item " onClick={()=>setadd(value.add1+"("+indexx+")")} data-ref="one" >{value.add1}       ({indexx}) </a>
  
  </li>)
+ })}
+ </ul>
+</div>:null}
+
+
+{durationmode.length>=1?<div class="dropdown" dir="ltr" >
+  <a class="btn btn-secondary dropdown-toggle"  role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+   {dm}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end me-auto"  aria-labelledby="dropdownMenuLink">
+ 
+ {durationmode.map((value,index)=>{
+   var indexx=index+1;
+ 
+ return(value.hdur!=""?<li class="row" style={{alignItems:"center"}}><a  class="dropdown-item " onClick={()=>setdm(value.name+" _ "+value.hdur)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>:
+ <li class="row" style={{alignItems:"center"}}><a  class="dropdown-item " onClick={()=>setdm(" _ ")} data-ref="one" >  {value.name}   </a></li>
+ )
  })}
  </ul>
 </div>:null}
