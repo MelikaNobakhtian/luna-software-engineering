@@ -29,11 +29,11 @@ function UserProfile(props) {
           console.log(response);
           setUser((prevState) => ({
             ...prevState,
-            userName: response.data.username,
-            firstName: response.data.first_name,
-            lastName: response.data.last_name,
-            email: response.data.email,
-            picture: API_BASE_URL + response.data.profile_photo,
+            userName: response.data.data.username,
+            firstName: response.data.data.first_name,
+            lastName: response.data.data.last_name,
+            email: response.data.data.email,
+            picture: API_BASE_URL + response.data.data.profile_photo,
           }));
         })
         .catch(function (error) {
@@ -62,11 +62,13 @@ function UserProfile(props) {
       setOpenSnack(true);
     } else {
       var formdata = new FormData();
-      formdata.append("username", user.userName);
-      formdata.append("first_name", user.firstName);
-      formdata.append("last_name", user.lastName);
-      formdata.append("profile_photo", user.picture);
+      formdata.append('username', user.userName);
+      formdata.append('first_name', user.firstName);
+      formdata.append('last_name', user.lastName);
+      formdata.append('profile_photo', state.file);
       //if (state.file != null) formdata.append("profile_photo", state.file);
+      console.log(user.picture);
+      console.log(state.file);
       console.log(formdata);
       axios
         .put(
@@ -75,7 +77,7 @@ function UserProfile(props) {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + Cookies.get("userTokenA"),
+              "Authorization": "Bearer " + Cookies.get("userTokenA"),
             },
           }
         )
@@ -162,10 +164,16 @@ function UserProfile(props) {
   //   navigate: false,
   //   file: null,
   // });
+  const [state , setState]=useState(
+    {
+        navigate:false,
+        file:null
+    }
+  )
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
-    //setState({ file: e.target.files[0] });
+    setState({ file: e.target.files[0] });
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
@@ -203,7 +211,7 @@ function UserProfile(props) {
   return (
     <div className="main-content ">
       <div className="container-fluid p-2">
-        {Cookies.get("doctorId") !== 0 ? (
+        {Cookies.get("doctorId").toString() !== "0" ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">

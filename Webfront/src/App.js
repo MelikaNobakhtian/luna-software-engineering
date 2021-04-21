@@ -1,8 +1,8 @@
+import React from "react";
 import "./App.css";
 //import "bootstrap/dist/css/bootstrap.min.css"
 import Navbar from "./Navbar.js";
 //import {Container ,Row,Col,Button,nav} from  "react-bootstrap";
-import React from "react";
 import {
   BrowserRouter as Router,
   Switch,

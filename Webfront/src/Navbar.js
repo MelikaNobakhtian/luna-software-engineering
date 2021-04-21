@@ -12,19 +12,21 @@ import Button from "react-bootstrap/Button";
 import { BsSearch, BsFillPersonFill } from "react-icons/bs";
 //import { BiSearchAlt2 } from "react-icons/bi";
 import Cookies from "js-cookie";
-// import {
+ import {
 //   BrowserRouter as Router,
 //   Switch,
 //   Route,
 //   Link,
 //   Redirect,
-// } from "react-router-dom";
+withRouter
+ } from "react-router-dom";
 
 function Navbar(props) {
   const redirecttoprofile = () => {
-    if (Cookies.get("doctorid") === 0) {
+    console.log(Cookies.get("doctorId"))
+    if (Cookies.get("doctorId").toString() === "0") {
       props.history.push("/userProfile");
-    } else if (Cookies.get("doctorid") === 1) {
+    } else if (Cookies.get("doctorId").toString() === "1") {
       props.history.push("/doctorProfile");
     } else {
       props.history.push("/login");
@@ -118,8 +120,7 @@ function Navbar(props) {
           </ul>
         </li> */}
               <div className="nav-item mt-lg-auto mb-lg-auto mb-2 mt-n5  ms-5">
-                {Cookies.get("doctorid") === 1 ||
-                Cookies.get("doctorid") === 0 ? (
+                {Cookies.get("doctorId") !== undefined? (
                   <div
                   class="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
@@ -159,4 +160,4 @@ function Navbar(props) {
   );
 }
 
-export default Navbar;
+export default  withRouter(Navbar);
