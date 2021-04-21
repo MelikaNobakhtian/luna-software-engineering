@@ -62,6 +62,8 @@ function SignUp(props) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
     }
+
+    console.log(state.file)
   };
 
 
@@ -98,7 +100,8 @@ const  imageHandler = (e) => {
       formd.append('password2',passwords.confirmPassword)
       formd.append('first_name',name)
       formd.append('last_name',lastname)
-      formd.append('degree',profileImg.split(':')[1])
+      formd.append('degree',state.file)
+      console.log(profileImg.split(':')[1])
       console.log(formd)
       axios
         .post(API_BASE_URL + "/register-doctor/", formd, {
@@ -387,23 +390,23 @@ const  imageHandler = (e) => {
               </label>
             </div>
             <div class="col-12 ">
-                      {/* <input
+                      <input
                         class="form-control"
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
                         ref={imageUploader}
                         style={{ display: "none", color: "white" }}
-                      /> */}
-                        <Form.Group>
+                      />
+                        {/* <Form.Group>
                           <Form.File id="uploadImg" accept="image/*" className="butChoose" onChange={imageHandler} />
-                        </Form.Group>
-                      {/* <div
-                        className="btn btn-outline-dark "
+                        </Form.Group> */}
+                      <div
+                        className="btn btn-dark "
                         onClick={() => imageUploader.current.click()}
                       >
                      انتخاب عکس 
-                      </div> */}
+                      </div>
                     </div>
             <div>
          
@@ -411,7 +414,7 @@ const  imageHandler = (e) => {
               ثبت نام
             </Button>
             <span className="btn mt-3" onClick={() => redirectToLogin()}>
-                قبلاً ثبت ‌نام نکرده‌اید؟
+                قبلاً ثبت ‌نام کرده‌اید؟
             </span>
 
             </div>
