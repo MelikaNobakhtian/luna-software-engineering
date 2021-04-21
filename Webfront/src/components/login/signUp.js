@@ -11,6 +11,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import {
+  useHistory,
   // Link,
   // Redirect,
   withRouter,
@@ -27,7 +28,6 @@ import { API_BASE_URL } from "../apiConstant/apiConstant";
 import docImage from "../../assets/Lovepik_com-401686853-online-medical-consultation.png";
 
 function SignUp(props) {
-  //const [errors, setErrors] = useState({});
   const [name, setName] = useState("");
   const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -50,6 +50,9 @@ function SignUp(props) {
     navigate: false,
     file: null,
   });
+  const [profileImg, setProfileImg] = useState("");
+  
+ 
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
@@ -57,12 +60,31 @@ function SignUp(props) {
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
-      // const { current } = uploadedImage;
-      // current.file = file;
-      
       reader.readAsDataURL(file);
     }
   };
+
+
+const  imageHandler = (e) => {
+    if(e.target?.files?.length > 0){
+        const reader = new FileReader();
+    reader.onload = () => {
+        if (reader.readyState === 2) {
+
+            setProfileImg(reader.result)
+        }
+    }
+    reader.readAsDataURL(e.target.files[0]);
+
+    setProfileImg(e.target.files[0]);
+    }
+    else{
+        setProfileImg("");
+    }
+    
+};
+
+  {console.log(profileImg+"ffilee")}
   function handleSubmit(event) {
     event.preventDefault();
     setEmailErr("");
@@ -76,17 +98,7 @@ function SignUp(props) {
       formd.append("password2",passwords.confirmPassword)
       formd.append("first_name",name)
       formd.append("last_name",lastname)
-      formd.append("degree",state.file)
-      // const payload = {
-      //   username: username,
-      //   email: email,
-      //   password: passwords.password,
-      //   password2: passwords.confirmPassword,
-      //   first_name: name,
-      //   last_name: lastname,
-      //   degree: selectedFile,
-      // };
-      //const back = JSON.stringify(payload);
+      formd.append("degree",profileImg)
       axios
         .post(API_BASE_URL + "/register-doctor/", formd, {
           headers: { "content-type": "application/json" },
@@ -97,7 +109,7 @@ function SignUp(props) {
             Cookies.set("userTokenA", response.data.token.access);
             Cookies.set("userId", response.data.user_id);
             Cookies.set("doctorId", response.data.doctor_id);
-            //redirectToHome();
+            props.history.push("/login");
           } else {
             console.log(response);
           }
@@ -125,7 +137,7 @@ function SignUp(props) {
             Cookies.set("userTokenA", response.data.token.access);
             Cookies.set("userId", response.data.user_id);
             Cookies.set("doctorId", response.data.doctor_id);
-            //redirectToHome();
+            props.history.push("/login");
           } else {
             console.log(response);
           }
@@ -140,9 +152,6 @@ function SignUp(props) {
     setName(value);
     let errors = "";
     if (value.length === 0) errors = "پر کرن نام ضروری است !";
-    // else if(!value.match(/^[a-zA-Z]+$/)){
-    // errors="فقط از حروف استفاده نمایید   !";
-    // }
     setNameErr(errors);
   }
 
@@ -150,9 +159,6 @@ function SignUp(props) {
     setLastName(value);
     let errors = "";
     if (value.length === 0) errors = "پر کرن نام خانوادگی ضروری است !";
-    // else if(!value.match(/^[a-zA-Z]+$/)){
-    // errors="فقط از حروف استفاده نمایید   !";
-    //  }
     setLastnameErr(errors);
   }
 
@@ -166,7 +172,9 @@ function SignUp(props) {
   function validatoremail(value) {
     setEmail(value);
     let errors = "";
-    if (!regex_email.test(String(value).toLowerCase())) {
+    if (value.length === 0) 
+    errors = "پر کرن ایمیل ضروری است !";
+   else if (!regex_email.test(String(value).toLowerCase())) {
       errors = " ایمیل صحیح را وارد نمایید !";
     }
     setEmailErr(errors);
@@ -176,7 +184,7 @@ function SignUp(props) {
     setPasswords({ ...passwords, password: values });
     let errors = "";
     if (!pattern.test(String(values).toLowerCase())) {
-      errors = "پسورد صحیح را وارد کنید !";
+      errors = "  پسورد باید حداقل هشت کاراکتر شامل حرف و رقم باشد  !";
     }
     setPassErr(errors);
   }
@@ -370,29 +378,31 @@ function SignUp(props) {
               </label>
             </div>
             <div class="col-12 ">
-                      <input
+                      {/* <input
                         class="form-control"
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
                         ref={imageUploader}
                         style={{ display: "none", color: "white" }}
-                      />
-                      <div
-                        className="btn btn-outline-light "
+                      /> */}
+                        <Form.Group>
+                          <Form.File id="uploadImg" accept="image/*" className="butChoose" onChange={imageHandler} />
+                        </Form.Group>
+                      {/* <div
+                        className="btn btn-outline-dark "
                         onClick={() => imageUploader.current.click()}
                       >
-                        
-                        انتخاب عکس 
-                      </div>
+                     انتخاب عکس 
+                      </div> */}
                     </div>
-
             <div>
+         
             <Button className="mt-3" block type="submit" variant="success">
               ثبت نام
             </Button>
             <span className="btn mt-3" onClick={() => redirectToLogin()}>
-                قبلاً ثبت‌نام نکرده‌اید؟
+                قبلاً ثبت ‌نام نکرده‌اید؟
             </span>
 
             </div>
