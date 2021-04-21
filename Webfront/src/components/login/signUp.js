@@ -89,27 +89,31 @@ const  imageHandler = (e) => {
     event.preventDefault();
     setEmailErr("");
     setPassErr("");
-    let formd = new FormData();
+    var formd = new FormData();
     if (isDoctor % 2 === 1) {
       
-      formd.append("username",username)
-      formd.append("email",email)
-      formd.append("password",passwords.password)
-      formd.append("password2",passwords.confirmPassword)
-      formd.append("first_name",name)
-      formd.append("last_name",lastname)
-      formd.append("degree",profileImg)
+      formd.append('username',username)
+      formd.append('email',email)
+      formd.append('password',passwords.password)
+      formd.append('password2',passwords.confirmPassword)
+      formd.append('first_name',name)
+      formd.append('last_name',lastname)
+      formd.append('degree',profileImg.split(':')[1])
+      console.log(formd)
       axios
         .post(API_BASE_URL + "/register-doctor/", formd, {
-          headers: { "content-type": "application/json" },
+          headers: { "content-Type": "application/json" },
         })
         .then(function (response) {
+          console.log(response);
           if (response.status === 200) {
-            Cookies.set("userTokenR", response.data.token.refresh);
-            Cookies.set("userTokenA", response.data.token.access);
-            Cookies.set("userId", response.data.user_id);
-            Cookies.set("doctorId", response.data.doctor_id);
-            props.history.push("/login");
+            // Cookies.set("userTokenR", response.data.token.refresh);
+            // Cookies.set("userTokenA", response.data.token.access);
+            // Cookies.set("userId", response.data.user_id);
+            // Cookies.set("doctorId", response.data.doctor_id);
+            // props.history.push("/login");
+
+            ////ایمیل تایید برای شما فرستاده شد
           } else {
             console.log(response);
           }
@@ -127,17 +131,22 @@ const  imageHandler = (e) => {
         last_name: lastname,
       };
       const back = JSON.stringify(payload);
+      console.log(back)
       axios
         .post(API_BASE_URL + "/register/", back, {
           headers: { "content-type": "application/json" },
         })
         .then(function (response) {
-          if (response.status === 200) {
-            Cookies.set("userTokenR", response.data.token.refresh);
-            Cookies.set("userTokenA", response.data.token.access);
-            Cookies.set("userId", response.data.user_id);
-            Cookies.set("doctorId", response.data.doctor_id);
-            props.history.push("/login");
+          console.log(response);
+          if (response.status === 201) {
+            // Cookies.set("userTokenR", response.data.token.refresh);
+            // Cookies.set("userTokenA", response.data.token.access);
+            // Cookies.set("userId", response.data.user_id);
+            // Cookies.set("doctorId", response.data.doctor_id);
+            // props.history.push("/login");
+
+            ////ایمیل تایید برای شما فرستاده شد
+
           } else {
             console.log(response);
           }
