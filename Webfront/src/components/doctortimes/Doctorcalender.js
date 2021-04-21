@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { render } from "react-dom";
 import { RangeDatePicker } from "jalali-react-datepicker";
 import { RestaurantMenu, TimeToLeave } from "@material-ui/icons";
@@ -50,6 +50,22 @@ function Doctorcalender() {
   const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:hduration,color:"#008F81"})
   const [dmhdur, setdmhdur] = useState("");
   const [snackbarerror,setsnackbarerror]=useState("");
+
+
+
+  useEffect(() => {
+    var doctorid=Cookies.get("doctorid");
+    axios.get(API_BASE_URL + "/appoinment/" + doctorid+"/")
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+
+
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
