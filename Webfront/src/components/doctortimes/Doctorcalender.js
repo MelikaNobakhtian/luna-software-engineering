@@ -32,6 +32,7 @@ function Doctorcalender() {
   const [hmmconflictmessage, sethmmconflictmessage] = useState(undefined);
   const [emptyhduration, setemptyhduration] = useState(undefined);
   const [emptymduration, setemptymduration] = useState(undefined);
+  const[col,setcol]=useState(randomColor())
   
   const [openSnack, setOpenSnack] = useState(false);
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
@@ -651,22 +652,23 @@ function Doctorcalender() {
                   </ul>
                 </div> : null}
 
-
+                  {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
                 {durationmode.length >= 1 ? <div class="dropdown me-5" dir="ltr" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-end me-auto col-auto" aria-labelledby="dropdownMenuLink">
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
                   
                       {/* value.hdur != "" ?  */}
                       {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */}
-                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
+                      return (<li class="row"  style={{ alignItems: "flex-start" }}><a class="dropdown-item " dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
                       )
                     })}
-                    <div class="align-Items-center" style={{}}><div class="dropdown-item " data-ref="one" >
+                  
+                    <div class=" d-flex flex-row mt-2 " data-ref="one" >
                       <BsPlusCircleFill color="gray" onClick={() => {
                         var col=randomColor()
                         setselectedduration({name:dmdur,duration:dmhdur,color:col})
@@ -676,11 +678,12 @@ function Doctorcalender() {
                       //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
                         setdurationmode([...durationmode,{name:dmdur,duration:dmhdur,color:col}])
                         console.log(durationmode)
-                      }} class="min-vw-20 min-vh-20 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <input value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
-                      <input placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
+                      }} class="min-vw-20 min-vh-20 align-self-start "  style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <div class="mx-2 shadow-1" onClick={()=>setcol(randomColor())} style={{backgroundColor:col,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
+                      <input lang="fa" dir="rtl" class="" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      <input lang="fa" dir="rtl" class="" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
                       </input>
-                    </div></div>
+                    </div>
                   </ul>
                 </div> : null}
               </div>
