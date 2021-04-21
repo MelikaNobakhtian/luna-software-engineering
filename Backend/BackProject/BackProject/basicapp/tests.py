@@ -449,6 +449,42 @@ class OnlineAppointmentAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['duration'],duration)
 
+
+class InPersonAppointmentAPIViewTest(TestCase):
+    
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+        add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        add.save()
+
+    def test_online_time(self):
+        doc_id = DoctorUser.objects.get(user=self.user).id
+        address_id = Address.objects.get(doc=self.doc).id
+        duration = 45
+        time_type = "general"
+        address_number = 1
+        duration_number = 'green'
+        start_datetime = "1400-12-10 13:30:00"
+        response = client.post(reverse('inperson-apt',kwargs={'doc_id':doc_id , 'address_id': address_id}),
+        data=json.dumps([{'doc_id':doc_id,'duration':duration,'start_datetime':start_datetime,
+                        'address_id':address_id,'time_type':time_type,'address_number':address_number,'duration_number':duration_number}]),
+            content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        response = client.get(reverse('inperson-apt',kwargs={'doc_id':doc_id , 'address_id': address_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['time_type'],time_type)
     
 
         
