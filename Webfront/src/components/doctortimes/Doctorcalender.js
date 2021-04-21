@@ -38,9 +38,9 @@ function Doctorcalender() {
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
     , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
-  const [durationmode, setdurationmode] = useState([ { name: "پر کردن دندون", hdur: 20,color:"#028090" }])
+  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", hdur: hduration,color:"#028090" }])
   const [dm, setdm] = useState("_");
-  const [dmdur, setdmdur] = useState("نوع بازه ی زمانی");
+  const [dmdur, setdmdur] = useState("");
   const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})
   const [dmhdur, setdmhdur] = useState("");
   const handleCloseSnack = (event, reason) => {
@@ -657,14 +657,16 @@ function Doctorcalender() {
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end me-auto col-auto" aria-labelledby="dropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-end me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
                   
                       {/* value.hdur != "" ?  */}
                       {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */}
-                      return (<li class="row"  style={{ alignItems: "flex-start" }}><a class="dropdown-item " dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
+                      return (<li class="d-flex flex-row" dir="ltr" lang="fa"  style={{}}>
+                      <div class="mx-2 shadow-1 col-12 align-self-center"  style={{backgroundColor:value.color,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
+                      <a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
                       )
                     })}
                   
@@ -680,8 +682,8 @@ function Doctorcalender() {
                         console.log(durationmode)
                       }} class="min-vw-20 min-vh-20 align-self-start "  style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <div class="mx-2 shadow-1" onClick={()=>setcol(randomColor())} style={{backgroundColor:col,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
-                      <input lang="fa" dir="rtl" class="" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
-                      <input lang="fa" dir="rtl" class="" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
+                      <input  type="number"  lang="fa" dir="rtl" class="round-2" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      <input type="text"  lang="fa" dir="rtl" class="round-2" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div>
                   </ul>
