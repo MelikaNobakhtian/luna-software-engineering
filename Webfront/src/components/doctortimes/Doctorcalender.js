@@ -37,6 +37,8 @@ function Doctorcalender() {
   const [emptymduration, setemptymduration] = useState(undefined);
   const [selecteddate,setselecteddate]=useState("");
   const[col,setcol]=useState(randomColor())
+  //az get
+  const [addressid,setaddressid]=useState(1);
   
   const [openSnack, setOpenSnack] = useState(false);
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
@@ -68,14 +70,15 @@ function Doctorcalender() {
 
   }
   const sendmagazis=()=>{
-    var values=[];
-    var doctorid=Cookies.get("doctorid");
-    console.log(doctorid+" doctorid");
+    
     if(selecteddate===""){
       // setemptymduration(undefined)
       setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
     }
+    var values=[];
+    var doctorid=Cookies.get("doctorid");
+    console.log(doctorid+" doctorid");
 
     for(var i=0;i<magazis.length;i++){
       var start=selecteddate+" "+magazis[i].time
@@ -97,11 +100,33 @@ function Doctorcalender() {
 
   }
   const sendhozori=()=>{
-    if(selecteddate===""){
-      // setemptymduration(undefined)
-      setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
-      setOpenSnack(true);
-    }
+      if(selecteddate===""){
+        // setemptymduration(undefined)
+        setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
+        setOpenSnack(true);
+      }
+      var values=[];
+      var doctorid=Cookies.get("doctorid");
+     console.log(hozoris);
+      for(var i=0;i<hozoris.length;i++){
+        var start=selecteddate+" "+hozoris[i].time
+        values.push({duration:hozoris[i].duration,start_datetime:start,doc_id:doctorid,
+        address_id:addressid,time_type:hozoris[i].durationname,address_number:hozoris[i].addressnumber,
+        durationnumber:hozoris[i].durationnumber
+        });
+      }
+      console.log(values)
+      console.log(" all the magazis values :)")
+  
+      axios.post(API_BASE_URL + "/appoinment/"+doctorid+"/online/", JSON.stringify(values), {
+            headers: { "content-type": "application/json" },
+          })
+          .then(function (response) {
+            console.log(response)   
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
 
   }
   const handleaddhfield = () => {
@@ -232,9 +257,16 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
-            
+            if(selectedduration.duration!=""){
             values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
               ,duration:selectedduration.duration,durationname:selectedduration.name,durationnumber:selectedduration.color })
+            }
+            else
+            {
+              console.log(hduration+" HDURATION ")
+              values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
+                ,duration:hduration,durationname:selectedduration.name,durationnumber:selectedduration.color })
+            }
             console.log(thistime + " thistime")
             console.log(values)
           }
