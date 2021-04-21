@@ -176,7 +176,7 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username','first_name','last_name','profile_photo']
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class OnlineAppointmentSerializer(serializers.ModelSerializer):
     
     doc_id = serializers.IntegerField()
     
@@ -196,3 +196,41 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         return attrs
 
+class InPersonAppointmentSerializer(serializers.ModelSerializer):
+    
+    doc_id = serializers.IntegerField()
+    address_id = serializers.IntegerField()
+    address = AddressSerializer(read_only=True)
+    
+    class Meta:
+        model = Appointment
+        fields = ['duration','start_datetime','doc_id','address_id','address','time_type','address_number','duration_number']
+
+    def validate(self,attrs):
+
+        doc_id = attrs.get('doc_id', '')
+        address_id = attrs.get('address_id', '')
+        time_type = attrs.get('time_type', '')
+        duration= attrs.get('duration', '')
+        start_datetime = attrs.get('start_datetime', '')
+        address_number = attrs.get('address_number', '')
+        duration_number = attrs.get('duration_number', '')
+        end_datetime = start_datetime + timedelta(minutes=duration)
+        doc = DoctorUser.objects.get(pk=doc_id)
+        address = Address.objects.get(pk=address_id)
+        apt = Appointment(duration=duration,doctor=doc,start_datetime=start_datetime,end_datetime=end_datetime
+                          ,address=address,time_type=time_type,is_online=False,address_number=address_number,duration_number=duration_number)
+        apt.save()
+
+        return attrs
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    
+    doctor = DoctorProfileSerializer(read_only=True)
+    patient = UserProfileSerializer(read_only=True)
+    address = AddressSerializer(read_only=True)
+    
+    class Meta:
+        model = Appointment
+        fields = '__all__'

@@ -87,3 +87,7 @@ class Appointment(models.Model):
     start_datetime = jmodels.jDateTimeField()
     end_datetime = jmodels.jDateTimeField()
     is_online = models.BooleanField(default=True)
+    time_type = models.CharField(max_length=150,null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
+    address_number = models.IntegerField(null=True)
+    duration_number = models.CharField(max_length=200,null=True)

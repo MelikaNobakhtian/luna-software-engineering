@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from rest_framework.parsers import JSONParser
 
 class RegisterView(generics.GenericAPIView):
 
@@ -281,11 +281,88 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
 
-class AppointmentView(generics.GenericAPIView):
-    serializer_class = AppointmentSerializer
+class OnlineAppointmentView(generics.GenericAPIView):
+    serializer_class = OnlineAppointmentSerializer
 
-    def post(self, request):
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        apts = Appointment.objects.filter(doctor=doc)
+        data = AppointmentSerializer(apts,many=True)
+        return Response(data.data, status=status.HTTP_200_OK)
+
+    def post(self, request,pk):
         serializer = self.serializer_class(data=request.data,many=True)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class InPersonAppointmentView(generics.GenericAPIView):
+    serializer_class = InPersonAppointmentSerializer
+
+    def get(self,request, doc_id, address_id):
+        doc = DoctorUser.objects.get(pk=doc_id)
+        address = Address.objects.get(pk=address_id)
+        apts = Appointment.objects.filter(doctor=doc,address=address,is_online=False)
+        data = AppointmentSerializer(apts,many=True)
+        return Response(data.data, status=status.HTTP_200_OK)
+
+    def post(self, request, doc_id, address_id):
+        serializer = self.serializer_class(data=request.data,many=True)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UpdateOnlineAppointmentView(generics.GenericAPIView):
+    
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=True)
+        apts = sorted(apts ,  key=lambda m: m.start_datetime)
+        if len(apts) == 0:
+            return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
+        last_reserved = apts[len(apts) - 1 ].start_datetime
+        data = { 'datetime' : str(last_reserved) }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def put(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        Appointment.objects.filter(doctor=doc,patient__isnull=True,start_datetime__gt=request.data['date'],is_online=True).delete()
+        apts = Appointment.objects.filter(doctor=doc,is_online=True)
+        serializer = AppointmentSerializer(apts,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        Appointment.objects.filter(doctor=doc,is_online=True).delete()
+        return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
+
+
+class UpdateInPersonAppointmentView(generics.GenericAPIView):
+    
+    def get(self,request,pk):
+        time_type = request.data['type']
+        doc = DoctorUser.objects.get(pk=pk)
+        apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=False,time_type=time_type)
+        apts = sorted(apts ,  key=lambda m: m.start_datetime)
+        if len(apts) == 0:
+            return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
+        last_reserved = apts[len(apts) - 1 ].start_datetime
+        data = { 'datetime' : str(last_reserved) }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def put(self,request,pk):
+        time_type = request.data['type']
+        doc = DoctorUser.objects.get(pk=pk)
+        Appointment.objects.filter(doctor=doc,patient__isnull=True,start_datetime__gt=request.data['date'],is_online=False,time_type=time_type).delete()
+        apts = Appointment.objects.filter(doctor=doc,is_online=False)
+        serializer = AppointmentSerializer(apts,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        Appointment.objects.filter(doctor=doc,is_online=False,time_type=request.data['type']).delete()
+        return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
+
+
+
+
 
