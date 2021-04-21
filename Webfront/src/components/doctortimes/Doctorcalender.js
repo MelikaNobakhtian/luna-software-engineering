@@ -51,7 +51,7 @@ function Doctorcalender() {
   const handleaddhfield=()=>{
     if(hduration===""){
       setemptymduration(undefined)
-      setemptyhduration("لطفا بازه ی زمانی نوبت های حضوری خود را پر کنید")
+      setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
       setOpenSnack(true);
     }
     if(hfields[0].start!="" &&hfields[0].startt!=""&&hfields[0].end!=""&&hfields[0].endd!=""&&hduration!=""){
@@ -276,7 +276,7 @@ function Doctorcalender() {
   const handleaddmfield=()=>{
     if(mduration===""){
       setemptyhduration(undefined)
-      setemptymduration("لطفا بازه ی زمانی نوبت های مجازی خود را پر کنید")
+      setemptymduration("لطفا فیلد مربوط به مدت زمان هر وقت مجازی خود را پر کنید")
       setOpenSnack(true);
     }
     if(mfields[0].start!="" &&mfields[0].startt!=""&&mfields[0].end!=""&&mfields[0].endd!=""&&mduration!=""){
@@ -525,7 +525,17 @@ function Doctorcalender() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
-  const sessionchange = (index) => {
+  const sessionchange = (index,horm) => {
+    if(horm==="hozori"){
+      var values=[...hozoris]
+      values.splice(index,1)
+      sethozoris(values)
+    }
+    if(horm==="magazi"){
+      var values=[...magazis]
+      values.splice(index,1)
+      setmagazis(values)
+    }    
     console.log("request back")
   }
   
@@ -595,6 +605,20 @@ function Doctorcalender() {
 
               </div>
 
+              <div class="dropdown">
+  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+    Dropdown link
+  </a>
+
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <li><a class="dropdown-item" data-ref="one" href="#">Action</a></li>
+    <li><a class="dropdown-item" data-ref="two" href="#">Another action</a></li>
+    <li><a class="dropdown-item" data-ref="three" href="#">Something else here</a></li>
+  </ul>
+  
+  
+</div>
+
               {/* </div> */}
               {/* <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -619,7 +643,7 @@ function Doctorcalender() {
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
                   return (<Button key={index} type="button" class="bt btn-sm col-2" style={{backgroundColor:"#00A896"}} data-bs-toggle="button"
                     onClick={(val) => {
-                      sessionchange(val.id);
+                      sessionchange(index,"hozori");
                       // setbuttoncolor("red")
                     }}
                     style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
@@ -701,7 +725,7 @@ function Doctorcalender() {
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
                   return (<Button key={index} type="button" class="btn btn-success btn-success btn-sm col-2"  data-bs-toggle="button"
                     onClick={(val) => {
-                      sessionchange(val.id);
+                      sessionchange(index,"magazi");
                       // setbuttoncolor("red")
                     }}
                     style={{ margin: 3, backgroundColor: "#008F81",borderColor:"#008F81" }}>{val.time}</Button>
