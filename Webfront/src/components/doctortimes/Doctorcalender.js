@@ -38,10 +38,10 @@ function Doctorcalender() {
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
     , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
-  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", hdur: hduration,color:"#028090" }])
+  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", duration: hduration,color:"#028090" }])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
-  const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})
+  const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:hduration,color:"#008F81"})
   const [dmhdur, setdmhdur] = useState("");
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -89,13 +89,30 @@ function Doctorcalender() {
       var timee = parseInt(hfields[0].startt);
       const endt = parseInt(hfields[0].end);
       const enddt = parseInt(hfields[0].endd)
-      const duration = parseInt(hduration)
-
+      //intori toye vaght adi moshkel
+      console.log(selectedduration);
+      if(selectedduration.name!="وقت عادی"&&selectedduration.name!="نوع بازه ی زمانی"){
+        var duration = parseInt(selectedduration.duration);
+      }
+      else{
+        var duration=parseInt(hduration);
+      }
+      
       var values = [...hozoris];
       var finish = false;
       var mend = parseInt(hfields[0].end) + ":" + parseInt(hfields[0].endd);
+      //**uniqe boosdan esm ha */
+      // var indexof=durationmode.findIndex((element)=>element.duration===duration && element.name===selectedduration.name)
       for (var i = time; !finish; i += (duration / 60)) {
+      var thisindex=hozoris.findIndex((element)=>element.duration=selectedduration.duration&&element.time===time)
+      console.log(thisindex+" this index")
+        // if(durationmode.length<=indexof-1){
+        //   finish=true;
+        //   break;
+        // }
+        console.log(duration+" duration");
         var check = parseInt(parseInt(duration) + parseInt(timee))
+        console.log(check+" CHECKKKKKKK")
         var timecopy = time
         var time2 = check
         console.log(time2 + "time2")
@@ -188,6 +205,7 @@ function Doctorcalender() {
         console.log(parseInt(duration + timee) + " parseInt")
         timee = parseInt(duration + timee)
         var now = time + ":" + timee
+       
       }
 
       sethozoris(values)
@@ -595,7 +613,10 @@ function Doctorcalender() {
                 >
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                  <input id="hozori" value={hduration} onChange={(event) => sethduration(event.target.value)} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                  <input id="hozori" value={hduration} onChange={(event) => {
+                  // var values=[...durationmode];
+                  // values[0]={name:"وقت عادی",duration:hduration,}
+                  sethduration(event.target.value)}} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
 
               </div>
@@ -666,19 +687,26 @@ function Doctorcalender() {
                       {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */}
                       return (<li class="d-flex flex-row" dir="ltr" lang="fa"  style={{}}>
                       <div class="mx-2 shadow-1 col-12 align-self-center"  style={{backgroundColor:value.color,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
-                      <a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.hdur}(دقیقه) </a></li>      
+                    {value.name!="وقت عادی"?(<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه) </a>):
+                    (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {hduration}(دقیقه) </a>)}</li>   
                       )
                     })}
                   
                     <div class=" d-flex flex-row mt-2 " data-ref="one" >
                       <BsPlusCircleFill color="gray" onClick={() => {
-                        var col=randomColor()
+                        // var col=randomColor()
                         setselectedduration({name:dmdur,duration:dmhdur,color:col})
-                        setdmhdur("مدت زمان")
-                        setdmdur("نوع بازه ی زمانی")
+                        console.log(dmhdur+" dmhdur")
+                       
                          console.log(durationmode+" durationmode")
+                      
                       //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
-                        setdurationmode([...durationmode,{name:dmdur,duration:dmhdur,color:col}])
+                       var values=[...durationmode];
+                       values.push({name:dmdur,duration:dmhdur,color:col})
+                       setdmhdur("مدت زمان")
+                        setdmdur("نوع بازه ی زمانی")
+                       console.log(values+" values")
+                        setdurationmode(values)
                         console.log(durationmode)
                       }} class="min-vw-20 min-vh-20 align-self-start "  style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <div class="mx-2 shadow-1" onClick={()=>setcol(randomColor())} style={{backgroundColor:col,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
