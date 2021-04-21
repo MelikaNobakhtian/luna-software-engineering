@@ -31,6 +31,7 @@ function Doctorcalender() {
   const [hmmconflictmessage, sethmmconflictmessage] = useState(undefined);
   const [emptyhduration, setemptyhduration] = useState(undefined);
   const [emptymduration, setemptymduration] = useState(undefined);
+  
   const [openSnack, setOpenSnack] = useState(false);
   const [add, setadd] = useState("... برای آدرس");
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
@@ -60,11 +61,25 @@ function Doctorcalender() {
   }
   const handleaddhfield = () => {
     if (hduration === "") {
+      if(add==="... برای آدرس"){
+        setemptymduration(undefined)
+        setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
+        setOpenSnack(true);
+      }
+      else{
       setemptymduration(undefined)
       setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
       setOpenSnack(true);
+      }
     }
-    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != "") {
+    else if(add==="... برای آدرس"){
+      setemptymduration(undefined)
+      setemptyhduration("لطفا آدرس مورد نظر برای هر وقت حضوری را اتخاب کنید")
+      setOpenSnack(true);
+    }
+   
+    
+    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != ""&&add!="برای آدرس ...") {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -155,7 +170,8 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
-            values.push({ time: thistime, time22: noww })
+          
+            values.push({ time: thistime, time22: noww,address:add })
             console.log(thistime + " thistime")
             console.log(values)
           }
@@ -622,7 +638,7 @@ function Doctorcalender() {
                     {add}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li>
+                    {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
                       return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd(value.add1 + "(" + indexx + ")")} data-ref="one" >{value.add1}       ({indexx}) </a>
