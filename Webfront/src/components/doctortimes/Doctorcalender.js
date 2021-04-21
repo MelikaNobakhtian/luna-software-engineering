@@ -33,13 +33,13 @@ function Doctorcalender() {
   const [emptymduration, setemptymduration] = useState(undefined);
   
   const [openSnack, setOpenSnack] = useState(false);
-  const [add, setadd] = useState("... برای آدرس");
+  const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
     , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
   const [durationmode, setdurationmode] = useState([{ name: "_", hdur: hduration }, { name: "پر کردن دندون", hdur: 20 }])
   const [dm, setdm] = useState("_");
-  const [dmdur, setdmdur] = useState();
-  const [dmhdur, setdmhdur] = useState();
+  const [dmdur, setdmdur] = useState("_");
+  const [dmhdur, setdmhdur] = useState(hduration);
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -61,7 +61,7 @@ function Doctorcalender() {
   }
   const handleaddhfield = () => {
     if (hduration === "") {
-      if(add==="... برای آدرس"){
+      if(add.address==="... برای آدرس"){
         setemptymduration(undefined)
         setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
         setOpenSnack(true);
@@ -72,14 +72,14 @@ function Doctorcalender() {
       setOpenSnack(true);
       }
     }
-    else if(add==="... برای آدرس"){
+    else if(add.address==="... برای آدرس"){
       setemptymduration(undefined)
       setemptyhduration("لطفا آدرس مورد نظر برای هر وقت حضوری را اتخاب کنید")
       setOpenSnack(true);
     }
    
     
-    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != ""&&add!="برای آدرس ...") {
+    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != ""&&add.address!="... برای آدرس") {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -170,8 +170,8 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
-          
-            values.push({ time: thistime, time22: noww,address:add })
+            
+            values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber ,duration:dmhdur,durationname:dmdur })
             console.log(thistime + " thistime")
             console.log(values)
           }
@@ -635,13 +635,13 @@ function Doctorcalender() {
               <div class="d-flex flex-row mt-3 " style={{ marginBottom: "-0.25rem" }}>
                 {haddresses.length > 1 ? <div class="dropdown" dir="ltr" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {add}
+                    {add.address} 
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd(value.add1 + "(" + indexx + ")")} data-ref="one" >{value.add1}       ({indexx}) </a>
+                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd({address:value.add1,addressnumber:indexx})} data-ref="one" >{value.add1}       ({indexx}) </a>
 
                       </li>)
                     })}
@@ -668,7 +668,7 @@ function Doctorcalender() {
                         setdmhdur("");
                         setdurationmode([...durationmode, { name: dmdur, hdur: dmhdur }])
                       }} class="min-vw-20 min-vh-20 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <input value={dmhdur} placeholder={"مدت زمان "} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      <input value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
                       <input placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div></div>
@@ -704,10 +704,10 @@ function Doctorcalender() {
                       sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: "#008F81", borderColor: "#008F81" }}>{val.time}</Button>
+                    style={{ margin: 3, backgroundColor: "#008F81", borderColor: "#008F81" }}>{val.time}  ({val.addressnumber})</Button>
                   )
                 }) : null}
-                {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null}
+                {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
 
 
               </div>
