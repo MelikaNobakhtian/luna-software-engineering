@@ -57,10 +57,10 @@ function Login(props) {
       .then(function (response) {
         console.log(response)
         if (response.status === 200) {
-          Cookies.set("userTokenR", response.data.tokens.refresh);
-          Cookies.set("userTokenA", response.data.tokens.access);
-          Cookies.set("userId", response.data.user_id);
-          Cookies.set("doctorId", response.data.doctor_id);
+          Cookies.set("userTokenR", response.data.data.tokens.refresh);
+          Cookies.set("userTokenA", response.data.data.tokens.access);
+          Cookies.set("userId", response.data.data.user_id);
+          Cookies.set("doctorId", response.data.data.doctor_id);
           //redirectToHome();
         } else {
           console.log(response);
