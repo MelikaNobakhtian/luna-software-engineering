@@ -56,12 +56,16 @@ function Login(props) {
       })
       .then(function (response) {
         console.log(response)
-        if (response.status === 200) {
+        console.log(response.status)
+        if (response.statusText === "OK") {
+          //console.log(response.data.tokens['refresh'])
           Cookies.set("userTokenR", response.data.data.tokens.refresh);
           Cookies.set("userTokenA", response.data.data.tokens.access);
           Cookies.set("userId", response.data.data.user_id);
           Cookies.set("doctorId", response.data.data.doctor_id);
-          //redirectToHome();
+          
+          redirectToHome();
+          console.log(response)
         } else {
           console.log(response);
         }
@@ -118,7 +122,7 @@ function Login(props) {
       })
       .then(function (response) {
         console.log(response)
-        if (response.status === 200) {
+        if (response.statusText === "OK") {
           setSended("لینک تغییر رمز به ایمیل شما ٝرستاده شد");
         } else if (response.status === 404) {
           setSended("حسابی با این ایمیل وجود ندارد");
@@ -147,6 +151,9 @@ function Login(props) {
       errors = "پسورد صحیح را وارد کنید !";
     }
     setPassErr(errors);
+  }
+  const redirectToHome=()=>{
+    props.history.push("/home");
   }
 
 
@@ -218,7 +225,7 @@ function Login(props) {
                 data-bs-target="#staticBackdrop"
                 style={{ color: "tomato" }}
               >
-                رمز خود را فراموش کرده‌اید؟
+                رمز خود را ٝراموش کرده‌اید؟
               </span>
             </Form.Group>
 
