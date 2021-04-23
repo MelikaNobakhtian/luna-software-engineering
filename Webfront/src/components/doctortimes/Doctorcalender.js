@@ -20,8 +20,9 @@ import randomColor from "randomcolor";
 import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import axios from "axios";
+import { duration } from "@material-ui/core";
 
-
+//یا همه ی موارد ولی ربای حذف یا یه چیز جدا
 //  بعدا بین md , sm هم فرق و تقویم نشون
 function Doctorcalender() {
   const [hozoris, sethozoris] = useState([]);
@@ -44,10 +45,10 @@ function Doctorcalender() {
   const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
   const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
     , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
-  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", duration: hduration,color:"#028090" }])
+  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", duration: hduration,color:"#008F81" }])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
-  const [selectedduration,setselectedduration]=useState({name:"نوع بازه ی زمانی",duration:hduration,color:"#008F81"})
+  const [selectedduration,setselectedduration]=useState( { name: "وقت عادی", duration: hduration,color:"#008F81" })
   const [dmhdur, setdmhdur] = useState("");
   const [snackbarerror,setsnackbarerror]=useState("");
 
@@ -93,7 +94,7 @@ function Doctorcalender() {
       setOpenSnack(true);
     }
     var values=[];
-    var doctorid=Cookies.get("doctorid");
+    var doctorid=Cookies.get("doctorId");
     console.log(doctorid+" doctorid");
 
     for(var i=0;i<magazis.length;i++){
@@ -122,7 +123,7 @@ function Doctorcalender() {
         setOpenSnack(true);
       }
       var values=[];
-      var doctorid=Cookies.get("doctorid");
+      var doctorid=Cookies.get("doctorId");
      console.log(hozoris);
       for(var i=0;i<hozoris.length;i++){
         var start=selecteddate+" "+hozoris[i].time
@@ -165,7 +166,7 @@ function Doctorcalender() {
     }
    
     
-    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != ""&&add.address!="... برای آدرس") {
+    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== ""&&add.address!=="... برای آدرس") {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -174,7 +175,7 @@ function Doctorcalender() {
       const enddt = parseInt(hfields[0].endd)
       //intori toye vaght adi moshkel
       console.log(selectedduration);
-      if(selectedduration.name!="وقت عادی"&&selectedduration.name!="نوع بازه ی زمانی"){
+      if(selectedduration.name!=="وقت عادی"&&selectedduration.name!=="نوع بازه ی زمانی"){
         var duration = parseInt(selectedduration.duration);
       }
       else{
@@ -187,8 +188,8 @@ function Doctorcalender() {
       //**uniqe boosdan esm ha */
       // var indexof=durationmode.findIndex((element)=>element.duration===duration && element.name===selectedduration.name)
       for (var i = time; !finish; i += (duration / 60)) {
-      var thisindex=hozoris.findIndex((element)=>element.duration=selectedduration.duration&&element.time===time)
-      console.log(thisindex+" this index")
+      // var thisindex=hozoris.findIndex((element)=>element.duration=selectedduration.duration&&element.time===time)
+      // console.log(thisindex+" this index")
         // if(durationmode.length<=indexof-1){
         //   finish=true;
         //   break;
@@ -273,6 +274,7 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
+            console.log(selectedduration.duration+" selectedduration DURATION")
             if(selectedduration.duration!=""){
             values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
               ,duration:selectedduration.duration,durationname:selectedduration.name,durationnumber:selectedduration.color })
@@ -303,14 +305,27 @@ function Doctorcalender() {
     }
   }
   const handleremovehfield = (index) => {
-    if (hfields[0].start != "" && hfields[0].startt != "" && hfields[0].end != "" && hfields[0].endd != "" && hduration != "") {
+    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== "") {
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
       var timee = parseInt(hfields[0].startt);
       const endt = parseInt(hfields[0].end);
       const enddt = parseInt(hfields[0].endd)
-      const duration = parseInt(hduration)
+      //الان selected duration در هر حال داریم ولی نباید داشته باشیم به نظرم
+      //اگه سلکتد دیوریشن هم انتخاب کرده بود بیاد اونایی که انتخاب کرده رو پاک کنه
+      //باید حالت دیفالتش همون وقت عادی باشه ولی برای حذف کردن یه گزینه ی جدید داشته باشیم که میخواد این همرو با هم پاک کنه چون برای اد به یه حالت دیفالت نیاز داریم 
+      //الان فرض فقط یه مدل دیوریشن رو حذف میکنه
+     
+      if(selectedduration.duration==="")
+      {
+      var duration = parseInt(hduration);
+      }
+      else
+      {
 
+        var duration=parseInt(selectedduration.duration);
+      }
+     console.log(duration+" duration")
       var values = [...hozoris];
       var finish = false;
 
@@ -321,10 +336,25 @@ function Doctorcalender() {
       console.log(enddt + " " + enddt.toString().length + " lenght")
       // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
       for (var i = time; !finish; i += (duration / 60)) {
+      
         if (timee.toString().length === 1)
           var thistime = time + ":" + "0" + timee
         else
           var thistime = time + ":" + timee
+
+      //   var thisbuttonindex= hozoris.findIndex((element) =>    
+      //    { 
+      //      console.log(element.time+" time shoro")
+      //      console.log(thistime+" time shoro")
+      //      console.log(element.duration+" element.duration")
+      //      console.log(selectedduration.duration +" selectedduration.duration")
+      //      return(moment(element.time, "HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm") &&
+      //      element.duration===selectedduration.duration && 
+      //      moment(element.time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+      // }
+        //)
+      
+      
         console.log(duration + " duration")
         console.log(parseInt(timee) + " timee15435")
         var check = parseInt(parseInt(duration) + parseInt(timee))
@@ -382,8 +412,24 @@ function Doctorcalender() {
             moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
         })
         console.log(index)
-        if (index != -1)
+        if (index !== -1 ){
+          // console.log(hozoris[index].duration+" ino")
+          // if(hozoris[index].duration!==""){
+          if(parseInt(hozoris[index].duration)===parseInt(duration) && hozoris[index].address===add.address){
+            console.log(" OMAD INJS ")
           values.splice(index, 1);
+          }
+        // }
+        // else{
+        //   if(parseInt(hozoris[index].duration)===parseInt(hduration)){
+        //     console.log(" OMAD INJS ")
+        //   values.splice(index, 1);
+        //   }
+        // } 
+        }
+        console.log(hozoris[index])
+        // console.log(hozoris[index].duration+" hozoris index duration")
+        console.log(duration+" duration")
         sethozoris(values)
         // values.push({time:thistime,time22:noww})
         console.log(thistime + " thistime")
