@@ -18,14 +18,50 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
+states = {}
+states["0"]="آذربایجان شرقی"
+states["1"]="آذربایجان غربی"
+states["2"]="اردبیل"
+states["3"]="اصفهان"
+states["4"]="البرز"
+states["5"]="ایلام"
+states["6"]="بوشهر"
+states["7"]="تهران"
+states["8"]="چهارمحال و بختیاری"
+states["9"]="خراسان جنوبی"
+states["10"]="خراسان رضوی"
+states["11"]="خراسان شمالی"
+states["12"]="خوزستان"
+states["13"]="زنجان"
+states["14"]="سمنان"
+states["15"]="سیستان و بلوچستان"
+states["16"]="فارس"
+states["17"]="قزوین"
+states["18"]="قم"
+states["19"]="کردستان"
+states["20"]="کرمان"
+states["22"]="کرمانشاه"
+states["23"]="کهگلویه و بویر احمد"
+states["24"]="گلستان"
+states["25"]="گیلان"
+states["26"]="لرستان"
+states["27"]="مازندران"
+states["28"]="مرکزی"
+states["29"]="هرمزگان"
+states["30"]="همدان"
+states["31"]="یزد"
 
+class Check(APIView):
+    def get(self,request):
+        return Response(states)
+        
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
 
     def post(self, request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        data = request.data
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
@@ -46,14 +82,18 @@ class RegisterView(generics.GenericAPIView):
 class RegisterDoctorView(generics.GenericAPIView):
 
     def post(self, request):
-        user = request.data
-        serializer = RegisterSerializer(data=user)
+        data1 = request.data
+        serializer = RegisterSerializer(data=data1)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
-        new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
+        degree = request.data.get('degree')
+        print(degree)
+        print()
+        new_doc = DoctorUser(user=user,degree=degree)
         new_doc.save()
+        print('***********')
         token = RefreshToken.for_user(user).access_token
         #current_site = get_current_site(request).domain
         current_site = 'localhost:3000'
@@ -65,7 +105,6 @@ class RegisterDoctorView(generics.GenericAPIView):
                 'email_subject': 'Verify your email'}
 
         Util.send_email(data)
-        user_data['degree']=new_doc.degree
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
@@ -78,11 +117,11 @@ class VerifyEmail(views.APIView):
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Successfully activated'}, status=status.HTTP_200_OK)
         except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Activation Expired'}, status=status.HTTP_200_OK)
         except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Invalid token'}, status=status.HTTP_200_OK)
 
 
 class LoginAPIView(generics.GenericAPIView):
@@ -90,8 +129,9 @@ class LoginAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            return Response({"data":serializer.data}, status=status.HTTP_200_OK)
+        return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
 
 
 class DoctorProfileView(APIView):
@@ -105,7 +145,7 @@ class DoctorProfileView(APIView):
     def get(self, request, pk, format=None):
         docprofile = self.get_object(pk)
         serializer = DoctorProfileSerializer(docprofile)
-        return Response(serializer.data)
+        return Response({"data":serializer.data,"states":states},status=status.HTTP_200_OK)
 
 class UpdateDoctorProfileView(generics.UpdateAPIView):
     serializer_class = UpdateDoctorProfileSerializer
@@ -116,12 +156,12 @@ class UpdateDoctorProfileView(generics.UpdateAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         doc = get_object_or_404(queryset,pk=pk)
         self.check_object_permissions(self.request, doc)
-
+        print(request)
         serializer = self.serializer_class(doc,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':True,'message':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({'failure':True,'message':serializer.errors},status=status.HTTP_200_OK)
 
 class UpdateDoctorAddressView(generics.UpdateAPIView):
     serializer_class = UpdateDoctorAddressSerializer
@@ -143,8 +183,9 @@ class UpdateDoctorAddressView(generics.UpdateAPIView):
         serializer = self.serializer_class(address,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':True},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+
+        return Response({'failure':True},status=status.HTTP_200_OK)
 
 class SetDoctorAddressView(APIView):
 
@@ -156,7 +197,7 @@ class SetDoctorAddressView(APIView):
         counter = 0
         while counter < count:
             add = request.data.get('addresses')[counter]
-            new_add = Address(state=add['state'],doc=doc,city=add['city'],detail=add['detail'])
+            new_add = Address(state=states[add['state']],doc=doc,city=add['city'],detail=add['detail'])
             new_add.save()
             counter+=1
             
@@ -164,7 +205,7 @@ class SetDoctorAddressView(APIView):
         doc.save()
         add_list = AddressSerializer(doc_add,many=True)
         doc_info = DoctorProfileSerializer(doc)
-        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data})
+        return Response({"message":"You submit your addresses successfully!","Doctor":doc_info.data},status=status.HTTP_200_OK)
 
 class ChangePasswordView(generics.UpdateAPIView):
 
@@ -182,7 +223,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         if serializer.is_valid():
             if not self.object.check_password(serializer.data.get("old_password")):
-                return Response({"old_password" : ["Wrong Password"]},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message" : ["Wrong Password"]},status=status.HTTP_200_OK)
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             response = {
@@ -192,7 +233,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
             return Response(response,status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
 
 class UpdateUserProfileView(generics.UpdateAPIView):
     serializer_class = UpdateUserProfileSerializer
@@ -208,10 +249,11 @@ class UpdateUserProfileView(generics.UpdateAPIView):
     def update(self,request,pk,*args,**kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user,data=request.data, partial=True)
+        print(request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response({'failure':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return Response({'failure':serializer.errors},status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
 
@@ -225,7 +267,7 @@ class UserProfileView(APIView):
     def get(self, request, pk, format=None):
         userprofile = self.get_object(pk)
         serializer = self.serializer_class(userprofile)
-        return Response(serializer.data)
+        return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
@@ -249,9 +291,9 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Reset your passsword'}
             Util.send_email(data)
-            return Response({'success': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
+            return Response({'message': 'We have sent you a link to reset your password'}, status=status.HTTP_200_OK)
         else:
-            return Response({'failure': 'There is no account with this email!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'There is no account with this email!'}, status=status.HTTP_200_OK)
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
 
@@ -261,16 +303,16 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
             id = smart_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=id)
             if not PasswordResetTokenGenerator().check_token(user,token):
-                    return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
             return Response({'success':True,'message':'Credentials Valid','uidb64':uidb64,'token':token},status=status.HTTP_200_OK)
 
         except DjangoUnicodeDecodeError as identifier:
             try:
                 if not PasswordResetTokenGenerator().check_token(user,token):
-                    return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
                     
             except UnboundLocalError as e:
-                return Response({'error': 'Token is not valid, please request a new one'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Token is not valid, please request a new one'}, status=status.HTTP_200_OK)
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer

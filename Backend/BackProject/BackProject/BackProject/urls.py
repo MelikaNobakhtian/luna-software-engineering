@@ -41,5 +41,6 @@ urlpatterns = [
          PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     path('password-reset-complete/', SetNewPasswordAPIView.as_view(),
          name='password-reset-complete'),
+    path('check/',Check.as_view(),name="check states"),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

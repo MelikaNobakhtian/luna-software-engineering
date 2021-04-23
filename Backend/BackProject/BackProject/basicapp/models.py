@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
+from django_jalali.db import models as jmodels
 
 class UserManager(BaseUserManager):
 
@@ -25,7 +26,7 @@ class UserManager(BaseUserManager):
         if password is None:
             raise TypeError('Password should not be none')
 
-        user = self.create_user(username, email,'ad','ad', password)
+        user = self.create_user(username, email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -77,3 +78,16 @@ class Address(models.Model):
     doc = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
     city = models.CharField(max_length=50)
     detail = models.TextField()
+
+class Appointment(models.Model):
+    
+    patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
+    doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
+    duration = models.IntegerField()
+    start_datetime = jmodels.jDateTimeField()
+    end_datetime = jmodels.jDateTimeField()
+    is_online = models.BooleanField(default=True)
+    time_type = models.CharField(max_length=150,null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
+    address_number = models.IntegerField(null=True)
+    duration_number = models.CharField(max_length=200,null=True)
