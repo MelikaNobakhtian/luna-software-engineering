@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { render } from "react-dom";
 import { RangeDatePicker } from "jalali-react-datepicker";
 import { RestaurantMenu, TimeToLeave } from "@material-ui/icons";
@@ -36,27 +36,27 @@ function Doctorcalender() {
   const [hmmconflictmessage, sethmmconflictmessage] = useState(undefined);
   const [emptyhduration, setemptyhduration] = useState(undefined);
   const [emptymduration, setemptymduration] = useState(undefined);
-  const [selecteddate,setselecteddate]=useState("");
-  const[col,setcol]=useState(randomColor())
+  const [selecteddate, setselecteddate] = useState("");
+  const [col, setcol] = useState(randomColor())
   //az get
-  const [addressid,setaddressid]=useState(1);
-  
+  const [addressid, setaddressid] = useState(1);
+
   const [openSnack, setOpenSnack] = useState(false);
-  const [add, setadd] = useState({address:"... برای آدرس",addressnumber:""});
-  const [haddresses, sethaddresses] = useState([{ add1: "آدرس 1", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }
-    , { add1: "آدرس 2", durationmodel: [{ name: "دندون پر کردن", duration: 20 }, { name: "ارتودنسی", duration: 10 }] }]);
-  const [durationmode, setdurationmode] = useState([ { name: "وقت عادی", duration: hduration,color:"#008F81" }])
+  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "" });
+  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )" }, { add1: "آدرس 1" }
+    , { add1: "آدرس 2" }]);
+  const [durationmode, setdurationmode] = useState([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" }, { name: "وقت عادی", duration: hduration, color: "#008F81" }])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
-  const [selectedduration,setselectedduration]=useState( { name: "وقت عادی", duration: hduration,color:"#008F81" })
+  const [selectedduration, setselectedduration] = useState({ name: "وقت عادی", duration: hduration, color: "#008F81" })
   const [dmhdur, setdmhdur] = useState("");
-  const [snackbarerror,setsnackbarerror]=useState("");
+  const [snackbarerror, setsnackbarerror] = useState("");
 
 
 
   useEffect(() => {
-    var doctorid=Cookies.get("doctorid");
-    axios.get(API_BASE_URL + "/appoinment/" + doctorid+"/")
+    var doctorid = Cookies.get("doctorid");
+    axios.get(API_BASE_URL + "/appoinment/" + doctorid + "/")
       .then(function (response) {
         console.log(response)
       })
@@ -86,87 +86,88 @@ function Doctorcalender() {
   const checkforhmconflict = (horm) => {
 
   }
-  const sendmagazis=()=>{
-    
-    if(selecteddate===""){
+  const sendmagazis = () => {
+
+    if (selecteddate === "") {
       // setemptymduration(undefined)
       setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
     }
-    var values=[];
-    var doctorid=Cookies.get("doctorId");
-    console.log(doctorid+" doctorid");
+    var values = [];
+    var doctorid = Cookies.get("doctorId");
+    console.log(doctorid + " doctorid");
 
-    for(var i=0;i<magazis.length;i++){
-      var start=selecteddate+" "+magazis[i].time
-      values.push({duration:mduration,start_datetime:start,doc_id:doctorid});
+    for (var i = 0; i < magazis.length; i++) {
+      var start = selecteddate + " " + magazis[i].time
+      values.push({ duration: mduration, start_datetime: start, doc_id: doctorid });
     }
     console.log(values)
     console.log(" all the magazis values :)")
 
-    axios.post(API_BASE_URL + "/appoinment/"+doctorid+"/online/", JSON.stringify(values), {
-          headers: { "content-type": "application/json" },
-        })
-        .then(function (response) {
-          console.log(response)   
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    axios.post(API_BASE_URL + "/appoinment/" + doctorid + "/online/", JSON.stringify(values), {
+      headers: { "content-type": "application/json" },
+    })
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
 
   }
-  const sendhozori=()=>{
-      if(selecteddate===""){
-        // setemptymduration(undefined)
-        setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
-        setOpenSnack(true);
-      }
-      var values=[];
-      var doctorid=Cookies.get("doctorId");
-     console.log(hozoris);
-      for(var i=0;i<hozoris.length;i++){
-        var start=selecteddate+" "+hozoris[i].time
-        values.push({duration:hozoris[i].duration,start_datetime:start,doc_id:doctorid,
-        address_id:addressid,time_type:hozoris[i].durationname,address_number:hozoris[i].addressnumber,
-        durationnumber:hozoris[i].durationnumber
-        });
-      }
-      console.log(values)
-      console.log(" all the magazis values :)")
-  
-      axios.post(API_BASE_URL + "/appoinment/"+doctorid+"/online/", JSON.stringify(values), {
-            headers: { "content-type": "application/json" },
-          })
-          .then(function (response) {
-            console.log(response)   
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+  const sendhozori = () => {
+    if (selecteddate === "") {
+      // setemptymduration(undefined)
+      setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      setOpenSnack(true);
+    }
+    var values = [];
+    var doctorid = Cookies.get("doctorId");
+    console.log(hozoris);
+    for (var i = 0; i < hozoris.length; i++) {
+      var start = selecteddate + " " + hozoris[i].time
+      values.push({
+        duration: hozoris[i].duration, start_datetime: start, doc_id: doctorid,
+        address_id: addressid, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
+        durationnumber: hozoris[i].durationnumber
+      });
+    }
+    console.log(values)
+    console.log(" all the magazis values :)")
+
+    axios.post(API_BASE_URL + "/appoinment/" + doctorid + "/online/", JSON.stringify(values), {
+      headers: { "content-type": "application/json" },
+    })
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   }
   const handleaddhfield = () => {
     if (hduration === "") {
-      if(add.address==="... برای آدرس"){
+      if (add.address === "... برای آدرس") {
         setemptymduration(undefined)
         setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
         setOpenSnack(true);
       }
-      else{
-      setemptymduration(undefined)
-      setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
-      setOpenSnack(true);
+      else {
+        setemptymduration(undefined)
+        setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
+        setOpenSnack(true);
       }
     }
-    else if(add.address==="... برای آدرس"){
+    else if (add.address === "... برای آدرس") {
       setemptymduration(undefined)
       setemptyhduration("لطفا آدرس مورد نظر برای هر وقت حضوری را اتخاب کنید")
       setOpenSnack(true);
     }
-   
-    
-    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== ""&&add.address!=="... برای آدرس") {
+
+
+    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== "" && add.address !== "... برای آدرس") {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -175,28 +176,28 @@ function Doctorcalender() {
       const enddt = parseInt(hfields[0].endd)
       //intori toye vaght adi moshkel
       console.log(selectedduration);
-      if(selectedduration.name!=="وقت عادی"&&selectedduration.name!=="نوع بازه ی زمانی"){
+      if (selectedduration.name !== "وقت عادی" && selectedduration.name !== "نوع بازه ی زمانی") {
         var duration = parseInt(selectedduration.duration);
       }
-      else{
-        var duration=parseInt(hduration);
+      else {
+        var duration = parseInt(hduration);
       }
-      
+
       var values = [...hozoris];
       var finish = false;
       var mend = parseInt(hfields[0].end) + ":" + parseInt(hfields[0].endd);
       //**uniqe boosdan esm ha */
       // var indexof=durationmode.findIndex((element)=>element.duration===duration && element.name===selectedduration.name)
       for (var i = time; !finish; i += (duration / 60)) {
-      // var thisindex=hozoris.findIndex((element)=>element.duration=selectedduration.duration&&element.time===time)
-      // console.log(thisindex+" this index")
+        // var thisindex=hozoris.findIndex((element)=>element.duration=selectedduration.duration&&element.time===time)
+        // console.log(thisindex+" this index")
         // if(durationmode.length<=indexof-1){
         //   finish=true;
         //   break;
         // }
-        console.log(duration+" duration");
+        console.log(duration + " duration");
         var check = parseInt(parseInt(duration) + parseInt(timee))
-        console.log(check+" CHECKKKKKKK")
+        console.log(check + " CHECKKKKKKK")
         var timecopy = time
         var time2 = check
         console.log(time2 + "time2")
@@ -274,16 +275,19 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
-            console.log(selectedduration.duration+" selectedduration DURATION")
-            if(selectedduration.duration!=""){
-            values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
-              ,duration:selectedduration.duration,durationname:selectedduration.name,durationnumber:selectedduration.color })
+            console.log(selectedduration.duration + " selectedduration DURATION")
+            if (selectedduration.duration != "") {
+              values.push({
+                time: thistime, time22: noww, address: add.address, addressnumber: add.addressnumber
+                , duration: selectedduration.duration, durationname: selectedduration.name, durationnumber: selectedduration.color
+              })
             }
-            else
-            {
-              console.log(hduration+" HDURATION ")
-              values.push({ time: thistime, time22: noww,address:add.address,addressnumber:add.addressnumber 
-                ,duration:hduration,durationname:selectedduration.name,durationnumber:selectedduration.color })
+            else {
+              console.log(hduration + " HDURATION ")
+              values.push({
+                time: thistime, time22: noww, address: add.address, addressnumber: add.addressnumber
+                , duration: hduration, durationname: selectedduration.name, durationnumber: selectedduration.color
+              })
             }
             console.log(thistime + " thistime")
             console.log(values)
@@ -297,7 +301,7 @@ function Doctorcalender() {
         console.log(parseInt(duration + timee) + " parseInt")
         timee = parseInt(duration + timee)
         var now = time + ":" + timee
-       
+
       }
 
       sethozoris(values)
@@ -305,7 +309,9 @@ function Doctorcalender() {
     }
   }
   const handleremovehfield = (index) => {
-    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== "") {
+
+    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "") {
+
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
       var timee = parseInt(hfields[0].startt);
@@ -315,17 +321,8 @@ function Doctorcalender() {
       //اگه سلکتد دیوریشن هم انتخاب کرده بود بیاد اونایی که انتخاب کرده رو پاک کنه
       //باید حالت دیفالتش همون وقت عادی باشه ولی برای حذف کردن یه گزینه ی جدید داشته باشیم که میخواد این همرو با هم پاک کنه چون برای اد به یه حالت دیفالت نیاز داریم 
       //الان فرض فقط یه مدل دیوریشن رو حذف میکنه
-     
-      if(selectedduration.duration==="")
-      {
-      var duration = parseInt(hduration);
-      }
-      else
-      {
 
-        var duration=parseInt(selectedduration.duration);
-      }
-     console.log(duration+" duration")
+
       var values = [...hozoris];
       var finish = false;
 
@@ -334,119 +331,137 @@ function Doctorcalender() {
       else
         var mend = endt + ":" + enddt
       console.log(enddt + " " + enddt.toString().length + " lenght")
-      // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
-      for (var i = time; !finish; i += (duration / 60)) {
-      
-        if (timee.toString().length === 1)
-          var thistime = time + ":" + "0" + timee
-        else
-          var thistime = time + ":" + timee
+      if (selectedduration.duration != "all") {
+        if (selectedduration.duration === "") {
+          var duration = parseInt(hduration);
+        }
+        else {
 
-      //   var thisbuttonindex= hozoris.findIndex((element) =>    
-      //    { 
-      //      console.log(element.time+" time shoro")
-      //      console.log(thistime+" time shoro")
-      //      console.log(element.duration+" element.duration")
-      //      console.log(selectedduration.duration +" selectedduration.duration")
-      //      return(moment(element.time, "HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm") &&
-      //      element.duration===selectedduration.duration && 
-      //      moment(element.time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
-      // }
-        //)
-      
-      
+          var duration = parseInt(selectedduration.duration);
+        }
         console.log(duration + " duration")
-        console.log(parseInt(timee) + " timee15435")
-        var check = parseInt(parseInt(duration) + parseInt(timee))
+        // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
+        for (var i = time; !finish; i += (duration / 60)) {
 
-        var timecopy = time
-        var time2 = check
-        console.log(time2 + "time2")
-        if (time2 >= 60) {
-          console.log(time2 + " check ya time2")
-          var plus = Math.floor(time2 / 60)
-          time2 = time2 % 60
-          if (time2.toString().length === 1) {
-            time2 = "0" + time2;
+          if (timee.toString().length === 1)
+            var thistime = time + ":" + "0" + timee
+          else
+            var thistime = time + ":" + timee
+
+          //   var thisbuttonindex= hozoris.findIndex((element) =>    
+          //    { 
+          //      console.log(element.time+" time shoro")
+          //      console.log(thistime+" time shoro")
+          //      console.log(element.duration+" element.duration")
+          //      console.log(selectedduration.duration +" selectedduration.duration")
+          //      return(moment(element.time, "HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm") &&
+          //      element.duration===selectedduration.duration && 
+          //      moment(element.time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+          // }
+          //)
+
+
+          console.log(duration + " duration")
+          console.log(parseInt(timee) + " timee15435")
+          var check = parseInt(parseInt(duration) + parseInt(timee))
+
+          var timecopy = time
+          var time2 = check
+          console.log(time2 + "time2")
+          if (time2 >= 60) {
+            console.log(time2 + " check ya time2")
+            var plus = Math.floor(time2 / 60)
+            time2 = time2 % 60
+            if (time2.toString().length === 1) {
+              time2 = "0" + time2;
+            }
+            console.log(time2 + " time 2 badesh")
+            console.log(time2 + " time2 2")
+            timecopy += plus
+            console.log(timecopy + " timecopy")
           }
-          console.log(time2 + " time 2 badesh")
-          console.log(time2 + " time2 2")
-          timecopy += plus
-          console.log(timecopy + " timecopy")
-        }
-        var noww = timecopy + ":" + time2
-        console.log(noww + " noww")
-        console.log(mend + " mend")
-        var dur = "00:" + duration
-        if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
-          finish = true;
-          break;
-        }
-        // console.log(i+"i")
-        console.log("to for")
-        //  if(timee===0)
-        //    var thenn=time+":"+timee+"0"
-        //   else
-        //   var thenn=time+":"+timee
-        //  if(timee>=60){
-        //    var plus=Math.floor(timee/60)
-        //    timee=timee-60
-        //    time+=plus
-        //  }  
-        // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
-
-        // console.log(values)
-        // console.log(noww+" noww")
-        // console.log(thistime+" this time")
-        // console.log(values)
-        // console.log("~~~~~~~~~~~~~~~~~~~~")
-        // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
-        // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
-        // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
-        const index = values.findIndex((element) => {
-          console.log(element.time22 + "element time22")
-          console.log(element.time + "element time")
+          var noww = timecopy + ":" + time2
           console.log(noww + " noww")
-          console.log(thistime + " thistime")
-          return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
-            moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
-        })
-        console.log(index)
-        if (index !== -1 ){
-          // console.log(hozoris[index].duration+" ino")
-          // if(hozoris[index].duration!==""){
-          if(parseInt(hozoris[index].duration)===parseInt(duration) && hozoris[index].address===add.address){
-            console.log(" OMAD INJS ")
-          values.splice(index, 1);
+          console.log(mend + " mend")
+          // var dur = "00:" + duration
+          if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
+            finish = true;
+            break;
           }
-        // }
-        // else{
-        //   if(parseInt(hozoris[index].duration)===parseInt(hduration)){
-        //     console.log(" OMAD INJS ")
-        //   values.splice(index, 1);
-        //   }
-        // } 
+          // console.log(i+"i")
+          console.log("to for")
+          //  if(timee===0)
+          //    var thenn=time+":"+timee+"0"
+          //   else
+          //   var thenn=time+":"+timee
+          //  if(timee>=60){
+          //    var plus=Math.floor(timee/60)
+          //    timee=timee-60
+          //    time+=plus
+          //  }  
+          // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
+
+          // console.log(values)
+          // console.log(noww+" noww")
+          // console.log(thistime+" this time")
+          // console.log(values)
+          // console.log("~~~~~~~~~~~~~~~~~~~~")
+          // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
+          // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
+          // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
+          const index = values.findIndex((element) => {
+            console.log(element.time22 + "element time22")
+            console.log(element.time + "element time")
+            console.log(noww + " noww")
+            console.log(thistime + " thistime")
+            return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
+              moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
+          })
+          console.log(index)
+          if (index !== -1) {
+            // console.log(hozoris[index].duration+" ino")
+            // if(hozoris[index].duration!==""){
+            if (parseInt(hozoris[index].duration) === parseInt(duration)) {
+              console.log(add.address + " add.address")
+              if (add.address != "همه ی آدرس ها ( برای حذف )") {
+                if (hozoris[index].address === add.address) {
+                  console.log(" OMAD INJS ")
+                  values.splice(index, 1);
+                }
+              }
+              else {
+                values.splice(index, 1);
+              }
+            }
+            // }
+            // else{
+            //   if(parseInt(hozoris[index].duration)===parseInt(hduration)){
+            //     console.log(" OMAD INJS ")
+            //   values.splice(index, 1);
+            //   }
+            // } 
+          }
+          console.log(hozoris[index])
+          // console.log(hozoris[index].duration+" hozoris index duration")
+          console.log(duration + " duration")
+          sethozoris(values)
+          // values.push({time:thistime,time22:noww})
+          console.log(thistime + " thistime")
+          // console.log(values)
+          // }
+          // else
+          // console.log("boodesh")
+          console.log(parseInt(duration + timee) + " parseInt")
+          time = timecopy;
+          timee = time2;
+          console.log(time + " THIS " + "time")
+          console.log(timee + " THIS " + "timee")
+          var now = timecopy + ":" + time2
         }
-        console.log(hozoris[index])
-        // console.log(hozoris[index].duration+" hozoris index duration")
-        console.log(duration+" duration")
-        sethozoris(values)
-        // values.push({time:thistime,time22:noww})
-        console.log(thistime + " thistime")
-        // console.log(values)
-        // }
-        // else
-        // console.log("boodesh")
-        console.log(parseInt(duration + timee) + " parseInt")
-        time = timecopy;
-        timee = time2;
-        console.log(time + " THIS " + "time")
-        console.log(timee + " THIS " + "timee")
-        var now = timecopy + ":" + time2
+
+
+        // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
       }
-
-
-      // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
     }
 
   }
@@ -703,7 +718,7 @@ function Doctorcalender() {
   const calenderchange = (value) => {
     console.log("hi")
     console.log(value + "value")
-    setselecteddate(value.from.year+"-"+value.from.month+"-"+value.from.day)
+    setselecteddate(value.from.year + "-" + value.from.month + "-" + value.from.day)
     console.log(value.from.year + "year" + value.from.month + "month" + value.from.day + " _ " + value.to)
     setSelectedDayRange(value)
   }
@@ -751,15 +766,16 @@ function Doctorcalender() {
                   {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                   {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
                   <input id="hozori" value={hduration} onChange={(event) => {
-                  // var values=[...durationmode];
-                  // values[0]={name:"وقت عادی",duration:hduration,}
-                  sethduration(event.target.value)}} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                    // var values=[...durationmode];
+                    // values[0]={name:"وقت عادی",duration:hduration,}
+                    sethduration(event.target.value)
+                  }} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                 </div>
 
               </div>
               {/* d-block mb-3 d-sm-none d-md-block d-lg-none  */}
               <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                <Button onClick={()=>sendhozori()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
+                <Button onClick={() => sendhozori()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                   {/* <div class="align-self-center justify-self-center"> */}
               تایید
               {/* {/* </div> */}
@@ -797,20 +813,20 @@ function Doctorcalender() {
               <div class="d-flex flex-row mt-3 " style={{ marginBottom: "-0.25rem" }}>
                 {haddresses.length > 1 ? <div class="dropdown" dir="ltr" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {add.address} 
+                    {add.address}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd({address:value.add1,addressnumber:indexx})} data-ref="one" >{value.add1}       ({indexx}) </a>
+                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd({ address: value.add1, addressnumber: indexx })} data-ref="one" >{value.add1}       ({indexx}) </a>
 
                       </li>)
                     })}
                   </ul>
                 </div> : null}
 
-                  {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
+                {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
                 {durationmode.length >= 1 ? <div class="dropdown me-5" dir="ltr" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
@@ -819,36 +835,38 @@ function Doctorcalender() {
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
-                  
-                      {/* value.hdur != "" ?  */}
-                      {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */}
-                      return (<li class="d-flex flex-row" dir="ltr" lang="fa"  style={{}}>
-                      <div class="mx-2 shadow-1 col-12 align-self-center"  style={{backgroundColor:value.color,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
-                    {value.name!="وقت عادی"?(<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه) </a>):
-                    (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() =>  setselectedduration(value)} data-ref="one" >{value.name}  {hduration}(دقیقه) </a>)}</li>   
+
+                      {/* value.hdur != "" ?  */ }
+                      {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */ }
+                      return (<li class="d-flex flex-row" dir="ltr" lang="fa" style={{}}>
+                        <div class="mx-2 shadow-1 col-12 align-self-center" style={{ backgroundColor: value.color, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                        {value.duration != "all" ? [value.name !== "وقت عادی" ? (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه) </a>) :
+                          (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {hduration}(دقیقه) </a>)] :
+                          <a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name} </a>
+                        }</li>
                       )
                     })}
-                  
+
                     <div class=" d-flex flex-row mt-2 " data-ref="one" >
                       <BsPlusCircleFill color="gray" onClick={() => {
                         // var col=randomColor()
-                        setselectedduration({name:dmdur,duration:dmhdur,color:col})
-                        console.log(dmhdur+" dmhdur")
-                       
-                         console.log(durationmode+" durationmode")
-                      
-                      //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
-                       var values=[...durationmode];
-                       values.push({name:dmdur,duration:dmhdur,color:col})
-                       setdmhdur("مدت زمان")
+                        setselectedduration({ name: dmdur, duration: dmhdur, color: col })
+                        console.log(dmhdur + " dmhdur")
+
+                        console.log(durationmode + " durationmode")
+
+                        //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
+                        var values = [...durationmode];
+                        values.push({ name: dmdur, duration: dmhdur, color: col })
+                        setdmhdur("مدت زمان")
                         setdmdur("نوع بازه ی زمانی")
-                       console.log(values+" values")
+                        console.log(values + " values")
                         setdurationmode(values)
                         console.log(durationmode)
-                      }} class="min-vw-20 min-vh-20 align-self-start "  style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <div class="mx-2 shadow-1" onClick={()=>setcol(randomColor())} style={{backgroundColor:col,borderRadius:100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"}}></div>
-                      <input  type="number"  lang="fa" dir="rtl" class="round-2" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
-                      <input type="text"  lang="fa" dir="rtl" class="round-2" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
+                      }} class="min-vw-20 min-vh-20 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <div class="mx-2 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                      <input type="number" lang="fa" dir="rtl" class="round-2" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      <input type="text" lang="fa" dir="rtl" class="round-2" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div>
                   </ul>
@@ -883,7 +901,7 @@ function Doctorcalender() {
                       sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: val.durationnumber , borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
+                    style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
@@ -912,7 +930,7 @@ function Doctorcalender() {
                 {/* ms-auto me-auto nashod */}
                 {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
                 <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                  <Button onClick={()=>sendmagazis()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
+                  <Button onClick={() => sendmagazis()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                     {/* <div class="align-self-center justify-self-center"> */}
               تایید
               {/* {/* </div> */}
@@ -1003,7 +1021,7 @@ function Doctorcalender() {
               {hmmconflictmessage != undefined ? <div style={{ fontSize: 14 }}>{hmmconflictmessage}</div> : <div style={{ fontSize: 14 }}>{hmhconflictmessage}</div>}
               {emptyhduration != undefined ? <div>{emptyhduration}</div> : null}
               {emptymduration != undefined ? <div>{emptymduration}</div> : null}
-              {snackbarerror!=""?<div>{snackbarerror}</div> :null}
+              {snackbarerror != "" ? <div>{snackbarerror}</div> : null}
             </div>
 
           }
