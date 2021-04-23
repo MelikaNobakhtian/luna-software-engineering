@@ -56,21 +56,21 @@ function Editprofile(props) {
           console.log(response);
           setUser((prevState) => ({
             ...prevState,
-            userName: response.data.user.username,
-            firstName: response.data.user.first_name,
-            lastName: response.data.user.last_name,
-            email: response.data.user.email,
-            picture: API_BASE_URL + response.data.user.profile_photo,
-            specialty: response.data.specialty,
-            sub_specialty: response.data.sub_specialty,
+            userName: response.data.data.user.username,
+            firstName: response.data.data.user.first_name,
+            lastName: response.data.data.user.last_name,
+            email: response.data.data.user.email,
+            picture: API_BASE_URL + response.data.data.user.profile_photo,
+            specialty: response.data.data.specialty,
+            sub_specialty: response.data.data.sub_specialty,
           }));
-          if (response.data.addresses.length > 0) {
+          if (response.data.data.addresses.length > 0) {
             setvar("true");
             setAddress((prevState) => ({
               ...prevState,
-              city: response.data.addresses[0].city,
-              state: response.data.addresses[0].state,
-              detail: response.data.addresses[0].detail,
+              city: response.data.data.addresses[0].city,
+              state: response.data.data.addresses[0].state,
+              detail: response.data.data.addresses[0].detail,
             }));
           }
 
@@ -180,13 +180,13 @@ function Editprofile(props) {
           console.log(error);
         });
 
-      const payloadcity = {
-        state: address.state,
-        city: address.city,
-        detail: address.detail,
-      };
-      const backcity = JSON.stringify(payloadcity);
       if (variable === true) {
+        const payloadcity = {
+          state: address.state,
+          city: address.city,
+          detail: address.detail,
+        };
+        const backcity = JSON.stringify(payloadcity);
         // var info = [];
         // if (address.state != null) info.push({ state: address.state });
         // if (address.city != null) info.push({ city: address.city });
@@ -219,7 +219,18 @@ function Editprofile(props) {
             console.log(error);
           });
         //}
-      } else if (variable === false) {
+      } else {
+        const payloadcity = {
+          count: 1,
+          addresses: [
+            {
+              state: "3",
+              city: address.city,
+              detail: address.detail,
+            }
+          ]
+        };
+        const backcity = JSON.stringify(payloadcity);
         axios
           .post(
             API_BASE_URL +
@@ -348,7 +359,7 @@ function Editprofile(props) {
   return (
     <div className="main-content">
       <div className="container-fluid p-2">
-        {Cookies.get("doctorId") !== 0 ? (
+        {Cookies.get("doctorId") === 0 ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">
