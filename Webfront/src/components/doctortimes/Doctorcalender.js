@@ -332,6 +332,7 @@ function Doctorcalender() {
         var mend = endt + ":" + enddt
       console.log(enddt + " " + enddt.toString().length + " lenght")
       if (selectedduration.duration != "all") {
+
         if (selectedduration.duration === "") {
           var duration = parseInt(hduration);
         }
@@ -461,6 +462,44 @@ function Doctorcalender() {
 
 
         // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
+      }
+      else{
+       var values=[...hozoris];
+        if (timee.toString().length === 1)
+        var thistime = time + ":0" + timee
+      else
+        var thistime = time + ":" + timee
+        console.log(mend+" mend")
+      var index=0;
+         console.log(hozoris.length+" hozorislenght")
+        for(var i=0;i<hozoris.length;i++){
+         index++;
+          if(moment(hozoris[i].time, "HH:mm").format("HH:mm")>=moment(thistime, "HH:mm").format("HH:mm")&&
+          moment(hozoris[i].time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+          {
+            console.log(" in if")
+            console.log(add.address+" add address")
+            console.log(hozoris[index].addressnumber+" hozori address")
+
+            if (add.address != "همه ی آدرس ها ( برای حذف )") {
+              if (hozoris[index].addressnumber === add.addressnumber) {
+                values.splice(index, 1);
+                index--;
+                console.log(values)
+         
+              }
+            }
+            else {
+              values.splice(index, 1);
+              index--;
+              console.log(values)
+         
+            }
+          }
+          console.log(i+" i")
+         
+        }
+        sethozoris(values);
       }
     }
 
