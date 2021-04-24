@@ -8,22 +8,22 @@
 // import * as ReactBootstrap from 'react-bootstrap';
 import React, { useState } from "react";
 //import { FcSearch } from "react-icons/fc";
-import Button from "react-bootstrap/Button";
+//import Button from "react-bootstrap/Button";
 import { BsSearch, BsFillPersonFill } from "react-icons/bs";
 //import { BiSearchAlt2 } from "react-icons/bi";
 import Cookies from "js-cookie";
- import {
-//   BrowserRouter as Router,
-//   Switch,
-//   Route,
-//   Link,
-//   Redirect,
-withRouter
- } from "react-router-dom";
+import {
+  //   BrowserRouter as Router,
+  //   Switch,
+  //   Route,
+  //   Link,
+  //   Redirect,
+  withRouter,
+} from "react-router-dom";
 
 function Navbar(props) {
   const redirecttoprofile = () => {
-    console.log(Cookies.get("doctorId"))
+    console.log(Cookies.get("doctorId"));
     if (Cookies.get("doctorId").toString() === "0") {
       props.history.push("/userProfile");
     } else if (Cookies.get("doctorId").toString() === "1") {
@@ -34,20 +34,36 @@ function Navbar(props) {
   };
 
   return (
-    <div className="" style={{backgroundColor:"#EBFCFF"}}>
-      <nav
-        className="navbar navbar-expand-lg navbar-light"
-        dir="rtl"
-      >
-        <div
-          className="container-fluid"
-          // style={{backgroundColor:"#E2FBF9"}}
-        >
+    <div className="" style={{ backgroundColor: "#EBFCFF" }}>
+      <nav className="navbar navbar-expand-lg navbar-light" dir="rtl">
+        <div className="container-fluid">
           <div
             className="navbar-brand"
             style={{ color: "#028090", fontWeight: "bolder" }}
           >
             پزشک
+            <button
+              class="btn mx-4 round-3 shadow-0"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasRight"
+              aria-controls="offcanvasRight"
+              style={{
+                backgroundColor: "white",
+                borderRadius: 100,
+                borderColor: "lightgray",
+              }}
+            >
+              <BsSearch
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight"
+                color="gray"
+                size="20"
+                class="round-3 mb-1 align-self-center justify-self-center"
+                dir="rtl"
+                style={{}}
+              ></BsSearch>
+            </button>
           </div>
 
           <button
@@ -72,33 +88,14 @@ function Navbar(props) {
           <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li> ///*/}
             </ul>
-            <form
-              className="d-flex col-lg-8  col-md-6 mt-lg-auto mb-lg-auto mb-n2 mt-3 col-11 round-3 me-lg-5 me-2"
-     
-            >
-              <Button
-                class="btn round-3 shadow-0"
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: 100,
-                  borderColor: "lightgray",
-                }}
-              >
-                <BsSearch
-                  color="gray"
-                  size="20"
-                  class="round-3 mb-1 align-self-center justify-self-center"
-                  dir="rtl"
-                  style={{}}
-                ></BsSearch>
-              </Button>
-              <input
+            <form className="d-flex col-lg-8  col-md-6 mt-lg-auto mb-lg-auto mb-n2 mt-3 col-11 round-3 me-lg-5 me-2">
+              {/* <input
                 className="form-control me-2 round-3 w-75 col-lg-11  shadow-0"
                 type="search"
                 style={{ borderRadius: 100 }}
                 placeholder="نام پزشک ..."
                 aria-label="Search"
-              ></input>
+              ></input> */}
 
               {/* <button className="btn btn-outline-success round-3 shadow" style={{borderRadius:100}} type="submit">جستجو</button> */}
             </form>
@@ -108,7 +105,7 @@ function Navbar(props) {
             id="navbarNav"
             // style={{backgroundColor:"green"}}
           >
-            <ul className="navbar-nav  " >
+            <ul className="navbar-nav  ">
               {/* <li className="nav-item dropdown" data-bs-toggle="collapse" dir ="ltr"  >
           <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
            پزشک هستید؟
@@ -120,9 +117,9 @@ function Navbar(props) {
           </ul>
         </li> */}
               <div className="nav-item mt-lg-auto mb-lg-auto mb-2 mt-n5  ms-5">
-                {Cookies.get("doctorId") !== undefined? (
+                {Cookies.get("doctorId") !== undefined ? (
                   <div
-                  class="btn p-1 "
+                    class="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
                   >
@@ -140,9 +137,11 @@ function Navbar(props) {
                   </div>
                 )}
               </div>
-              <li className="btn nav-item nav-link pull-left ms-auto" style={{ color: "#00A896", fontWeight: "bold" }}>
-              
-                  <small>مشاهده ی اتاق ها</small>
+              <li
+                className="btn nav-item nav-link pull-left ms-auto"
+                style={{ color: "#00A896", fontWeight: "bold" }}
+              >
+                <small>مشاهده ی اتاق ها</small>
               </li>
             </ul>
           </div>
@@ -155,9 +154,57 @@ function Navbar(props) {
 </div> */}
       </nav>
 
-      {/* <ReactBootstrap.Button>HI this is bootstrap bottom</ReactBootstrap.Button> */}
+      <div
+        class="offcanvas offcanvas-end "
+        tabindex="-1"
+        id="offcanvasRight"
+        aria-labelledby="offcanvasRightLabel"
+      >
+        <div class="offcanvas-header">
+          <button
+            type="button"
+            class="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+          <h5 id="offcanvasRightLabel">جستجو</h5>
+        </div>
+        <div class="offcanvas-body m-1 ">
+          <p className="">قسمت های مورد نظر خود را پر کنید</p>
+          <form class="row g-3">
+            <div class="col-12">
+              <input type="text" class="form-control " placeholder="نام دکتر" />
+            </div>
+            <div class="col-12">
+              <input
+                type="text"
+                class="form-control  "
+                placeholder="تخصص"
+                aria-label=""
+              />
+            </div>
+            <div class="col-6">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="استان"
+                aria-label=""
+              />
+            </div>
+            <div class="col-6">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="شهر"
+                aria-label=""
+              />
+            </div>
+            <div className="btn btn-primary col-4 mx-2">بگرد</div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default  withRouter(Navbar);
+export default withRouter(Navbar);
