@@ -241,8 +241,8 @@ function Doctorcalender() {
           console.log(noww + " noww");
           console.log("++++++++++")
           //
-          return (((moment(noww, "HH:mm").format("HH:mm") > moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) < (moment(time.time22, "HH:mm").format("HH:mm"))) ||
-            ((moment(noww, "HH:mm").format("HH:mm") < moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) > (moment(time.time22, "HH:mm").format("HH:mm")))
+          return (((moment(noww, "HH:mm").format("HH:mm") >= moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) <= (moment(time.time22, "HH:mm").format("HH:mm"))) 
+
           )
 
         }
