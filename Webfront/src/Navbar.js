@@ -22,12 +22,12 @@ import {
 } from "react-router-dom";
 
 function Navbar(props) {
-  const [searchedDoctor,setSearchedDoctor] = useState({
-    name : "",
-    specialty:"",
-    state:"",
-    city:""
-  })
+  const [searchedDoctor, setSearchedDoctor] = useState({
+    name: "",
+    specialty: "",
+    state: "",
+    city: "",
+  });
 
   const redirecttoprofile = () => {
     console.log(Cookies.get("doctorId"));
@@ -48,9 +48,9 @@ function Navbar(props) {
     }));
   };
 
-  const GoToSearch=(e)=>{
-    props.history.push("/searchResult/"+ JSON.stringify(searchedDoctor));
-  }
+  const GoToSearch = (e) => {
+    props.history.push("/searchResult/" + JSON.stringify(searchedDoctor));
+  };
 
   return (
     <div className="" style={{ backgroundColor: "#EBFCFF" }}>
@@ -235,7 +235,9 @@ function Navbar(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="btn btn-primary col-4 mx-2" onClick={GoToSearch}>بگرد</div>
+            <div className="btn btn-primary col-4 mx-2" onClick={GoToSearch}>
+              بگرد
+            </div>
           </form>
         </div>
       </div>

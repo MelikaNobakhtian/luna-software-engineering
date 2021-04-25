@@ -4,9 +4,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import { Avatar } from "@material-ui/core";
-import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
+//import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
 import { RiUserStarFill } from "react-icons/all";
-import { FcApproval } from "react-icons/fc";
+//import { FcApproval } from "react-icons/fc";
 function SearchResult(props) {
   const [doctors, setDoctors] = useState([]);
   const [page, setPage] = useState(1);
@@ -40,7 +40,7 @@ function SearchResult(props) {
     <div className="main-content">
       <div className="container-fluid p-2">
         <div className="d-flex flex-wrap">
-          <div className="mx-md-5 px-md-5">
+          <div className="mx-md-5">
             {doctors.length === 0 ? (
               <p>نتیجه‌ای برای نمایش وجود ندارد</p>
             ) : (
@@ -53,23 +53,25 @@ function SearchResult(props) {
                     <div class="card h-100 shadow">
                       <Avatar
                         src={current.doctor_photo}
-                        class="card-img-top shadow-sm "
                         alt={current.name}
+                        className="card-img-top mx-auto my-2 shadow-sm "
                         onClick={() => routeToDoctorHandler(current.id)}
+                        style={{ width: 150, height: 150 }}
                       />
                       <div class="card-body">
                         <h5
-                          class="card-title btn m-n2"
+                          class="card-title btn m-n2 text-break"
                           onClick={() => routeToDoctorHandler(current.id)}
                           style={{ fontSize: 25 }}
                         >
                           {current.firstname}
                           {current.lastname}
                         </h5>
-                        <p class="card-text">{current.specialty}</p>
+                        <p class="card-text text-break">{current.specialty}</p>
                       </div>
                       <div className="align-items-center m-3">
                         <h6 class="card-subtitle mt-1 text-muted">
+                          <RiUserStarFill></RiUserStarFill>
                           {current.score}
                         </h6>
                       </div>
