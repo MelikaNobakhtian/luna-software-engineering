@@ -332,139 +332,140 @@ function Doctorcalender() {
       else
         var mend = endt + ":" + enddt
       console.log(enddt + " " + enddt.toString().length + " lenght")
-      if (selectedduration.duration != "all") {
+      // if (selectedduration.duration != "all") {
+        
 
-        if (selectedduration.duration === "") {
-          var duration = parseInt(hduration);
-        }
-        else {
+        // if (selectedduration.duration === "") {
+        //   var duration = parseInt(hduration);
+        // }
+        // else {
 
-          var duration = parseInt(selectedduration.duration);
-        }
-        console.log(duration + " duration")
-        // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
-        for (var i = time; !finish; i += (duration / 60)) {
+        //   var duration = parseInt(selectedduration.duration);
+        // }
+        // console.log(duration + " duration")
+        // // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
+        // for (var i = time; !finish; i += (duration / 60)) {
 
-          if (timee.toString().length === 1)
-            var thistime = time + ":" + "0" + timee
-          else
-            var thistime = time + ":" + timee
+        //   if (timee.toString().length === 1)
+        //     var thistime = time + ":" + "0" + timee
+        //   else
+        //     var thistime = time + ":" + timee
 
-          //   var thisbuttonindex= hozoris.findIndex((element) =>    
-          //    { 
-          //      console.log(element.time+" time shoro")
-          //      console.log(thistime+" time shoro")
-          //      console.log(element.duration+" element.duration")
-          //      console.log(selectedduration.duration +" selectedduration.duration")
-          //      return(moment(element.time, "HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm") &&
-          //      element.duration===selectedduration.duration && 
-          //      moment(element.time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
-          // }
-          //)
+        //   //   var thisbuttonindex= hozoris.findIndex((element) =>    
+        //   //    { 
+        //   //      console.log(element.time+" time shoro")
+        //   //      console.log(thistime+" time shoro")
+        //   //      console.log(element.duration+" element.duration")
+        //   //      console.log(selectedduration.duration +" selectedduration.duration")
+        //   //      return(moment(element.time, "HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm") &&
+        //   //      element.duration===selectedduration.duration && 
+        //   //      moment(element.time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+        //   // }
+        //   //)
 
 
-          console.log(duration + " duration")
-          console.log(parseInt(timee) + " timee15435")
-          var check = parseInt(parseInt(duration) + parseInt(timee))
+        //   console.log(duration + " duration")
+        //   console.log(parseInt(timee) + " timee15435")
+        //   var check = parseInt(parseInt(duration) + parseInt(timee))
 
-          var timecopy = time
-          var time2 = check
-          console.log(time2 + "time2")
-          if (time2 >= 60) {
-            console.log(time2 + " check ya time2")
-            var plus = Math.floor(time2 / 60)
-            time2 = time2 % 60
-            if (time2.toString().length === 1) {
-              time2 = "0" + time2;
-            }
-            console.log(time2 + " time 2 badesh")
-            console.log(time2 + " time2 2")
-            timecopy += plus
-            console.log(timecopy + " timecopy")
-          }
-          var noww = timecopy + ":" + time2
-          console.log(noww + " noww")
-          console.log(mend + " mend")
-          // var dur = "00:" + duration
-          if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
-            finish = true;
-            break;
-          }
-          // console.log(i+"i")
-          console.log("to for")
-          //  if(timee===0)
-          //    var thenn=time+":"+timee+"0"
-          //   else
-          //   var thenn=time+":"+timee
-          //  if(timee>=60){
-          //    var plus=Math.floor(timee/60)
-          //    timee=timee-60
-          //    time+=plus
-          //  }  
-          // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
+        //   var timecopy = time
+        //   var time2 = check
+        //   console.log(time2 + "time2")
+        //   if (time2 >= 60) {
+        //     console.log(time2 + " check ya time2")
+        //     var plus = Math.floor(time2 / 60)
+        //     time2 = time2 % 60
+        //     if (time2.toString().length === 1) {
+        //       time2 = "0" + time2;
+        //     }
+        //     console.log(time2 + " time 2 badesh")
+        //     console.log(time2 + " time2 2")
+        //     timecopy += plus
+        //     console.log(timecopy + " timecopy")
+        //   }
+        //   var noww = timecopy + ":" + time2
+        //   console.log(noww + " noww")
+        //   console.log(mend + " mend")
+        //   // var dur = "00:" + duration
+        //   if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
+        //     finish = true;
+        //     break;
+        //   }
+        //   // console.log(i+"i")
+        //   console.log("to for")
+        //   //  if(timee===0)
+        //   //    var thenn=time+":"+timee+"0"
+        //   //   else
+        //   //   var thenn=time+":"+timee
+        //   //  if(timee>=60){
+        //   //    var plus=Math.floor(timee/60)
+        //   //    timee=timee-60
+        //   //    time+=plus
+        //   //  }  
+        //   // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
 
-          // console.log(values)
-          // console.log(noww+" noww")
-          // console.log(thistime+" this time")
-          // console.log(values)
-          // console.log("~~~~~~~~~~~~~~~~~~~~")
-          // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
-          // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
-          // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
-          const index = values.findIndex((element) => {
-            console.log(element.time22 + "element time22")
-            console.log(element.time + "element time")
-            console.log(noww + " noww")
-            console.log(thistime + " thistime")
-            return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
-              moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
-          })
-          console.log(index)
-          if (index !== -1) {
-            // console.log(hozoris[index].duration+" ino")
-            // if(hozoris[index].duration!==""){
-            if (parseInt(hozoris[index].duration) === parseInt(duration)) {
-              console.log(add.address + " add.address")
-              if (add.address != "همه ی آدرس ها ( برای حذف )") {
-                if (hozoris[index].address === add.address) {
-                  console.log(" OMAD INJS ")
-                  values.splice(index, 1);
-                }
-              }
-              else {
-                values.splice(index, 1);
-              }
-            }
-            // }
-            // else{
-            //   if(parseInt(hozoris[index].duration)===parseInt(hduration)){
-            //     console.log(" OMAD INJS ")
-            //   values.splice(index, 1);
-            //   }
-            // } 
-          }
-          console.log(hozoris[index])
-          // console.log(hozoris[index].duration+" hozoris index duration")
-          console.log(duration + " duration")
-          sethozoris(values)
-          // values.push({time:thistime,time22:noww})
-          console.log(thistime + " thistime")
-          // console.log(values)
-          // }
-          // else
-          // console.log("boodesh")
-          console.log(parseInt(duration + timee) + " parseInt")
-          time = timecopy;
-          timee = time2;
-          console.log(time + " THIS " + "time")
-          console.log(timee + " THIS " + "timee")
-          var now = timecopy + ":" + time2
-        }
+        //   // console.log(values)
+        //   // console.log(noww+" noww")
+        //   // console.log(thistime+" this time")
+        //   // console.log(values)
+        //   // console.log("~~~~~~~~~~~~~~~~~~~~")
+        //   // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
+        //   // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
+        //   // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
+        //   const index = values.findIndex((element) => {
+        //     console.log(element.time22 + "element time22")
+        //     console.log(element.time + "element time")
+        //     console.log(noww + " noww")
+        //     console.log(thistime + " thistime")
+        //     return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
+        //       moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
+        //   })
+        //   console.log(index)
+        //   if (index !== -1) {
+        //     // console.log(hozoris[index].duration+" ino")
+        //     // if(hozoris[index].duration!==""){
+        //     if (parseInt(hozoris[index].duration) === parseInt(duration)) {
+        //       console.log(add.address + " add.address")
+        //       if (add.address != "همه ی آدرس ها ( برای حذف )") {
+        //         if (hozoris[index].address === add.address) {
+        //           console.log(" OMAD INJS ")
+        //           values.splice(index, 1);
+        //         }
+        //       }
+        //       else {
+        //         values.splice(index, 1);
+        //       }
+        //     }
+        //     // }
+        //     // else{
+        //     //   if(parseInt(hozoris[index].duration)===parseInt(hduration)){
+        //     //     console.log(" OMAD INJS ")
+        //     //   values.splice(index, 1);
+        //     //   }
+        //     // } 
+        //   }
+        //   console.log(hozoris[index])
+        //   // console.log(hozoris[index].duration+" hozoris index duration")
+        //   console.log(duration + " duration")
+        //   sethozoris(values)
+        //   // values.push({time:thistime,time22:noww})
+        //   console.log(thistime + " thistime")
+        //   // console.log(values)
+        //   // }
+        //   // else
+        //   // console.log("boodesh")
+        //   console.log(parseInt(duration + timee) + " parseInt")
+        //   time = timecopy;
+        //   timee = time2;
+        //   console.log(time + " THIS " + "time")
+        //   console.log(timee + " THIS " + "timee")
+        //   var now = timecopy + ":" + time2
+        // }
 
 
         // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
-      }
-      else{
+      // }
+      // else{
        var values=[...hozoris];
         if (timee.toString().length === 1)
         var thistime = time + ":0" + timee
@@ -485,8 +486,8 @@ function Doctorcalender() {
             console.log(" in if")
             console.log(add.address+" add address")
             console.log(values[index].addressnumber+" hozori address")
-
-            if (add.address != "همه ی آدرس ها ( برای حذف )") {
+           if (selectedduration.duration === "all") {
+            if (add.address !== "همه ی آدرس ها ( برای حذف )") {
               console.log(" toye if hameye address ha nist")
               console.log(index+" index")
               console.log(values[index])
@@ -509,6 +510,32 @@ function Doctorcalender() {
          
             }
           }
+          else if(values[index].duration===selectedduration.duration){
+            if (add.address !== "همه ی آدرس ها ( برای حذف )") {
+              console.log(" toye if hameye address ha nist")
+              console.log(index+" index")
+              console.log(values[index])
+              if (values[index].address === add.address) {
+                console.log(" mige addressesh hamone")
+                values.splice(index, 1);
+                 index--;
+                // lengthtt--;
+                console.log(values)
+         
+              }
+              
+            }
+            else {
+              console.log(" omad toye elese ")
+              values.splice(index, 1);
+              index--;
+              // lengthtt--;
+              console.log(values)
+         
+            }
+
+          }
+          }
           index++;
           console.log(i+" i")
          
@@ -517,7 +544,7 @@ function Doctorcalender() {
       }
     }
 
-  }
+  // }
 
   const handlemstartchange = (index, event) => {
     const values = [...mfields];
