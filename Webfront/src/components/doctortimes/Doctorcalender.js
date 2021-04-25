@@ -241,7 +241,8 @@ function Doctorcalender() {
           console.log(noww + " noww");
           console.log("++++++++++")
           //
-          return (((moment(noww, "HH:mm").format("HH:mm") >= moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) <= (moment(time.time22, "HH:mm").format("HH:mm"))) 
+          return (((moment(noww, "HH:mm").format("HH:mm") > moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) < (moment(time.time22, "HH:mm").format("HH:mm"))) ||
+          ((moment(noww, "HH:mm").format("HH:mm") < moment(time.time, "HH:mm").format("HH:mm")) && (moment(thistime, "HH:mm").format("HH:mm")) > (moment(time.time22, "HH:mm").format("HH:mm")))
 
           )
 
@@ -472,30 +473,43 @@ function Doctorcalender() {
         console.log(mend+" mend")
       var index=0;
          console.log(hozoris.length+" hozorislenght")
-        for(var i=0;i<hozoris.length;i++){
-         index++;
-          if(moment(hozoris[i].time, "HH:mm").format("HH:mm")>=moment(thistime, "HH:mm").format("HH:mm")&&
-          moment(hozoris[i].time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+        // var lengthtt=hozoris.length;
+        for(var i=0;index<values.length;i++){
+         console.log(add)
+         console.log(add.address+" add.address")
+         console.log(add.addressnumber+" add addressnumber")
+        
+          if(moment(values[index].time, "HH:mm").format("HH:mm")>=moment(thistime, "HH:mm").format("HH:mm")&&
+          moment(values[index].time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
           {
             console.log(" in if")
             console.log(add.address+" add address")
-            console.log(hozoris[index].addressnumber+" hozori address")
+            console.log(values[index].addressnumber+" hozori address")
 
             if (add.address != "همه ی آدرس ها ( برای حذف )") {
-              if (hozoris[index].addressnumber === add.addressnumber) {
+              console.log(" toye if hameye address ha nist")
+              console.log(index+" index")
+              console.log(values[index])
+              if (values[index].address === add.address) {
+                console.log(" mige addressesh hamone")
                 values.splice(index, 1);
-                index--;
+                 index--;
+                // lengthtt--;
                 console.log(values)
          
               }
+              
             }
             else {
+              console.log(" omad toye elese ")
               values.splice(index, 1);
               index--;
+              // lengthtt--;
               console.log(values)
          
             }
           }
+          index++;
           console.log(i+" i")
          
         }
@@ -796,7 +810,7 @@ function Doctorcalender() {
               {/* mt - 2 وسط وسط نیست */}
               <div class="row  align-items-start col-auto ms-4">
                 <div class="col-auto">
-                  <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+                  <label data-testid="hozoritext" for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
                 </div>
                 {/* class="col-2 me-n3 " */}
                 <div class=" col-auto row align-items-center"
