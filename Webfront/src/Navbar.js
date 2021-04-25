@@ -155,10 +155,11 @@ function Navbar(props) {
       </nav>
 
       <div
-        class="offcanvas offcanvas-end "
+        class="offcanvas offcanvas-end"
         tabindex="-1"
         id="offcanvasRight"
         aria-labelledby="offcanvasRightLabel"
+        style={{ backgroundColor: "#e3eeee" }}
       >
         <div class="offcanvas-header">
           <button
@@ -173,13 +174,17 @@ function Navbar(props) {
           <p className="">قسمت های مورد نظر خود را پر کنید</p>
           <form class="row g-3">
             <div class="col-12">
-              <input type="text" class="form-control " placeholder="نام دکتر" />
+              <input
+                type="text"
+                class="form-control "
+                placeholder="نام دکتر..."
+              />
             </div>
             <div class="col-12">
               <input
                 type="text"
                 class="form-control  "
-                placeholder="تخصص"
+                placeholder="تخصص..."
                 aria-label=""
               />
             </div>
@@ -187,7 +192,7 @@ function Navbar(props) {
               <input
                 type="text"
                 class="form-control"
-                placeholder="استان"
+                placeholder="استان..."
                 aria-label=""
               />
             </div>
@@ -195,7 +200,7 @@ function Navbar(props) {
               <input
                 type="text"
                 class="form-control"
-                placeholder="شهر"
+                placeholder="شهر..."
                 aria-label=""
               />
             </div>

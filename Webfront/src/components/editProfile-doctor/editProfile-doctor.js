@@ -227,8 +227,8 @@ function Editprofile(props) {
               state: "3",
               city: address.city,
               detail: address.detail,
-            }
-          ]
+            },
+          ],
         };
         const backcity = JSON.stringify(payloadcity);
         axios
@@ -359,19 +359,23 @@ function Editprofile(props) {
   return (
     <div className="main-content">
       <div className="container-fluid p-2">
-        {Cookies.get("doctorId") === 0 ? (
+        {Cookies.get("doctorId") === undefined ||
+        Cookies.get("doctorId").toString() !== "0" ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">
             <div className="col-12 col-md-4 ">
-              <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
+              <div
+                className="card border-dark border p-2 m-1 shadow"
+                style={{ backgroundColor: "#EEEDE8" }}
+              >
                 <div class="card-header d-flex justify-content-center">
                   <div className="text-center">
                     <Avatar
                       src={user.picture}
                       ref={uploadedImage}
                       alt="عکس"
-                      className=""
+                      className="mx-auto"
                       style={{ width: 120, height: 120 }}
                     />
                     <h5 className="username mt-2">{user.userName}</h5>
@@ -380,12 +384,12 @@ function Editprofile(props) {
                 </div>
                 <div class="card-body flex row g-2">
                   <div
-                    className="btn btn-outline-light btn-sm"
+                    className="btn btn-outline-dark btn-sm"
                     onClick={handleLogout}
                   >
                     خروج از حساب
                   </div>
-                  <div className="btn btn-outline-light btn-sm">
+                  <div className="btn btn-outline-dark btn-sm">
                     <EditIcon></EditIcon>
                     ویرایش اطلاعات
                   </div>
@@ -393,7 +397,10 @@ function Editprofile(props) {
               </div>
             </div>
             <div className="col-12 col-md-8 ">
-              <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
+              <div
+                className="card border-dark border p-2 m-1 shadow-"
+                style={{ backgroundColor: "#EEEDE8" }}
+              >
                 <div class="card-header d-flex">
                   <h4>اطلاعات شخصی</h4>
                 </div>
@@ -608,7 +615,7 @@ function Editprofile(props) {
                                 style={{ display: "none", color: "white" }}
                               />
                               <div
-                                className="btn btn-outline-light rounded"
+                                className="btn btn-outline-dark rounded"
                                 onClick={() => imageUploader.current.click()}
                               >
                                 <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
@@ -620,7 +627,7 @@ function Editprofile(props) {
                         <div class="col-12 ">
                           <button
                             type="submit"
-                            class="btn btn-outline-light"
+                            class="btn btn-outline-dark"
                             onClick={handleChangeInfosClick}
                           >
                             <CheckCircleIcon></CheckCircleIcon>
@@ -670,7 +677,7 @@ function Editprofile(props) {
                         <div class="col-12">
                           <button
                             type="submit"
-                            class="btn btn-outline-light"
+                            class="btn btn-outline-dark"
                             onClick={handleChangePassClick}
                           >
                             <CheckCircleIcon></CheckCircleIcon>
