@@ -930,7 +930,10 @@ function Doctorcalender() {
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      return (<li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setadd({ address: value.add1, addressnumber: indexx })} data-ref="one" >{value.add1}       ({indexx}) </a>
+                      return (<li class="d-flex flex-row"  style={{ alignItems: "center" }}>
+                      <div style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse" 
+                      onClick={() => setadd({ address: value.add1, addressnumber: indexx })} data-ref="one" >{value.add1}     ({indexx}) 
+                      </div>
 
                       </li>)
                     })}
