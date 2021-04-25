@@ -673,7 +673,7 @@ function Doctorcalender() {
 
             console.log(values)
             console.log(noww + "noww")
-            values.push({ time: thistime, time22: noww })
+            values.push({ time: thistime, time22: noww})
             console.log(thistime + " thistime")
             console.log(values)
           }
@@ -707,89 +707,120 @@ function Doctorcalender() {
         var mend = endt + ":" + enddt
       console.log(enddt + " " + enddt.toString().length + " lenght")
       // var mend=parseInt(hfields[0].end)+":"+parseInt(hfields[0].endd);
-      for (var i = time; !finish; i += (duration / 60)) {
-        if (timee.toString().length === 1)
-          var thistime = time + ":" + "0" + timee
-        else
-          var thistime = time + ":" + timee
-        console.log(duration + " duration")
-        console.log(parseInt(timee) + " timee15435")
-        var check = parseInt(parseInt(duration) + parseInt(timee))
+      // for (var i = time; !finish; i += (duration / 60)) {
+      //   if (timee.toString().length === 1)
+      //     var thistime = time + ":" + "0" + timee
+      //   else
+      //     var thistime = time + ":" + timee
+      //   console.log(duration + " duration")
+      //   console.log(parseInt(timee) + " timee15435")
+      //   var check = parseInt(parseInt(duration) + parseInt(timee))
 
-        var timecopy = time
-        var time2 = check
-        console.log(time2 + "time2")
-        if (time2 >= 60) {
-          console.log(time2 + " check ya time2")
-          var plus = Math.floor(time2 / 60)
-          time2 = time2 % 60
-          if (time2.toString().length === 1) {
-            time2 = "0" + time2;
-          }
-          console.log(time2 + " time 2 badesh")
-          console.log(time2 + " time2 2")
-          timecopy += plus
-          console.log(timecopy + " timecopy")
-        }
-        var noww = timecopy + ":" + time2
-        console.log(noww + " noww")
-        console.log(mend + " mend")
-        var dur = "00:" + duration
-        if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
-          finish = true;
-          break;
-        }
-        // console.log(i+"i")
-        console.log("to for")
-        //  if(timee===0)
-        //    var thenn=time+":"+timee+"0"
-        //   else
-        //   var thenn=time+":"+timee
-        //  if(timee>=60){
-        //    var plus=Math.floor(timee/60)
-        //    timee=timee-60
-        //    time+=plus
-        //  }  
-        // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
+      //   var timecopy = time
+      //   var time2 = check
+      //   console.log(time2 + "time2")
+      //   if (time2 >= 60) {
+      //     console.log(time2 + " check ya time2")
+      //     var plus = Math.floor(time2 / 60)
+      //     time2 = time2 % 60
+      //     if (time2.toString().length === 1) {
+      //       time2 = "0" + time2;
+      //     }
+      //     console.log(time2 + " time 2 badesh")
+      //     console.log(time2 + " time2 2")
+      //     timecopy += plus
+      //     console.log(timecopy + " timecopy")
+      //   }
+      //   var noww = timecopy + ":" + time2
+      //   console.log(noww + " noww")
+      //   console.log(mend + " mend")
+      //   var dur = "00:" + duration
+      //   if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
+      //     finish = true;
+      //     break;
+      //   }
+      //   // console.log(i+"i")
+      //   console.log("to for")
+      //   //  if(timee===0)
+      //   //    var thenn=time+":"+timee+"0"
+      //   //   else
+      //   //   var thenn=time+":"+timee
+      //   //  if(timee>=60){
+      //   //    var plus=Math.floor(timee/60)
+      //   //    timee=timee-60
+      //   //    time+=plus
+      //   //  }  
+      //   // console.log(hozoris.some(time=>(moment(time.time22,"HH:mm").format("HH:mm")<moment(thistime,"HH:mm").format("HH:mm") || moment(time.time,"HH:mm").format("HH:mm") >moment(noww,"HH:mm").format("HH:mm")))+"somee")
 
-        // console.log(values)
-        // console.log(noww+" noww")
-        // console.log(thistime+" this time")
-        // console.log(values)
-        // console.log("~~~~~~~~~~~~~~~~~~~~")
-        // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
-        // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
-        // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
-        const index = values.findIndex((element) => {
-          console.log(element.time22 + "element time22")
-          console.log(element.time + "element time")
-          console.log(noww + " noww")
-          console.log(thistime + " thistime")
-          return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
-            moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
-        })
-        console.log(index)
-        if (index != -1)
-          values.splice(index, 1);
-        setmagazis(values)
-        // values.push({time:thistime,time22:noww})
-        console.log(thistime + " thistime")
-        // console.log(values)
-        // }
-        // else
-        // console.log("boodesh")
-        console.log(parseInt(duration + timee) + " parseInt")
-        time = timecopy;
-        timee = time2;
-        console.log(time + " THIS " + "time")
-        console.log(timee + " THIS " + "timee")
-        var now = timecopy + ":" + time2
-      }
+      //   // console.log(values)
+      //   // console.log(noww+" noww")
+      //   // console.log(thistime+" this time")
+      //   // console.log(values)
+      //   // console.log("~~~~~~~~~~~~~~~~~~~~")
+      //   // return(moment(element.time22,"HH:mm").format("HH:mm")<moment(noww,"HH:mm").format("HH:mm") &&
+      //   // moment(element.time,"HH:mm").format("HH:mm")>=moment(thistime,"HH:mm").format("HH:mm"))})
+      //   // const index=values.findIndex((element)=>element.time===thistime && element.time22===noww)
+      //   const index = values.findIndex((element) => {
+      //     console.log(element.time22 + "element time22")
+      //     console.log(element.time + "element time")
+      //     console.log(noww + " noww")
+      //     console.log(thistime + " thistime")
+      //     return (moment(element.time22, "HH:mm").format("HH:mm") === moment(noww, "HH:mm").format("HH:mm") &&
+      //       moment(element.time, "HH:mm").format("HH:mm") === moment(thistime, "HH:mm").format("HH:mm"))
+      //   })
+      //   console.log(index)
+      //   if (index != -1)
+      //     values.splice(index, 1);
+      //   setmagazis(values)
+      //   // values.push({time:thistime,time22:noww})
+      //   console.log(thistime + " thistime")
+      //   // console.log(values)
+      //   // }
+      //   // else
+      //   // console.log("boodesh")
+      //   console.log(parseInt(duration + timee) + " parseInt")
+      //   time = timecopy;
+      //   timee = time2;
+      //   console.log(time + " THIS " + "time")
+      //   console.log(timee + " THIS " + "timee")
+      //   var now = timecopy + ":" + time2
+      // }
 
 
       // sethfields([...hfields,{ start: "", startt: "", end: "", endd: "" }]);
+      if (timee.toString().length === 1)
+        var thistime = time + ":0" + timee
+      else
+        var thistime = time + ":" + timee
+        console.log(mend+" mend")
+      var index=0;
+      console.log(magazis.length+" hozorislenght")
+     // var lengthtt=hozoris.length;
+     for(var i=0;index<values.length;i++){
+      console.log(add)
+      console.log(add.address+" add.address")
+      console.log(add.addressnumber+" add addressnumber")
+     
+       if(moment(values[index].time, "HH:mm").format("HH:mm")>=moment(thistime, "HH:mm").format("HH:mm")&&
+       moment(values[index].time22, "HH:mm").format("HH:mm")<=moment(mend, "HH:mm").format("HH:mm"))
+       {
+         console.log(" in if")
+         console.log(add.address+" add address")
+        //  console.log(values[index].addressnumber+" hozori address")
+           console.log(" omad toye elese ")
+           values.splice(index, 1);
+           index--;
+           // lengthtt--;
+           console.log(values)
+       }
+       index++;
+       console.log(i+" i")
+      
+     }
+     setmagazis(values);
     }
   }
+
 
   const [selectedDayRange, setSelectedDayRange] = useState({
     from: null,
