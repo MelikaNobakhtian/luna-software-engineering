@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { render } from "react-dom";
 import { RangeDatePicker } from "jalali-react-datepicker";
-import { RestaurantMenu, TimeToLeave } from "@material-ui/icons";
+import { CallMadeSharp, RestaurantMenu, TimeToLeave } from "@material-ui/icons";
 import moment from 'moment-jalaali'
 // import DatePicker from 'react-datepicker2';
 import Navbar from "../../Navbar"
@@ -938,11 +938,11 @@ function Doctorcalender() {
                 </div> : null}
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
-                {durationmode.length >= 1 ? <div class="dropdown me-5" dir="ltr" >
-                  <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                {durationmode.length >= 1 ? <div class="dropdown shadow-sm me-5" dir="ltr" >
+                  <div class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
+                  </div>
+                  <ul class="dropdown-menu dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
@@ -950,16 +950,30 @@ function Doctorcalender() {
                       {/* value.hdur != "" ?  */ }
                       {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */ }
                       return (<li class="d-flex flex-row" dir="ltr" lang="fa" style={{}}>
-                        <div class="mx-2 shadow-1 col-12 align-self-center" style={{ backgroundColor: value.color, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
-                        {value.duration != "all" ? [value.name !== "وقت عادی" ? (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه) </a>) :
-                          (<a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {hduration}(دقیقه) </a>)] :
-                          <a class="dropdown-item mx-auto  " style={{}} dir="rtl" onClick={() => setselectedduration(value)} data-ref="one" >{value.name} </a>
+                      
+                        {value.duration !== "all" ? [value.name !== "وقت عادی" ? 
+                        (<div class="dropdown-item  d-flex flex-row-reverse  " style={{fontSize:"clamp(12px,2vw,15px)"}} dir="ltr"
+                         onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه)
+                           <div class="mx-auto shadow-1 col-12 ms-0 align-items-end" style={{ backgroundColor: value.color,
+                         borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                          </div>) :
+                          (<div  class="dropdown-item  d-flex flex-row-reverse  " style={{fontSize:"clamp(12px,2vw,15px)"}} dir="ltr" onClick={() => setselectedduration(value)}
+                           data-ref="one" >{value.name}  {hduration}(دقیقه)
+                             <div class="mx-auto shadow-1 ms-0 col-12  align-items-end" style={{ backgroundColor: value.color,
+                         borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                            </div>)] :
+                          <div class="dropdown-item  d-flex flex-row-reverse " style={{}} dir="ltr" onClick={() => setselectedduration(value)} 
+                          data-ref="one" >
+                           <div  style={{fontSize:"clamp(12px,2vw,15px)"}} >
+                          {value.name} 
+                          </div>
+                          </div>
                         }</li>
                       )
                     })}
 
-                    <div class=" d-flex flex-row mt-2 " data-ref="one" >
-                      <BsPlusCircleFill color="gray" onClick={() => {
+                    <div class=" d-flex flex-row mt-2 mx-1 " data-ref="one" >
+                      <BsPlusCircleFill color="gray"  onClick={() => {
                         // var col=randomColor()
                         setselectedduration({ name: dmdur, duration: dmhdur, color: col })
                         console.log(dmhdur + " dmhdur")
@@ -969,15 +983,17 @@ function Doctorcalender() {
                         //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
                         var values = [...durationmode];
                         values.push({ name: dmdur, duration: dmhdur, color: col })
-                        setdmhdur("مدت زمان")
-                        setdmdur("نوع بازه ی زمانی")
+                        // setdmhdur("مدت زمان")
+                        // setdmdur("نوع بازه ی زمانی")
+                        setcol(randomColor());
                         console.log(values + " values")
                         setdurationmode(values)
                         console.log(durationmode)
-                      }} class="min-vw-20 min-vh-20 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <div class="mx-2 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
-                      <input type="number" lang="fa" dir="rtl" class="round-2" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
-                      <input type="text" lang="fa" dir="rtl" class="round-2" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
+                      }} class="min-vw-20 min-vh-20 mt-1 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <div class="mx-1 mt-1 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                      {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
+                      <input type="number"  style={{fontSize:"clamp(11px,2vw,15px)",width:"clamp(86px,15vw,106px)",borderRadius:50,borderWidth:1,borderColor:"lightgray"}} class="form-control form-control-sm" lang="fa" dir="rtl" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      <input  style={{fontSize:"clamp(11px,2vw,15px)",width:"clamp(100px,20vw,150px)",borderRadius:50}}  lang="fa" dir="rtl" class="form-control form-control-sm" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div>
                   </ul>
