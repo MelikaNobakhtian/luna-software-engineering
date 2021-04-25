@@ -6,7 +6,7 @@
 // import {navbar,nav,Button} from "bootstrap"
 // import {Navbar,Nav} from 'bootstrap';
 // import * as ReactBootstrap from 'react-bootstrap';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 //import { FcSearch } from "react-icons/fc";
 //import Button from "react-bootstrap/Button";
 import { BsSearch, BsFillPersonFill } from "react-icons/bs";
@@ -22,6 +22,13 @@ import {
 } from "react-router-dom";
 
 function Navbar(props) {
+  const [searchedDoctor,setSearchedDoctor] = useState({
+    name : "",
+    specialty:"",
+    state:"",
+    city:""
+  })
+
   const redirecttoprofile = () => {
     console.log(Cookies.get("doctorId"));
     if (Cookies.get("doctorId").toString() === "0") {
@@ -32,6 +39,18 @@ function Navbar(props) {
       props.history.push("/login");
     }
   };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setSearchedDoctor((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
+  const GoToSearch=(e)=>{
+    props.history.push("/searchResult/"+ e);
+  }
 
   return (
     <div className="" style={{ backgroundColor: "#EBFCFF" }}>
@@ -204,7 +223,7 @@ function Navbar(props) {
                 aria-label=""
               />
             </div>
-            <div className="btn btn-primary col-4 mx-2">بگرد</div>
+            <div className="btn btn-primary col-4 mx-2" onClick={GoToSearch}>بگرد</div>
           </form>
         </div>
       </div>

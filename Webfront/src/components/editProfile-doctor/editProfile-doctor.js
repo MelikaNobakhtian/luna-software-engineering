@@ -84,7 +84,7 @@ function Editprofile(props) {
   }, []);
 
   const handleChange = (e) => {
-    console.log(user);
+    //console.log(user);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
