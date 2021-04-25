@@ -49,7 +49,7 @@ function Navbar(props) {
   };
 
   const GoToSearch=(e)=>{
-    props.history.push("/searchResult/"+ e);
+    props.history.push("/searchResult/"+ JSON.stringify(searchedDoctor));
   }
 
   return (
@@ -197,6 +197,9 @@ function Navbar(props) {
                 type="text"
                 class="form-control "
                 placeholder="نام دکتر..."
+                id="name"
+                value={searchedDoctor.name}
+                onChange={handleChange}
               />
             </div>
             <div class="col-12">
@@ -205,6 +208,9 @@ function Navbar(props) {
                 class="form-control  "
                 placeholder="تخصص..."
                 aria-label=""
+                id="specialty"
+                value={searchedDoctor.specialty}
+                onChange={handleChange}
               />
             </div>
             <div class="col-6">
@@ -213,6 +219,9 @@ function Navbar(props) {
                 class="form-control"
                 placeholder="استان..."
                 aria-label=""
+                value={searchedDoctor.state}
+                id="state"
+                onChange={handleChange}
               />
             </div>
             <div class="col-6">
@@ -221,6 +230,9 @@ function Navbar(props) {
                 class="form-control"
                 placeholder="شهر..."
                 aria-label=""
+                value={searchedDoctor.city}
+                id="city"
+                onChange={handleChange}
               />
             </div>
             <div className="btn btn-primary col-4 mx-2" onClick={GoToSearch}>بگرد</div>
