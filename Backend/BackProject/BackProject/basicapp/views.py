@@ -18,6 +18,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework.parsers import JSONParser
+from datetime import timedelta,datetime
+import arrow
 
 class RegisterView(generics.GenericAPIView):
 
@@ -31,9 +33,7 @@ class RegisterView(generics.GenericAPIView):
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
         token = RefreshToken.for_user(user).access_token
-        #current_site = get_current_site(request).domain
         current_site = 'localhost:3000'
-        #relativeLink = reverse('verification')
         absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.username + \
             ' Use the link below to verify your email \n' + absurl
@@ -55,9 +55,7 @@ class RegisterDoctorView(generics.GenericAPIView):
         new_doc = DoctorUser(user=user,degree=request.FILES['degree'])
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
-        #current_site = get_current_site(request).domain
         current_site = 'localhost:3000'
-        #relativeLink = reverse('verification')
         absurl = 'http://'+current_site+"/verification/"+str(token)
         email_body = 'Hi '+user.first_name+' '+user.last_name + \
             ' Use the link below to verify your email \n' + absurl
@@ -239,10 +237,6 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            # current_site = get_current_site(
-            #     request=request).domain
-            # relativeLink = reverse(
-            #     'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
             absurl = 'http://localhost:3000/forgotpassword/' + uidb64 +'/'+token
             email_body = 'Hello, \n Use link below to reset your password  \n' + \
                 absurl
@@ -286,14 +280,25 @@ class OnlineAppointmentView(generics.GenericAPIView):
 
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc)
+        apts = Appointment.objects.filter(doctor=doc,is_online=True)
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
     def post(self, request,pk):
-        serializer = self.serializer_class(data=request.data,many=True)
-        serializer.is_valid(raise_exception=True)
+        start_day = arrow.get(request.data['start_day'],"YYYY-MM-DD").date()
+        end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
+        appointments = request.data['appointments']
+        while start_day <= end_day:
+            for apt in appointments:
+                apt['date'] = start_day
+                serializer = self.serializer_class(data=apt)
+                serializer.is_valid(raise_exception=True)
+            start_day = start_day + timedelta(days=1)
+        doc = DoctorUser.objects.get(pk=pk)
+        apts = Appointment.objects.filter(doctor=doc,is_online=True)
+        serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class InPersonAppointmentView(generics.GenericAPIView):
     serializer_class = InPersonAppointmentSerializer
@@ -305,26 +310,36 @@ class InPersonAppointmentView(generics.GenericAPIView):
         return Response(data.data, status=status.HTTP_200_OK)
 
     def post(self, request, doc_id):
-        serializer = self.serializer_class(data=request.data,many=True)
-        serializer.is_valid(raise_exception=True)
+        start_day = arrow.get(request.data['start_day'],"YYYY-MM-DD").date()
+        end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
+        appointments = request.data['appointments']
+        while start_day <= end_day:
+            for apt in appointments:
+                apt['date'] = start_day
+                serializer = self.serializer_class(data=apt)
+                serializer.is_valid(raise_exception=True)
+            start_day = start_day + timedelta(days=1)
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apts = Appointment.objects.filter(doctor=doc,is_online=False)
+        serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+            
 
 class UpdateOnlineAppointmentView(generics.GenericAPIView):
     
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=True)
-        apts = sorted(apts ,  key=lambda m: m.start_datetime)
+        apts = sorted(apts ,  key=lambda m: m.date)
         if len(apts) == 0:
             return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-        last_reserved = apts[len(apts) - 1 ].start_datetime
+        last_reserved = apts[len(apts) - 1 ].date
         data = { 'datetime' : str(last_reserved) }
         return Response(data, status=status.HTTP_200_OK)
 
     def put(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,patient__isnull=True,start_datetime__gt=request.data['date'],is_online=True).delete()
+        Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=True).delete()
         apts = Appointment.objects.filter(doctor=doc,is_online=True)
         serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -341,17 +356,17 @@ class UpdateInPersonAppointmentView(generics.GenericAPIView):
         time_type = request.data['type']
         doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=False,time_type=time_type)
-        apts = sorted(apts ,  key=lambda m: m.start_datetime)
+        apts = sorted(apts ,  key=lambda m: m.date)
         if len(apts) == 0:
             return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-        last_reserved = apts[len(apts) - 1 ].start_datetime
+        last_reserved = apts[len(apts) - 1 ].date
         data = { 'datetime' : str(last_reserved) }
         return Response(data, status=status.HTTP_200_OK)
 
     def put(self,request,pk):
         time_type = request.data['type']
         doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,patient__isnull=True,start_datetime__gt=request.data['date'],is_online=False,time_type=time_type).delete()
+        Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=False,time_type=time_type).delete()
         apts = Appointment.objects.filter(doctor=doc,is_online=False)
         serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

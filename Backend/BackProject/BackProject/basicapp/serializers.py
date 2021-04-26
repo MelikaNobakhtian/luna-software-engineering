@@ -182,16 +182,17 @@ class OnlineAppointmentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Appointment
-        fields = ['duration','start_datetime','doc_id']
+        fields = ['duration','start_time','doc_id','end_time','date']
 
     def validate(self,attrs):
 
         doc_id = attrs.get('doc_id', '')
         duration= attrs.get('duration', '')
-        start_datetime = attrs.get('start_datetime', '')
-        end_datetime = start_datetime + timedelta(minutes=duration)
+        start_time = attrs.get('start_time', '')
+        end_time = attrs.get('end_time','')
+        date = attrs.get('date','')
         doc = DoctorUser.objects.get(pk=doc_id)
-        apt = Appointment(duration=duration,doctor=doc,start_datetime=start_datetime,end_datetime=end_datetime)
+        apt = Appointment(duration=duration,doctor=doc,start_time=start_time,end_time=end_time,date=date)
         apt.save()
 
         return attrs
@@ -204,21 +205,21 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Appointment
-        fields = ['duration','start_datetime','doc_id','address_id','address','time_type','address_number','duration_number']
+        fields = ['duration','start_time','doc_id','address_id','address','time_type','address_number','duration_number','date','end_time']
 
     def validate(self,attrs):
-
+        date = attrs.get('date','')
         doc_id = attrs.get('doc_id', '')
         address_id = attrs.get('address_id', '')
         time_type = attrs.get('time_type', '')
         duration= attrs.get('duration', '')
-        start_datetime = attrs.get('start_datetime', '')
+        start_time = attrs.get('start_time', '')
         address_number = attrs.get('address_number', '')
         duration_number = attrs.get('duration_number', '')
-        end_datetime = start_datetime + timedelta(minutes=duration)
+        end_time = attrs.get('end_time','')
         doc = DoctorUser.objects.get(pk=doc_id)
         address = Address.objects.get(pk=address_id)
-        apt = Appointment(duration=duration,doctor=doc,start_datetime=start_datetime,end_datetime=end_datetime
+        apt = Appointment(date=date,duration=duration,doctor=doc,start_time=start_time,end_time=end_time
                           ,address=address,time_type=time_type,is_online=False,address_number=address_number,duration_number=duration_number)
         apt.save()
 
