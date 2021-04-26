@@ -36,7 +36,8 @@ function Doctorcalender() {
   const [hmmconflictmessage, sethmmconflictmessage] = useState(undefined);
   const [emptyhduration, setemptyhduration] = useState(undefined);
   const [emptymduration, setemptymduration] = useState(undefined);
-  const [selecteddate, setselecteddate] = useState("");
+  const [startselectedday, setstartseletedday] = useState("");
+  const [endselectedday, setendseletedday] = useState("");
   const [col, setcol] = useState(randomColor())
   //az get
   const [addressid, setaddressid] = useState(1);
@@ -52,7 +53,7 @@ function Doctorcalender() {
   const [dmhdur, setdmhdur] = useState("");
   const [snackbarerror, setsnackbarerror] = useState("");
 
-
+//validation ***
 
   useEffect(() => {
     var doctorid = Cookies.get("doctorid");
@@ -88,23 +89,25 @@ function Doctorcalender() {
   }
   const sendmagazis = () => {
 
-    if (selecteddate === "") {
+    if (startselectedday === "") {
       // setemptymduration(undefined)
       setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
     }
+    
     var values = [];
+    //***** */
     var doctorid = Cookies.get("doctorId");
     console.log(doctorid + " doctorid");
 
     for (var i = 0; i < magazis.length; i++) {
-      var start = selecteddate + " " + magazis[i].time
-      values.push({ duration: mduration, start_datetime: start, doc_id: doctorid });
+      // var start = startselectedday + " " + magazis[i].time
+      values.push({ duration: mduration, doc_id: 1 ,start_time:magazis[i].time,end_time:magazis[i].time22});
     }
-    console.log(values)
     console.log(" all the magazis values :)")
-
-    axios.post(API_BASE_URL + "/appoinment/" + doctorid + "/online/", JSON.stringify(values), {
+    var informations={start_day:startselectedday,end_day:endselectedday,appointments:values}
+    console.log(informations)
+    axios.post(API_BASE_URL + "/appointment/" + 1 + "/online/", JSON.stringify(informations), {
       headers: { "content-type": "application/json" },
     })
       .then(function (response) {
@@ -117,7 +120,7 @@ function Doctorcalender() {
 
   }
   const sendhozori = () => {
-    if (selecteddate === "") {
+    if (startselectedday === "") {
       // setemptymduration(undefined)
       setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
@@ -126,7 +129,7 @@ function Doctorcalender() {
     var doctorid = Cookies.get("doctorId");
     console.log(hozoris);
     for (var i = 0; i < hozoris.length; i++) {
-      var start = selecteddate + " " + hozoris[i].time
+      var start = startselectedday + " " + hozoris[i].time
       values.push({
         duration: hozoris[i].duration, start_datetime: start, doc_id: doctorid,
         address_id: addressid, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
@@ -829,7 +832,44 @@ function Doctorcalender() {
   const calenderchange = (value) => {
     console.log("hi")
     console.log(value + "value")
-    setselecteddate(value.from.year + "-" + value.from.month + "-" + value.from.day)
+    var startmonth="";
+    var startday="";
+    if(value.from.month.toString().length===1){
+       startmonth="0"+value.from.month
+    }
+    else{
+       startmonth=value.from.month
+    }
+    if(value.from.day.toString().length===1){
+      startday="0"+value.from.day
+   }
+   else{
+      startday=value.from.day
+   }
+    setstartseletedday(value.from.year + "-" + startmonth + "-" + startday)
+    console.log(value.to)
+    if(value.to!=null){
+      var endmonth="";
+    var endday="";
+    if(value.to.month.toString().length===1){
+       endmonth="0"+value.to.month
+    }
+    else{
+       endmonth=value.to.month
+    }
+    if(value.to.day.toString().length===1){
+      endday="0"+value.to.day
+   }
+   else{
+      endday=value.to.day
+   }
+   setendseletedday(value.to.year + "-" + endmonth + "-" + endday)
+
+    }
+    else{
+      setendseletedday(value.from.year + "-" + startmonth + "-" + startday)
+    }
+    // console.log(value.to.year+" to year")
     console.log(value.from.year + "year" + value.from.month + "month" + value.from.day + " _ " + value.to)
     setSelectedDayRange(value)
   }
