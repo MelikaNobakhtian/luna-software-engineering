@@ -94,6 +94,7 @@ function Doctorcalender() {
       setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
     }
+    else{
     
     var values = [];
     //***** */
@@ -117,7 +118,7 @@ function Doctorcalender() {
         console.log(error);
       });
 
-
+    }
   }
   const sendhozori = () => {
     if (startselectedday === "") {
@@ -125,21 +126,25 @@ function Doctorcalender() {
       setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
       setOpenSnack(true);
     }
+    else if(hozoris.length!==0){
+    
     var values = [];
     var doctorid = Cookies.get("doctorId");
     console.log(hozoris);
+    //doctor id va address id ***
     for (var i = 0; i < hozoris.length; i++) {
-      var start = startselectedday + " " + hozoris[i].time
+      // var start = startselectedday + " " + hozoris[i].time
       values.push({
-        duration: hozoris[i].duration, start_datetime: start, doc_id: doctorid,
-        address_id: addressid, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
+        duration: hozoris[i].duration, start_time: hozoris[i].time,end_time:hozoris[i].time22, doc_id: 1,
+        address_id: 1, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
         durationnumber: hozoris[i].durationnumber
       });
     }
-    console.log(values)
+    var informations={start_day:startselectedday,end_day:endselectedday,appointments:values}
+    console.log(informations)
     console.log(" all the magazis values :)")
 
-    axios.post(API_BASE_URL + "/appoinment/" + doctorid + "/online/", JSON.stringify(values), {
+    axios.post(API_BASE_URL + "/appointment/" + 1 + "/in-person/", JSON.stringify(informations), {
       headers: { "content-type": "application/json" },
     })
       .then(function (response) {
@@ -148,6 +153,7 @@ function Doctorcalender() {
       .catch(function (error) {
         console.log(error);
       });
+    }
 
   }
   const handleaddhfield = () => {
