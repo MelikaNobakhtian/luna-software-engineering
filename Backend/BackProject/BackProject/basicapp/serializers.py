@@ -90,13 +90,11 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
-
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     class Meta:
         fields = ['email']
-
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
@@ -174,3 +172,12 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username','first_name','last_name','profile_photo']
 
+class SearchInUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = "__all__"
+
+    def to_representation(self,value):
+        if DoctorUser.objects.filter(user=value).exists():
+            return DoctorProfileSerializer(DoctorUser.objects.get(user=value),).data

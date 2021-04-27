@@ -324,9 +324,31 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 class AdvancedSearchDoctorView(APIView):
     def get(self,request):
         doctors = DoctorUser.objects.all()
-        search_fields = self.request.query_params.copy()
+        search_fields = {}
+        search_fields['state'] = self.request.query_params.get('state', None)
+        search_fields['city'] = self.request.query_params.get('city', None)
+        search_fields['first_name'] = self.request.query_params.get('first_name', None)
+        search_fields['last_name'] = self.request.query_params.get('last_name', None)
+        search_fields['specialty'] = self.request.query_params.get('specialty', None)
+        # search_fields['sub_specialty'] = self.request.query_params.get('sub_specialty', None)
 
+        print(search_fields)
+
+        if search_fields['first_name'] is not None:
+            user = User.objects.filter(first_name=search_fields['first_name'])
+            doctors = doctors.filter(user=user,many=True)
+
+#             Blog.objects.exclude(
+#     entry__in=Entry.objects.filter(
+#         headline__contains='Lennon',
+#         pub_date__year=2008,
+#     ),
+# )
+
+        # if search_fields['state'] is not None:
+        #     print("**")
+        doctors_list = DoctorProfileSerializer(doctors,many=True)
         if doctors is None:
-            return Response({"message":"No doctors found","doctors":doctors})
+            return Response({"message":"No doctors found","doctors":doctors_list.data})
 
-        return Response({"message":"successfully found these doctors","doctors":doctors})
+        return Response({"message":"successfully found these doctors","doctors":doctors_list.data})
