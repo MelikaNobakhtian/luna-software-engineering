@@ -324,3 +324,9 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 class AdvancedSearchDoctorView(APIView):
     def get(self,request):
         doctors = DoctorUser.objects.all()
+        search_fields = self.request.query_params.copy()
+
+        if doctors is None:
+            return Response({"message":"No doctors found","doctors":doctors})
+
+        return Response({"message":"successfully found these doctors","doctors":doctors})
