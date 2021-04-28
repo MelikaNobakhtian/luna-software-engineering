@@ -21,6 +21,7 @@ import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import axios from "axios";
 import { duration } from "@material-ui/core";
+import { BiChevronDown } from "react-icons/bi";
 
 //یا همه ی موارد ولی ربای حذف یا یه چیز جدا
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -43,9 +44,10 @@ function Doctorcalender() {
   const [addressid, setaddressid] = useState(1);
 
   const [openSnack, setOpenSnack] = useState(false);
-  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "" });
-  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )" }, { add1: "آدرس 1" }
-    , { add1: "آدرس 2" }]);
+  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "",detail:"" });
+  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )",detail:"" }, { add1: "آدرس 1",deltail:":(" }
+    , { add1: "آدرس 2" ,detail:":)"}]);
+  const [showdetail,setshowdetail]=useState(false);
   const [durationmode, setdurationmode] = useState([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" }, { name: "وقت عادی", duration: hduration, color: "#008F81" }])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
@@ -58,6 +60,21 @@ function Doctorcalender() {
   useEffect(() => {
     var doctorid = Cookies.get("doctorid");
     axios.get(API_BASE_URL + "/appoinment/" + doctorid + "/")
+      .then(function (response) {
+        console.log(response)
+        console.log(response.data.user.id+" id");
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+
+  useEffect(() => {
+    var doctorid = Cookies.get("doctorId");
+    
+    axios.get(API_BASE_URL + "/doctor/" + 1 + "/")
       .then(function (response) {
         console.log(response)
       })
@@ -976,12 +993,29 @@ function Doctorcalender() {
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      return (<li class="d-flex flex-row"  style={{ alignItems: "center" }}>
-                      <div style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse" 
+                      //faseleye har address ta felesh ro be payin ziad ***
+                      return (<div><li class="d-flex flex-row"  style={{  }}>
+                      <div data-bs-toggle="collapse" data-bs-target="#collapsedetail" aria-expanded="false" aria-controls="collapsedetail"
+                       class="ms-1" onClick={()=>console.log("clicked")}
+                       style={{backgroundColor:"#F7F7F7",alignItems: "center",justifyContent:"center",borderWidth:1,borderColor:"gray",borderRadius:100}}>
+                      <BiChevronDown size={20} class="m-1" color="#028090"></BiChevronDown>
+                      </div>
+                     
+                      <div style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse mx-auto" 
                       onClick={() => setadd({ address: value.add1, addressnumber: indexx })} data-ref="one" >{value.add1}     ({indexx}) 
+                     
+                      </div>
+                     
+
+                      </li>
+                      <div  class="dropdown-menu  collapse" id="collapsedetail">
+                        <div  class="dropdown-divider"></div>
+                        {add.detail} hihihihihi
+                        <div  class="dropdown-divider"></div>
+                      </div>
                       </div>
 
-                      </li>)
+                      )
                     })}
                   </ul>
                 </div> : null}
