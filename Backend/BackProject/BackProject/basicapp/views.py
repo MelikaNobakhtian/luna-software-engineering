@@ -289,6 +289,8 @@ class OnlineAppointmentView(generics.GenericAPIView):
         end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
         appointments = request.data['appointments']
         while start_day <= end_day:
+            if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).exists() ):
+                Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).delete()
             for apt in appointments:
                 apt['date'] = start_day
                 serializer = self.serializer_class(data=apt)
@@ -303,23 +305,25 @@ class OnlineAppointmentView(generics.GenericAPIView):
 class InPersonAppointmentView(generics.GenericAPIView):
     serializer_class = InPersonAppointmentSerializer
 
-    def get(self,request, doc_id):
-        doc = DoctorUser.objects.get(pk=doc_id)
+    def get(self,request, pk):
+        doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,is_online=False)
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
-    def post(self, request, doc_id):
+    def post(self, request, pk):
         start_day = arrow.get(request.data['start_day'],"YYYY-MM-DD").date()
         end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
         appointments = request.data['appointments']
         while start_day <= end_day:
+            if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).exists() ):
+                Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).delete()
             for apt in appointments:
                 apt['date'] = start_day
                 serializer = self.serializer_class(data=apt)
                 serializer.is_valid(raise_exception=True)
             start_day = start_day + timedelta(days=1)
-        doc = DoctorUser.objects.get(pk=doc_id)
+        doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,is_online=False)
         serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
