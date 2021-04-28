@@ -41,12 +41,12 @@ function Doctorcalender() {
   const [endselectedday, setendseletedday] = useState("");
   const [col, setcol] = useState(randomColor())
   //az get
+  const [littleadd,setlittleadd]=useState( "همه ی آدرس ها ( برای حذف )");
   const [addressid, setaddressid] = useState(1);
 
   const [openSnack, setOpenSnack] = useState(false);
-  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "",detail:"" });
-  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )",detail:"" }, { add1: "آدرس 1",deltail:":(" }
-    , { add1: "آدرس 2" ,detail:":)"}]);
+  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "" });
+  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )" }]);
   const [showdetail,setshowdetail]=useState(false);
   const [durationmode, setdurationmode] = useState([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" }, { name: "وقت عادی", duration: hduration, color: "#008F81" }])
   const [dm, setdm] = useState("_");
@@ -76,7 +76,17 @@ function Doctorcalender() {
     
     axios.get(API_BASE_URL + "/doctor/" + 1 + "/")
       .then(function (response) {
-        console.log(response)
+        // console.log(response)
+        console.log(response.data.addresses);
+        var Alltheaddresses=response.data.addresses;
+        var values=[...haddresses];
+        for(var i=0;i<Alltheaddresses.length;i++){
+          values.push({add1:Alltheaddresses[i].state+"_"+Alltheaddresses[i].city+"_"+Alltheaddresses[i].detail})
+        }
+       
+        console.log(values)
+        sethaddresses(values);
+        console.log(haddresses);
       })
       .catch(function (error) {
         console.log(error);
@@ -985,34 +995,52 @@ function Doctorcalender() {
 
               </div>
               <div class="d-flex flex-row mt-3 " style={{ marginBottom: "-0.25rem" }}>
-                {haddresses.length > 1 ? <div class="dropdown" dir="ltr" >
+                {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {add.address}
+                    {littleadd}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
+                      if(value.add1.toString().length>10){
+                      var thisadd=value.add1.toString().substring(0,10)+" ..."
+                      console.log(thisadd)
+                  
+                      }
+                      else{
+                        var thisadd=value.add1;
+                      }
+                      
                       //faseleye har address ta felesh ro be payin ziad ***
                       return (<div><li class="d-flex flex-row"  style={{  }}>
-                      <div data-bs-toggle="collapse" data-bs-target="#collapsedetail" aria-expanded="false" aria-controls="collapsedetail"
+                      {/* <div data-bs-toggle="collapse" data-bs-target="#collapsedetail" aria-expanded="false" aria-controls="collapsedetail"
                        class="ms-1" onClick={()=>console.log("clicked")}
                        style={{backgroundColor:"#F7F7F7",alignItems: "center",justifyContent:"center",borderWidth:1,borderColor:"gray",borderRadius:100}}>
                       <BiChevronDown size={20} class="m-1" color="#028090"></BiChevronDown>
-                      </div>
-                     
+                      </div> */}
+
+                      {value.add1.toString().length>10 &&index>0?<div dir="ltr" style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse mx-auto" 
+                      data-bs-toggle="tooltip" data-bs-placement="left" 
+                      onClick={() => {
+                        setlittleadd(thisadd)
+                        setadd({ address: value.add1, addressnumber: indexx })}}
+                       title={value.add1} >{thisadd}     ({indexx}) 
+                      </div>:
                       <div style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse mx-auto" 
-                      onClick={() => setadd({ address: value.add1, addressnumber: indexx })} data-ref="one" >{value.add1}     ({indexx}) 
-                     
-                      </div>
+                      onClick={() => {
+                        setlittleadd(thisadd)
+                        setadd({ address: value.add1, addressnumber: indexx })}} data-ref="one" >{value.add1}     ({indexx}) 
+                      </div>}
+                      
                      
 
                       </li>
-                      <div  class="dropdown-menu  collapse" id="collapsedetail">
+                      {/* <div  class="dropdown-menu  collapse" id="collapsedetail">
                         <div  class="dropdown-divider"></div>
                         {add.detail} hihihihihi
                         <div  class="dropdown-divider"></div>
-                      </div>
+                      </div> */}
                       </div>
 
                       )
@@ -1021,7 +1049,7 @@ function Doctorcalender() {
                 </div> : null}
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
-                {durationmode.length >= 1 ? <div class="dropdown shadow-sm me-5" dir="ltr" >
+                {durationmode.length >= 1 ? <div class="dropdown shadow-sm me-5" dir="rtl" >
                   <div class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </div>
