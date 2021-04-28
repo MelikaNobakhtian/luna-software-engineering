@@ -45,8 +45,8 @@ function Doctorcalender() {
   const [addressid, setaddressid] = useState(1);
 
   const [openSnack, setOpenSnack] = useState(false);
-  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "" });
-  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )" }]);
+  const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "",id:"" });
+  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )" ,id:""}]);
   const [showdetail,setshowdetail]=useState(false);
   const [durationmode, setdurationmode] = useState([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" }, { name: "وقت عادی", duration: hduration, color: "#008F81" }])
   const [dm, setdm] = useState("_");
@@ -81,7 +81,7 @@ function Doctorcalender() {
         var Alltheaddresses=response.data.addresses;
         var values=[...haddresses];
         for(var i=0;i<Alltheaddresses.length;i++){
-          values.push({add1:Alltheaddresses[i].state+"_"+Alltheaddresses[i].city+"_"+Alltheaddresses[i].detail})
+          values.push({add1:Alltheaddresses[i].state+"_"+Alltheaddresses[i].city+"_"+Alltheaddresses[i].detail,id:Alltheaddresses[i].id})
         }
        
         console.log(values)
@@ -159,11 +159,14 @@ function Doctorcalender() {
     var doctorid = Cookies.get("doctorId");
     console.log(hozoris);
     //doctor id va address id ***
+   
     for (var i = 0; i < hozoris.length; i++) {
+      console.log(hozoris[i].id)
       // var start = startselectedday + " " + hozoris[i].time
+      console.log(hozoris)
       values.push({
         duration: hozoris[i].duration, start_time: hozoris[i].time,end_time:hozoris[i].time22, doc_id: 1,
-        address_id: 1, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
+        address_id: hozoris[i].id, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
         durationnumber: hozoris[i].durationnumber
       });
     }
@@ -315,6 +318,7 @@ function Doctorcalender() {
             console.log(selectedduration.duration + " selectedduration DURATION")
             if (selectedduration.duration != "") {
               values.push({
+                id:add.id,
                 time: thistime, time22: noww, address: add.address, addressnumber: add.addressnumber
                 , duration: selectedduration.duration, durationname: selectedduration.name, durationnumber: selectedduration.color
               })
@@ -322,6 +326,7 @@ function Doctorcalender() {
             else {
               console.log(hduration + " HDURATION ")
               values.push({
+                id:add.id,
                 time: thistime, time22: noww, address: add.address, addressnumber: add.addressnumber
                 , duration: hduration, durationname: selectedduration.name, durationnumber: selectedduration.color
               })
@@ -522,11 +527,17 @@ function Doctorcalender() {
             console.log(" in if")
             console.log(add.address+" add address")
             console.log(values[index].addressnumber+" hozori address")
+            console.log(add.address !== "همه ی آدرس ها ( برای حذف )")
+            console.log(values[index].duration===selectedduration.duration)
+            console.log(values[index].duration)
+            console.log(selectedduration.duration)
+            console.log("bool")
            if (selectedduration.duration === "all") {
             if (add.address !== "همه ی آدرس ها ( برای حذف )") {
               console.log(" toye if hameye address ha nist")
               console.log(index+" index")
               console.log(values[index])
+              console.log(values[index].address)
               if (values[index].address === add.address) {
                 console.log(" mige addressesh hamone")
                 values.splice(index, 1);
@@ -546,7 +557,8 @@ function Doctorcalender() {
          
             }
           }
-          else if(values[index].duration===selectedduration.duration){
+          //ino shak daram toye validation bayad handle ke yeho hduration ro khali ya pak nakone
+          else if(values[index].duration===selectedduration.duration||selectedduration.duration===""){
             if (add.address !== "همه ی آدرس ها ( برای حذف )") {
               console.log(" toye if hameye address ha nist")
               console.log(index+" index")
@@ -997,7 +1009,7 @@ function Doctorcalender() {
               <div class="d-flex flex-row mt-3 " style={{ marginBottom: "-0.25rem" }}>
                 {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
                   <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    {littleadd}
+                    {add.address}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
@@ -1024,13 +1036,13 @@ function Doctorcalender() {
                       data-bs-toggle="tooltip" data-bs-placement="left" 
                       onClick={() => {
                         setlittleadd(thisadd)
-                        setadd({ address: value.add1, addressnumber: indexx })}}
+                        setadd({ address: thisadd, addressnumber: indexx,id:value.id })}}
                        title={value.add1} >{thisadd}     ({indexx}) 
                       </div>:
-                      <div style={{fontSize:"clamp(12px,2vw,15px)"}} class="dropdown-item d-flex flex-row-reverse mx-auto" 
+                      <div style={{fontSize:"clamp(12px,2vw,15px)"}} dir="ltr" class="dropdown-item d-flex flex-row-reverse mx-auto" 
                       onClick={() => {
                         setlittleadd(thisadd)
-                        setadd({ address: value.add1, addressnumber: indexx })}} data-ref="one" >{value.add1}     ({indexx}) 
+                        setadd({ address: value.add1, addressnumber: indexx ,id:value.id})}} data-ref="one" >{value.add1}     ({indexx}) 
                       </div>}
                       
                      
