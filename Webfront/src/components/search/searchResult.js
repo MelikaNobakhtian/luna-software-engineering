@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import { Avatar } from "@material-ui/core";
 //import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
-import { RiUserStarFill } from "react-icons/all";
+//import { RiUserStarFill } from "react-icons/all";
 //import { FcApproval } from "react-icons/fc";
 function SearchResult(props) {
   const [doctors, setDoctors] = useState([]);
@@ -71,7 +71,7 @@ function SearchResult(props) {
                       </div>
                       <div className="align-items-center m-3">
                         <h6 class="card-subtitle mt-1 text-muted">
-                          <RiUserStarFill></RiUserStarFill>
+                          {/* <RiUserStarFill></RiUserStarFill> */}
                           {current.score}
                         </h6>
                       </div>
