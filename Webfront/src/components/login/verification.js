@@ -1,41 +1,36 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  //Toast,
-  Button,
-  Form,
-  // FormGroup,
-  // Label,
-  // Input,
-  // FormText,
-  // Col,
-  InputGroup,
-} from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  useRouteMatch,
-  useParams,
+  //BrowserRouter as Router,
+  //useRouteMatch,
+ //useParams,
   withRouter,
 } from "react-router-dom";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import LockIcon from "@material-ui/icons/Lock";
-import "./signUp.css";
-import Cookies from "js-cookie";
+//import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
-import docImage from "../../assets/Lovepik_com-401686853-online-medical-consultation.png";
 
 function Verification(props) {
+  const [alart ,setAlart]=useState("")
   console.log(props.match.params.tokenId + "*****************");
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/email-verify/?token=" + props.match.params.tokenId)
       .then(function (response) {
+        if(response.message === 'Successfully activated'){
+          setAlart("ایمیل شما تایید شد. از صفحه لاگین وارد شوید.")
+        }
+        if(response.message === 'Activation Expired'){
+          setAlart("لینک منقصی شده است. دوباره تلاش کنید.")
+        }
+        if(response.message === 'Invalid token'){
+          setAlart("لینک اشتباه است. دوباره تلاش کنید.")
+        }
         console.log(response);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [props.tokenId]);
+  }, [props.match.params.tokenId]);
   return (
     <div>
       <div className="d-flex justify-content-center background">
@@ -43,9 +38,7 @@ function Verification(props) {
           className="shadow-lg border border-5 border-success rounded p-4"
           style={{ backgroundColor: "white" }}
         >
-          ایمیل شما تایید شد
-          <hr></hr>
-          از صفحه لاگین وارد شوید
+          {alart}
         </div>
       </div>
     </div>
