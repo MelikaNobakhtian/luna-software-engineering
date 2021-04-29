@@ -55,17 +55,22 @@ function Login(props) {
         headers: { "content-type": "application/json" },
       })
       .then(function (response) {
-        console.log(response)
-        console.log(response.status)
+        console.log(response);
+        console.log(response.status);
         if (response.statusText === "OK") {
+          if (response.message === 'Invalid credentials, try again') {
+            setPassErr("ایمیل یا رمز اشتباه است!");
+          } else if(response.message === 'Email is not verified'){
+            setPassErr("ایمیل فعال‌سازی نشده است!");
+          }
           //console.log(response.data.tokens['refresh'])
           Cookies.set("userTokenR", response.data.data.tokens.refresh);
           Cookies.set("userTokenA", response.data.data.tokens.access);
           Cookies.set("userId", response.data.data.user_id);
           Cookies.set("doctorId", response.data.data.doctor_id);
-          
+
           redirectToHome();
-          console.log(response)
+          console.log(response);
         } else {
           console.log(response);
         }
@@ -74,22 +79,20 @@ function Login(props) {
         console.log(error);
       });
   }
-      function validatorusername(value){
-        setEmail(value);
-        let errors=""
-        if(value.length === 0)
-        errors ="پر کردن ایمیل ضروری است  !";
-        setEmailErr(errors)
-      }
-     
-      function validatorpass(value){
-        setPasswords(value);
-        let errors=""
-        if(value.length === 0)
-        errors ="پر کردن کلمه عبور ضروری است  !";
-        setPassErr(errors)
-      }
-     
+  function validatorusername(value) {
+    setEmail(value);
+    let errors = "";
+    if (value.length === 0) errors = "پر کردن ایمیل ضروری است  !";
+    setEmailErr(errors);
+  }
+
+  function validatorpass(value) {
+    setPasswords(value);
+    let errors = "";
+    if (value.length === 0) errors = "پر کردن کلمه عبور ضروری است  !";
+    setPassErr(errors);
+  }
+
   const redirectToRegister = () => {
     props.history.push("/signup");
   };
@@ -115,13 +118,13 @@ function Login(props) {
       email: email,
     };
     const back = JSON.stringify(payload);
-    console.log(back)
+    console.log(back);
     axios
       .post(API_BASE_URL + "/request-reset-email/", back, {
         headers: { "content-type": "application/json" },
       })
       .then(function (response) {
-        console.log(response)
+        console.log(response);
         if (response.statusText === "OK") {
           setSended("لینک تغییر رمز به ایمیل شما ٝرستاده شد");
         } else if (response.status === 404) {
@@ -129,7 +132,7 @@ function Login(props) {
         }
       })
       .catch(function (error) {
-        console.log(error)
+        console.log(error);
         setSended("حسابی با این ایمیل وجود ندارد");
       });
   };
@@ -152,10 +155,9 @@ function Login(props) {
     }
     setPassErr(errors);
   }
-  const redirectToHome=()=>{
+  const redirectToHome = () => {
     props.history.push("/home");
-  }
-
+  };
 
   return (
     <div className="d-flex justify-content-center background">

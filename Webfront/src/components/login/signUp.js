@@ -116,7 +116,7 @@ function SignUp(props) {
             })
             .then(function (response) {
               console.log(response);
-              if (response.status === 200) {
+              if (response.statusText === "OK") {
                 if (response.message === "Passwords must match") {
                   setConfirmPassErr("پسورد وارد شده تطابق ندارد !");
                 } else if (
@@ -161,7 +161,7 @@ function SignUp(props) {
           })
           .then(function (response) {
             console.log(response);
-            if (response.status === 200) {
+            if (response.statusText === "OK") {
               // Cookies.set("userTokenR", response.data.token.refresh);
               // Cookies.set("userTokenA", response.data.token.access);
               // Cookies.set("userId", response.data.user_id);
