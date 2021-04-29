@@ -357,7 +357,7 @@ class UpdateOnlineAppointmentView(generics.GenericAPIView):
 class UpdateInPersonAppointmentView(generics.GenericAPIView):
     
     def get(self,request,pk):
-        time_type = request.data['type']
+        time_type = request.GET.get("type")
         doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=False,time_type=time_type)
         apts = sorted(apts ,  key=lambda m: m.date)

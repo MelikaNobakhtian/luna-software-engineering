@@ -437,7 +437,7 @@ class OnlineAppointmentAPIViewTest(TestCase):
         self.doc.save()
 
     def test_online_time(self):
-        new_client = APIClient()
+        #new_client = APIClient()
         doc_id = DoctorUser.objects.get(user=self.user).id
         apts = {
         "start_day": "1400-02-13",
@@ -456,8 +456,9 @@ class OnlineAppointmentAPIViewTest(TestCase):
             content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-        response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/online/",
-        data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
+        #response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/online/",
+        #data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
+        response = client.get("/appointment/"+str(doc_id)+"/online/?date=1400-02-14")
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['duration'],20)
 
@@ -499,13 +500,14 @@ class InPersonAppointmentAPIViewTest(TestCase):
              }
                         ]
             }
-        new_client = APIClient()
+        #new_client = APIClient()
         response = client.post(reverse('inperson-apt',kwargs={'pk':doc_id }),
         data=json.dumps(apts),
             content_type='application/json')
         doc_str = str(doc_id)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/in-person/",data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
+        response = client.get("/appointment/"+str(doc_id)+"/in-person/?date=1400-02-14")
+        #response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/in-person/",data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['time_type'],"general")
     
