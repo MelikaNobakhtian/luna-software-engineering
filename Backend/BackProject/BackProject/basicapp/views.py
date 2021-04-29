@@ -19,7 +19,7 @@ from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnico
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework.parsers import JSONParser
 from datetime import timedelta,datetime
-import arrow
+import jdatetime
 
 class RegisterView(generics.GenericAPIView):
 
@@ -283,15 +283,22 @@ class OnlineAppointmentView(generics.GenericAPIView):
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
+    def parse_date(self,date_str):
+        date_arr = date_str.split('-')
+        year = int(date_arr[0])
+        month = int (date_arr[1])
+        day = int(date_arr[2])
+        return jdatetime.date(year,month,day)
+
     def post(self, request,pk):
-        start_day = arrow.get(request.data['start_day'],"YYYY-MM-DD").date()
-        end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
+        start_day = self.parse_date(request.data['start_day'])
+        end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
         while start_day <= end_day:
             if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).exists() ):
                 Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).delete()
             for apt in appointments:
-                apt['date'] = start_day
+                apt['date_str'] = str(start_day)
                 serializer = self.serializer_class(data=apt)
                 serializer.is_valid(raise_exception=True)
             start_day = start_day + timedelta(days=1)
@@ -311,15 +318,22 @@ class InPersonAppointmentView(generics.GenericAPIView):
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
+    def parse_date(self,date_str):
+        date_arr = date_str.split('-')
+        year = int(date_arr[0])
+        month = int (date_arr[1])
+        day = int(date_arr[2])
+        return jdatetime.date(year,month,day)
+
     def post(self, request, pk):
-        start_day = arrow.get(request.data['start_day'],"YYYY-MM-DD").date()
-        end_day = arrow.get(request.data['end_day'],"YYYY-MM-DD").date()
+        start_day = self.parse_date(request.data['start_day'])
+        end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
         while start_day <= end_day:
             if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).exists() ):
                 Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).delete()
             for apt in appointments:
-                apt['date'] = start_day
+                apt['date_str'] = str(start_day)
                 serializer = self.serializer_class(data=apt)
                 serializer.is_valid(raise_exception=True)
             start_day = start_day + timedelta(days=1)

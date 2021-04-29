@@ -84,7 +84,7 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
     doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
     duration = models.IntegerField()
-    date = models.DateField(null=True)
+    date = jmodels.jDateField(null=True)
     start_time = models.TimeField(null=True)
     end_time = models.TimeField(null=True)
     is_online = models.BooleanField(default=True)
