@@ -24,7 +24,7 @@ import {
 function Navbar(props) {
   const [searchedDoctor, setSearchedDoctor] = useState({
     name: "",
-    lastname:"",
+    lastname: "",
     specialty: "",
     state: "",
     city: "",
@@ -63,7 +63,7 @@ function Navbar(props) {
           >
             پزشک
             <button
-              class="btn mx-4 round-3 shadow-0"
+              className="btn mx-4 round-3 shadow-0"
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasRight"
               aria-controls="offcanvasRight"
@@ -79,7 +79,7 @@ function Navbar(props) {
                 aria-controls="offcanvasRight"
                 color="gray"
                 size="20"
-                class="round-3 mb-1 align-self-center justify-self-center"
+                className="round-3 mb-1 align-self-center justify-self-center"
                 dir="rtl"
                 style={{}}
               ></BsSearch>
@@ -139,20 +139,20 @@ function Navbar(props) {
               <div className="nav-item mt-lg-auto mb-lg-auto mb-2 mt-n5  ms-5">
                 {Cookies.get("doctorId") !== undefined ? (
                   <div
-                    class="btn p-1 "
+                    className="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
                   >
-                    <BsFillPersonFill class="ms-2"></BsFillPersonFill>
+                    <BsFillPersonFill className="ms-2"></BsFillPersonFill>
                     حساب کاربری
                   </div>
                 ) : (
                   <div
-                    class="btn p-1 "
+                    className="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
                   >
-                    <BsFillPersonFill class="ms-2"></BsFillPersonFill>
+                    <BsFillPersonFill className="ms-2"></BsFillPersonFill>
                     ورود یا ثبت نام
                   </div>
                 )}
@@ -175,48 +175,48 @@ function Navbar(props) {
       </nav>
 
       <div
-        class="offcanvas offcanvas-end"
-        tabindex="-1"
+        className="offcanvas offcanvas-end"
+        tabIndex="-1"
         id="offcanvasRight"
         aria-labelledby="offcanvasRightLabel"
         style={{ backgroundColor: "#e3eeee" }}
       >
-        <div class="offcanvas-header">
+        <div className="offcanvas-header">
           <button
             type="button"
-            class="btn-close text-reset"
+            className="btn-close text-reset"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
           ></button>
           <h5 id="offcanvasRightLabel">جستجو</h5>
         </div>
-        <div class="offcanvas-body m-1 ">
+        <div className="offcanvas-body m-1 ">
           <p className="">قسمت های مورد نظر خود را پر کنید</p>
-          <form class="row g-3">
-            <div class="col-6">
+          <form className="row g-3">
+            <div className="col-6">
               <input
                 type="text"
-                class="form-control "
+                className="form-control "
                 placeholder="نام دکتر..."
                 id="name"
                 value={searchedDoctor.name}
                 onChange={handleChange}
               />
             </div>
-            <div class="col-6">
+            <div className="col-6">
               <input
                 type="text"
-                class="form-control "
+                className="form-control "
                 placeholder="فامیلی دکتر..."
                 id="lastname"
                 value={searchedDoctor.lastname}
                 onChange={handleChange}
               />
             </div>
-            <div class="col-12">
+            <div className="col-12">
               <input
                 type="text"
-                class="form-control  "
+                className="form-control  "
                 placeholder="تخصص..."
                 aria-label=""
                 id="specialty"
@@ -224,10 +224,10 @@ function Navbar(props) {
                 onChange={handleChange}
               />
             </div>
-            <div class="col-6">
+            <div className="col-6">
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="استان..."
                 aria-label=""
                 value={searchedDoctor.state}
@@ -235,10 +235,10 @@ function Navbar(props) {
                 onChange={handleChange}
               />
             </div>
-            <div class="col-6">
+            <div className="col-6">
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="شهر..."
                 aria-label=""
                 value={searchedDoctor.city}

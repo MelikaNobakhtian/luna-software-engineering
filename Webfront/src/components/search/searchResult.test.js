@@ -31,6 +31,9 @@ describe("UserProfile", () => {
         container
       );
     });
+    //console.log("html", document.body.innerHTML);
+    //console.log("iiii", document.getElementById("noResultPage").textContent);
+    //console.log("noooo", container.querySelector("p"));
 
     expect(container.querySelector("p")).toHaveTextContent(
       "نتیجه‌ای برای نمایش وجود ندارد"
@@ -40,7 +43,7 @@ describe("UserProfile", () => {
   it("render with result", () => {
     const history = createMemoryHistory();
     const container = document.getElementById("app");
-    container.doctor={name:"q",city:"ww"}
+    container.doctor = { name: "q", city: "ww" };
     act(() => {
       render(
         <Router history={history}>
@@ -49,8 +52,9 @@ describe("UserProfile", () => {
         container
       );
     });
+    //expect(container.doctor).toBe();
     expect(container.querySelector("p")).toHaveTextContent(
-        "نتیجه‌ای برای نمایش وجود ندارد"
-      );  });
-
+      "نتیجه‌ای برای نمایش وجود ندارد"
+    );
+  });
 });
