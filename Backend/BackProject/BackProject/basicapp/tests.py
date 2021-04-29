@@ -437,17 +437,29 @@ class OnlineAppointmentAPIViewTest(TestCase):
         self.doc.save()
 
     def test_online_time(self):
+        new_client = APIClient()
         doc_id = DoctorUser.objects.get(user=self.user).id
-        duration = 45
-        start_datetime = "1400-12-10 13:30:00"
+        apts = {
+        "start_day": "1400-02-13",
+        "end_day":"1400-02-17",
+        "appointments": [
+             {
+                    "duration":20,
+                    "doc_id":doc_id,
+                    "start_time":"18:00",
+                    "end_time":"18:20"
+             }
+                        ]
+             }
         response = client.post(reverse('online-apt',kwargs={'pk':doc_id}),
-        data=json.dumps([{'doc_id':doc_id,'duration':duration,'start_datetime':start_datetime}]),
+        data=json.dumps(apts),
             content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-        response = client.get(reverse('online-apt',kwargs={'pk':doc_id}))
+        response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/online/",
+        data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['duration'],duration)
+        self.assertEqual(response.data[0]['duration'],20)
 
 
 class InPersonAppointmentAPIViewTest(TestCase):
@@ -471,20 +483,31 @@ class InPersonAppointmentAPIViewTest(TestCase):
     def test_inperson_time(self):
         doc_id = DoctorUser.objects.get(user=self.user).id
         address_id = Address.objects.get(doc=self.doc).id
-        duration = 45
-        time_type = "general"
-        address_number = 1
-        duration_number = 'green'
-        start_datetime = "1400-12-10 13:30:00"
-        response = client.post(reverse('inperson-apt',kwargs={'doc_id':doc_id }),
-        data=json.dumps([{'doc_id':doc_id,'duration':duration,'start_datetime':start_datetime,
-                        'address_id':address_id,'time_type':time_type,'address_number':address_number,'duration_number':duration_number}]),
+        apts = {
+        "start_day": "1400-02-13",
+        "end_day":"1400-02-17",
+        "appointments": [
+             {
+                 "duration_number":"aaa",
+                    "address_number":7,
+                    "duration":20,
+                    "doc_id":doc_id,
+                    "address_id":address_id,
+                    "time_type":"general",
+                    "start_time":"19:00",
+                    "end_time":"19:20"
+             }
+                        ]
+            }
+        new_client = APIClient()
+        response = client.post(reverse('inperson-apt',kwargs={'pk':doc_id }),
+        data=json.dumps(apts),
             content_type='application/json')
+        doc_str = str(doc_id)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-
-        response = client.get(reverse('inperson-apt',kwargs={'doc_id':doc_id }))
+        response = new_client.generic(method="GET", path="/appointment/"+str(doc_id)+"/in-person/",data=json.dumps({'date':'1400-02-14'}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['time_type'],time_type)
+        self.assertEqual(response.data[0]['time_type'],"general")
     
 
         

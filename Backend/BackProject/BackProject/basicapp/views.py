@@ -232,7 +232,6 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
 
         email = request.data.get('email', '')
-        print(email)
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
@@ -270,7 +269,6 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
     def post(self, request):
-        print(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
@@ -279,7 +277,7 @@ class OnlineAppointmentView(generics.GenericAPIView):
     serializer_class = OnlineAppointmentSerializer
 
     def get(self,request,pk):
-        date = request.data['date']
+        date = request.GET.get("date")
         doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,is_online=True,date=date)
         data = AppointmentSerializer(apts,many=True)
@@ -306,8 +304,8 @@ class OnlineAppointmentView(generics.GenericAPIView):
 class InPersonAppointmentView(generics.GenericAPIView):
     serializer_class = InPersonAppointmentSerializer
 
-    def get(self,request, pk):
-        date = request.data['date']
+    def get(self, request, pk):
+        date = request.GET.get("date")
         doc = DoctorUser.objects.get(pk=pk)
         apts = Appointment.objects.filter(doctor=doc,is_online=False,date=date)
         data = AppointmentSerializer(apts,many=True)
