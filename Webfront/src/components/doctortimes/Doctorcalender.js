@@ -10,8 +10,8 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
-import { BsPlusCircleFill } from "react-icons/bs";
-import { AiFillMinusCircle } from "react-icons/ai";
+import { BsPlusCircleFill,BsTrash } from "react-icons/bs";
+import { AiFillMinusCircle,AiOutlineEdit } from "react-icons/ai";
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -54,23 +54,49 @@ function Doctorcalender() {
   const [selectedduration, setselectedduration] = useState({ name: "وقت عادی", duration: hduration, color: "#008F81" })
   const [dmhdur, setdmhdur] = useState("");
   const [snackbarerror, setsnackbarerror] = useState("");
+  const [changingdate,setchangingdate]=useState("");
 
 //validation ***
-
+//age to calendar avaz ham dobare dare get mikone
   useEffect(() => {
+    if(startselectedday!==""){
     var doctorid = Cookies.get("doctorid");
-    axios.get(API_BASE_URL + "/appoinment/" + doctorid + "/")
+    // values.push({
+    //   id:add.id,
+    //   time: thistime, time22: noww, address: add.address, addressnumber: add.addressnumber
+    //   , duration: hduration, durationname: selectedduration.name, durationnumber: selectedduration.color
+    // })
+    console.log("TOYE GET")
+// console.log(startselectedday)
+// console.log(startselectedday)
+ var datee={date:"1400-02-10"}
+ var stringifydate=JSON.stringify(datee);
+// console.log(stringigydate)
+console.log(stringifydate)
+// ,JSON.stringify({date:"1400-02-10"}
+    axios.get(API_BASE_URL + "/appointment/" + 1 + "/in-person/",{"date":"1400-02-09"})
       .then(function (response) {
-        console.log(response)
-        console.log(response.data.user.id+" id");
+        console.log(response);
+        var resdata=response.data;
+        // console.log(resdata.user.id+" id");
+        var values=[];
+        for(var i=0;i<resdata.length;i++){
+          var address=resdata.address.state+"_"+resdata.address.city+"_"+resdata.address.detail;
+          values.push({id:resdata.address.id,time:resdata.start_time,time22:resdata.end_time,
+            address:address,addressnumber:resdata.address_number,duration:resdata.duration,durationnumber:resdata.duration_number,durationname:resdata.time_type})
+        }
+        console.log(values);
+        console.log("values");
+        sethozoris(values)
 
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+    }
+  }, [changingdate]);
 
-
+//age shod yekari ke in ba rerender shodan balayi dobare get nakone
   useEffect(() => {
     var doctorid = Cookies.get("doctorId");
     
@@ -163,11 +189,12 @@ function Doctorcalender() {
     for (var i = 0; i < hozoris.length; i++) {
       console.log(hozoris[i].id)
       // var start = startselectedday + " " + hozoris[i].time
-      console.log(hozoris)
+      console.log((hozoris))
+      console.log(hozoris[i].durationnumber+" HOZORIS I DURATION NUMBER");
       values.push({
         duration: hozoris[i].duration, start_time: hozoris[i].time,end_time:hozoris[i].time22, doc_id: 1,
         address_id: hozoris[i].id, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
-        durationnumber: hozoris[i].durationnumber
+        duration_number: hozoris[i].durationnumber
       });
     }
     var informations={start_day:startselectedday,end_day:endselectedday,appointments:values}
@@ -875,6 +902,8 @@ function Doctorcalender() {
     to: null
   });
   const calenderchange = (value) => {
+    sethozoris([])
+    setchangingdate(value.from)
     console.log("hi")
     console.log(value + "value")
     var startmonth="";
@@ -1072,18 +1101,18 @@ function Doctorcalender() {
 
                       {/* value.hdur != "" ?  */ }
                       {/* <li class="row" style={{ alignItems: "center" }}><a class="dropdown-item " onClick={() => setselectedduration({name:"نوع بازه ی زمانی",duration:"",color:"#008F81"})} data-ref="one" >نوع بازه ی زمانی</a></li> */ }
-                      return (<li class="d-flex flex-row" dir="ltr" lang="fa" style={{}}>
+                      return (
+                     
+                        <li class="d-flex flex-row" dir="rtl" lang="fa" style={{}}>
                       
                         {value.duration !== "all" ? [value.name !== "وقت عادی" ? 
                         (<div class="dropdown-item  d-flex flex-row-reverse  " style={{fontSize:"clamp(12px,2vw,15px)"}} dir="ltr"
                          onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه)
-                           <div class="mx-auto shadow-1 col-12 ms-0 align-items-end" style={{ backgroundColor: value.color,
-                         borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                           
                           </div>) :
                           (<div  class="dropdown-item  d-flex flex-row-reverse  " style={{fontSize:"clamp(12px,2vw,15px)"}} dir="ltr" onClick={() => setselectedduration(value)}
                            data-ref="one" >{value.name}  {hduration}(دقیقه)
-                             <div class="mx-auto shadow-1 ms-0 col-12  align-items-end" style={{ backgroundColor: value.color,
-                         borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                          
                             </div>)] :
                           <div class="dropdown-item  d-flex flex-row-reverse " style={{}} dir="ltr" onClick={() => setselectedduration(value)} 
                           data-ref="one" >
@@ -1091,7 +1120,16 @@ function Doctorcalender() {
                           {value.name} 
                           </div>
                           </div>
-                        }</li>
+                        }
+                        <AiOutlineEdit size={20} color={value.color} class="align-self-center"></AiOutlineEdit>
+                        <BsTrash  size={20} color={value.color} class="align-self-center me-2"></BsTrash>
+                        <div class="mx-2 ms-2 shadow-1 align-self-center col-12 ms-0 align-items-end" style={{ backgroundColor: value.color,
+                         borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                      
+                       
+                        </li>
+                       
+                
                       )
                     })}
 
@@ -1120,6 +1158,7 @@ function Doctorcalender() {
                       </input>
                     </div>
                   </ul>
+                
                 </div> : null}
               </div>
 
