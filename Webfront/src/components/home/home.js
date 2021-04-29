@@ -12,29 +12,7 @@ import ReactiveButton from 'reactive-button';
 
 function Home(props) {
   const [state, setState] = useState('idle');
-  const [doctor, setDoctor] = useState([{
-    "id": 15,
-    "user": {
-      "id": 28,
-      "password": "pbkdf2_sha256$216000$NsKTzsQCFHmy$SHNr8kvIjMpqIozqeu5aYc63qfNMdYY9Lwf2yoK4Qns=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "FAhm",
-      "first_name": "F",
-      "last_name": "Omid",
-      "email": "fateme.ahmadi1522@gmail.com",
-      "profile_photo": 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGljfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60',
-      "is_verified": false,
-      "is_staff": false,
-      "created": "2021-04-22T17:39:21.715630Z",
-      "auth_provider": "email",
-      "groups": [],
-      "user_permissions": []
-    },
-    "specialty": "ali",
-    "sub_specialty": "iiii",
-    "addresses": [{ "state": "alo", "city": "saba", "detail": "yyy" }, { "state": "alo", "city": "soooo", "detail": "yyy" }]
-  }]);
+  const [doctor, setDoctor] = useState([]);
 
   useEffect(() => {
     if (Cookies.get("userTokenA")) {
@@ -53,10 +31,10 @@ function Home(props) {
 
 
   const onClickHandler = () => {
-      setState('loading');
-      setTimeout(() => {
-          setState('success');
-      }, 2000);
+    setState('loading');
+    setTimeout(() => {
+      setState('success');
+    }, 2000);
   }
 
   return (
@@ -69,8 +47,8 @@ function Home(props) {
               doctor.map((doc) => {
                 if (doc) return (
                   <div class="col mb-4">
-                    <Card style={{ width: '20rem'}} >
-                      <div class=" card-header d-flex justify-content-center" >
+                    <Card style={{ width: '20rem' }} >
+                      <div class=" card-header d-flex justify-content-center" style={{ borderRadius: '5%' }} >
                         <Avatar
                           src={doc.user.profile_photo}
                           alt="عکس"
@@ -91,30 +69,29 @@ function Home(props) {
                         {doc.addresses.length === 0 ? <div></div> :
                           doc.addresses.map((address) => {
                             if (address) return (
-                              <Card.Text>
-
-                                
-                                {"● "+address.state + "،" + address.city + "،" + address.detail}
+                              <Card.Text style={{ color: "#6F6D6D" }}>
+                                {"● " + address.state + "،" + address.city + "،" + address.detail}
                               </Card.Text>
+
                             )
                           })}
 
                         <ReactiveButton
-            buttonState={state}
-            onClick={onClickHandler}
-            color={'green'}
-            idleText={'نوبت دهی'}
-            loadingText={'Loading'}
-            successText={'Success'}
-            type={'button'}
-            className={'class1 class2'}
-            style={{ borderRadius: '5px'}}
-            shadow={true}
-            size={'normal'}
-            messageDuration={2000}
-            buttonRef={null}
-            animation={true}
-        />
+                          buttonState={state}
+                          onClick={onClickHandler}
+                          color={'green'}
+                          idleText={'نوبت دهی'}
+                          loadingText={'Loading'}
+                          successText={'Success'}
+                          type={'button'}
+                          className={'class1 class2'}
+                          style={{ borderRadius: '5px' }}
+                          shadow={true}
+                          size={'normal'}
+                          messageDuration={2000}
+                          buttonRef={null}
+                          animation={true}
+                        />
                       </Card.Body>
                     </Card>
                   </div>
