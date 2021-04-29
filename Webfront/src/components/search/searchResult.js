@@ -42,7 +42,7 @@ function SearchResult(props) {
         <div className="d-flex flex-wrap">
           <div className="mx-md-5">
             {doctors.length === 0 ? (
-              <p>نتیجه‌ای برای نمایش وجود ندارد</p>
+              <p id="noResultPage">نتیجه‌ای برای نمایش وجود ندارد</p>
             ) : (
               <div
                 class="row row-cols-1 row-cols-md-4 row-cols-sm-2"
