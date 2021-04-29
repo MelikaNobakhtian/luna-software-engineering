@@ -1,6 +1,4 @@
 .home {    
-    display: flex !important;
-    position: relative;
      justify-content: center;
      align-items:center;
      padding-top: 5%;

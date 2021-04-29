@@ -15,16 +15,17 @@ function Home(props) {
   const [doctor, setDoctor] = useState([]);
 
   useEffect(() => {
-    if (Cookies.get("userTokenA")) {
+    //if (Cookies.get("userTokenA")) {
       axios
         .get(API_BASE_URL + "/home/?filter=recent")
         .then((d) => {
-          setDoctor(doctor.concat(Array.from(d.results)));
+          console.log(d)
+          setDoctor(d.data.doctors);
         })
         .catch(function (error) {
           console.log(error);
         });
-    }
+    //}
   }, []);
 
 
@@ -42,12 +43,12 @@ function Home(props) {
 
       <div className="home">
         <div className="homePage" >
-          <div class="row row-cols-1 row-cols-md-3"  >
+          <div class="row row-cols-1 row-cols-md-3 row-cols-sm-2"  >
             {doctor.length === 0 ? <div></div> :
               doctor.map((doc) => {
                 if (doc) return (
                   <div class="col mb-4">
-                    <Card style={{ width: '20rem' }} >
+                    <Card  >
                       <div class=" card-header d-flex justify-content-center" style={{ borderRadius: '5%' }} >
                         <Avatar
                           src={doc.user.profile_photo}
