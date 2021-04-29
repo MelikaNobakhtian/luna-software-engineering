@@ -72,7 +72,7 @@ function Editprofile(props) {
               city: response.data.data.addresses[0].city,
               state: response.data.data.addresses[0].state,
               detail: response.data.data.addresses[0].detail,
-              id: response.data.data.addresses[0].detail.id,
+              id: response.data.data.addresses[0].id,
             }));
           }
 

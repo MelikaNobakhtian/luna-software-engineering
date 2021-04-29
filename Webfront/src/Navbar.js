@@ -24,6 +24,7 @@ import {
 function Navbar(props) {
   const [searchedDoctor, setSearchedDoctor] = useState({
     name: "",
+    lastname:"",
     specialty: "",
     state: "",
     city: "",
@@ -192,13 +193,23 @@ function Navbar(props) {
         <div class="offcanvas-body m-1 ">
           <p className="">قسمت های مورد نظر خود را پر کنید</p>
           <form class="row g-3">
-            <div class="col-12">
+            <div class="col-6">
               <input
                 type="text"
                 class="form-control "
                 placeholder="نام دکتر..."
                 id="name"
                 value={searchedDoctor.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div class="col-6">
+              <input
+                type="text"
+                class="form-control "
+                placeholder="فامیلی دکتر..."
+                id="lastname"
+                value={searchedDoctor.lastname}
                 onChange={handleChange}
               />
             </div>

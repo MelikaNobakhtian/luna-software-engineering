@@ -1,7 +1,9 @@
 import { TvTwoTone } from "@material-ui/icons";
-import React from "react";
+import React, { createElement } from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
+import { Router } from "react-router";
+import searchResult from "./searchResult";
 import SearchResult from "./searchResult";
 
 describe("UserProfile", () => {
@@ -18,7 +20,15 @@ describe("UserProfile", () => {
   });
 
   it("render with no result", () => {
+
+    expect(container.doctor).toBe();
+  });
+  it("render with result", () => {
       
-    
+    expect(container.doctor).toBe();
+  });
+  it("render with result2", () => {
+      
+    expect(container.doctor).toBe();
   });
 });
