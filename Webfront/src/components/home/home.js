@@ -15,7 +15,6 @@ function Home(props) {
   const [doctor, setDoctor] = useState([]);
 
   useEffect(() => {
-    //if (Cookies.get("userTokenA")) {
       axios
         .get(API_BASE_URL + "/home/?filter=recent")
         .then((d) => {
@@ -25,7 +24,7 @@ function Home(props) {
         .catch(function (error) {
           console.log(error);
         });
-    //}
+
   }, []);
 
 
