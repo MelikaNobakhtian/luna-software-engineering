@@ -44,6 +44,7 @@ function Editprofile(props) {
     state: "",
     city: "",
     detail: "",
+    id: "",
   });
   const [variable, setvar] = useState("false");
 
@@ -71,6 +72,7 @@ function Editprofile(props) {
               city: response.data.data.addresses[0].city,
               state: response.data.data.addresses[0].state,
               detail: response.data.data.addresses[0].detail,
+              id: response.data.data.addresses[0].detail.id,
             }));
           }
 
@@ -200,7 +202,7 @@ function Editprofile(props) {
               "/doctor/" +
               Cookies.get("doctorId") +
               "/update-address/" +
-              "48/",
+              address.id,
             backcity,
             {
               headers: {
@@ -247,9 +249,11 @@ function Editprofile(props) {
           )
           .then(function (response) {
             console.log(response);
-            if (response.message === "You submit your addresses successfully!") {
+            if (
+              response.message === "You submit your addresses successfully!"
+            ) {
               console.log(response.status);
-              setMassage("آدرس شما با موفقیت اضافه شد")
+              setMassage("آدرس شما با موفقیت اضافه شد");
             }
           })
           .catch(function (error) {
