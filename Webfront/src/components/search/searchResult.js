@@ -7,6 +7,8 @@ import { Avatar } from "@material-ui/core";
 //import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
 //import { RiUserStarFill } from "react-icons/all";
 //import { FcApproval } from "react-icons/fc";
+import ReactiveButton from 'reactive-button';
+
 function SearchResult(props) {
   const [doctors, setDoctors] = useState([]);
   const [page, setPage] = useState(1);
@@ -36,73 +38,132 @@ function SearchResult(props) {
     props.history.push("/visitDoctor");
   };
 
+  const [state, setState] = useState('idle');
+
+  const onClickHandler = () => {
+    setState('loading');
+    setTimeout(() => {
+      setState('success');
+    }, 2000);
+  }
   return (
     <div className="main-content">
-      <div className="container-fluid p-2">
-        <div className="d-flex flex-wrap">
-          <div className="mx-md-5">
-            {doctors.length === 0 ? (
-              <p id="noResultPage">نتیجه‌ای برای نمایش وجود ندارد</p>
-            ) : (
-              <div
-                class="row row-cols-1 row-cols-md-4 row-cols-sm-2"
-                style={{ textAlign: "right" }}
-              >
-                {doctors.map((current) => (
-                  <div class="col mb-4">
-                    <div class="card h-100 shadow">
+      <div className="home">
+        <div className="homePage">
+          {doctors.length === 0 ? (
+            <p id="noResultPage">نتیجه‌ای برای نمایش وجود ندارد</p>
+          ) : (
+            <div
+              class="row row-cols-1 row-cols-md-3 row-cols-sm-2"
+              style={{ textAlign: "right" }}
+            >
+              {doctors.map((current) => (
+                <div class="col mb-4">
+                  <div class="card h-100">
+                    <div
+                      class=" card-header d-flex justify-content-center"
+                      style={{ borderRadius: "5%" }}
+                    >
                       <Avatar
                         src={current.doctor_photo}
                         alt={current.name}
-                        className="card-img-top mx-auto my-2 shadow-sm "
+                        className=""
                         onClick={() => routeToDoctorHandler(current.id)}
-                        style={{ width: 150, height: 150 }}
+                        style={{
+                          width: 150,
+                          height: 150,
+                          justifyontent: "Center",
+                          margin: "5%",
+                        }}
                       />
-                      <div class="card-body">
-                        <h5
-                          class="card-title btn m-n2 text-break"
-                          onClick={() => routeToDoctorHandler(current.id)}
-                          style={{ fontSize: 25 }}
-                        >
-                          {current.firstname}
-                          {current.lastname}
-                        </h5>
-                        <p class="card-text text-break">{current.specialty}</p>
+                    </div>
+                    <div class="card-body">
+                      <h5
+                        class="card-title btn m-n2 text-break"
+                        onClick={() => routeToDoctorHandler(current.id)}
+                      >
+                        {"دکتر " +
+                          current.user.first_name +
+                          " " +
+                          current.user.last_name}
+                      </h5>
+                      <div class="card-text text-break">
+                        {" "}
+                        {"تخصص " + current.specialty}
                       </div>
-                      <div className="align-items-center m-3">
-                        <h6 class="card-subtitle mt-1 text-muted">
-                          {/* <RiUserStarFill></RiUserStarFill> */}
-                          {current.score}
-                        </h6>
+                      <div class="card-text text-break">
+                        {" "}
+                        {current.sub_specialty}
+                      </div>
+                      {current.addresses.length === 0 ? (
+                        <div></div>
+                      ) : (
+                        current.addresses.map((address) => {
+                          if (address)
+                            return (
+                              <div
+                                class="card-text text-break"
+                                style={{ color: "#6F6D6D" }}
+                              >
+                                {"● " +
+                                  address.state +
+                                  "،" +
+                                  address.city +
+                                  "،" +
+                                  address.detail}
+                              </div>
+                            );
+                        })
+                      )}
+                      
+                    </div>
+                    <div className="align-items-center m-3">
+                      <div class="card-subtitle mt-1 ">
+                      <ReactiveButton
+                          buttonState={state}
+                          onClick={onClickHandler}
+                          color={'green'}
+                          idleText={'نوبت دهی'}
+                          loadingText={'Loading'}
+                          successText={'Success'}
+                          type={'button'}
+                          className={'class1 class2'}
+                          style={{ borderRadius: '5px' }}
+                          shadow={true}
+                          size={'normal'}
+                          messageDuration={2000}
+                          buttonRef={null}
+                          animation={true}
+                        />
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-          <div className="mb-5">
-            {pagesNumber === 1 || pagesNumber === undefined ? (
-              <p></p>
-            ) : (
-              <div>
-                {Array.from(Array(pagesNumber), (e, i) => {
-                  return (
-                    <div
-                      className="btn btn-light"
-                      onClick={() => {
-                        setPage(i + 1);
-                      }}
-                    >
-                      {" "}
-                      {i + 1}{" "}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+        <div className="mb-5">
+          {pagesNumber === 1 || pagesNumber === undefined ? (
+            <p></p>
+          ) : (
+            <div>
+              {Array.from(Array(pagesNumber), (e, i) => {
+                return (
+                  <div
+                    className="btn btn-light"
+                    onClick={() => {
+                      setPage(i + 1);
+                    }}
+                  >
+                    {" "}
+                    {i + 1}{" "}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
