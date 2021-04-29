@@ -7,7 +7,7 @@ import {
   // Label,
   // Input,
   // FormText,
-  Col,
+  //Col,
   InputGroup,
 } from "react-bootstrap";
 import {
@@ -247,8 +247,9 @@ function Editprofile(props) {
           )
           .then(function (response) {
             console.log(response);
-            if (response.status === 200) {
+            if (response.message === "You submit your addresses successfully!") {
               console.log(response.status);
+              setMassage("آدرس شما با موفقیت اضافه شد")
             }
           })
           .catch(function (error) {
