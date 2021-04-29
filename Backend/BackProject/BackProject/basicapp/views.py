@@ -279,8 +279,9 @@ class OnlineAppointmentView(generics.GenericAPIView):
     serializer_class = OnlineAppointmentSerializer
 
     def get(self,request,pk):
+        date = request.data['date']
         doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=True)
+        apts = Appointment.objects.filter(doctor=doc,is_online=True,date=date)
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
@@ -306,8 +307,9 @@ class InPersonAppointmentView(generics.GenericAPIView):
     serializer_class = InPersonAppointmentSerializer
 
     def get(self,request, pk):
+        date = request.data['date']
         doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=False)
+        apts = Appointment.objects.filter(doctor=doc,is_online=False,date=date)
         data = AppointmentSerializer(apts,many=True)
         return Response(data.data, status=status.HTTP_200_OK)
 
