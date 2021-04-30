@@ -181,3 +181,21 @@ class SearchInUserSerializer(serializers.ModelSerializer):
     def to_representation(self,value):
         if DoctorUser.objects.filter(user=value).exists():
             return DoctorProfileSerializer(DoctorUser.objects.get(user=value),).data
+
+class SearchInAddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = "__all__"
+
+    def to_representation(self,value):
+        doctors = self.context['doctors']
+        return DoctorProfileSerializer(doctors.get(pk=value.doc),).data
+
+class DoctorSerializer(serializers.ModelSerializer):
+    
+    user = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = DoctorUser
+        fields = "__all__"
