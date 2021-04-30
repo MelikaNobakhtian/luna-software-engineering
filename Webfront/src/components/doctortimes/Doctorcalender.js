@@ -67,13 +67,13 @@ function Doctorcalender() {
     //   , duration: hduration, durationname: selectedduration.name, durationnumber: selectedduration.color
     // })
     console.log("TOYE GET")
-// console.log(startselectedday)
-// console.log(startselectedday)
- var datee={date:"1400-02-10"}
- var stringifydate=JSON.stringify(datee);
-// console.log(stringigydate)
-console.log(stringifydate)
-// ,JSON.stringify({date:"1400-02-10"}
+    // console.log(startselectedday)
+    // console.log(startselectedday)
+    var datee={date:"1400-02-10"}
+    var stringifydate=JSON.stringify(datee);
+    // console.log(stringigydate)
+    console.log(stringifydate)
+    // ,JSON.stringify({date:"1400-02-10"}
     axios.get(API_BASE_URL + "/appointment/" + 1 + "/in-person?date="+startselectedday)
       .then(function (response) {
         console.log(response);
@@ -95,7 +95,30 @@ console.log(stringifydate)
       .catch(function (error) {
         console.log(error);
       });
-    }
+    
+
+    axios.get(API_BASE_URL + "/appointment/" + 1 + "/online?date="+startselectedday)
+    .then(function (response) {
+      console.log(response);
+      var resdata=response.data;
+      // console.log(resdata.user.id+" id");
+      var values=[];
+      for(var i=0;i<resdata.length;i++){
+        var starttime=resdata[i].start_time.toString().substring(0,5);
+        var endtime=resdata[i].end_time.toString().substring(0,5);
+      
+        values.push({time:starttime,time22:endtime})
+      }
+      console.log(values);
+      console.log("values");
+      setmagazis(values)
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  
   }, [changingdate]);
 
 //age shod yekari ke in ba rerender shodan balayi dobare get nakone
@@ -928,6 +951,7 @@ console.log(stringifydate)
     console.log(startselectedday)
     console.log("MOTEFAVET")
     sethozoris([])
+    setmagazis([])
   setchangingdate(value.from)
   }
     setstartseletedday(newselectedday)
