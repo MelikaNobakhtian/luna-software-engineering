@@ -47,6 +47,7 @@ function Editprofile(props) {
     id: "",
   });
   const [variable, setvar] = useState("false");
+  const [states, setStates] = useState({ 0: "444", 1: "ttt" });
 
   //const [type, setType] = useState("");
   useEffect(() => {
@@ -65,6 +66,8 @@ function Editprofile(props) {
             specialty: response.data.data.specialty,
             sub_specialty: response.data.data.sub_specialty,
           }));
+          setStates(response.data.states);
+          console.log(states);
           if (response.data.data.addresses.length > 0) {
             setvar("true");
             setAddress((prevState) => ({
@@ -87,6 +90,7 @@ function Editprofile(props) {
 
   const handleChange = (e) => {
     //console.log(user);
+    console.log(states);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
@@ -364,8 +368,7 @@ function Editprofile(props) {
   return (
     <div className="main-content">
       <div className="container-fluid p-2">
-        {Cookies.get("doctorId") === undefined ||
-        Cookies.get("doctorId").toString() !== "0" ? (
+        {Cookies.get("doctorId") === undefined ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">
@@ -473,70 +476,52 @@ function Editprofile(props) {
                             </InputGroup>
                           </Form.Group>
                         </div>
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>استان</Form.Label>
-                            <Form.Control
-                              controlId="formGridState"
-                              as="select"
-                              defaultValue=" choose...."
-                              id="state"
-                              value={address.state}
-                              onChange={(e) => {
-                                console.log("e.target.value", e.target.value);
-                                setAddress({
-                                  ...address,
-                                  state: e.target.value,
-                                });
-                              }}
-                            >
-                              <option className="text-muted" value="">
-                                انتخاب کنید...
-                              </option>
-                              <option value="آذربایجان شرقی">
-                                آذربایجان شرقی
-                              </option>
-                              <option value="	آذربایجان غربی">
-                                آذربایجان غربی
-                              </option>
-                              <option value="اردبیل">اردبیل</option>
-                              <option value="اصفهان">اصفهان</option>
-                              <option value="البرز">البرز</option>
-                              <option value="ایلام">ایلام</option>
-                              <option value="بوشهر">بوشهر</option>
-                              <option value="تهران">تهران</option>
-                              <option value="چهارمحال و بختیاری">
-                                چهارمحال و بختیاری
-                              </option>
-                              <option value="خراسان جنوبی">خراسان جنوبی</option>
-                              <option value="خراسان رضوی">خراسان رضوی</option>
-                              <option value="خراسان شمالی	">خراسان شمالی</option>
-                              <option value="خوزستان">خوزستان</option>
-                              <option value="	زنجان">زنجان</option>
-                              <option value="سمنان">سمنان</option>
-                              <option value="سیستان و بلوچستان	">
-                                سیستان و بلوچستان
-                              </option>
-                              <option value="فارس">فارس</option>
-                              <option value="قزوین">قزوین</option>
-                              <option value="	قم">قم</option>
-                              <option value="	کردستان">کردستان</option>
-                              <option value="کرمان">کرمان</option>
-                              <option value="کرمانشاه">کرمانشاه</option>
-                              <option value="کهگیلویه و بویراحمد">
-                                کهگیلویه و بویراحمد
-                              </option>
-                              <option value="	گلستان">گلستان</option>
-                              <option value="گیلان">گیلان</option>
-                              <option value="لرستان">لرستان</option>
-                              <option value="	مازندران">مازندران</option>
-                              <option value="مرکزی">مرکزی</option>
-                              <option value="	هرمزگان">هرمزگان</option>
-                              <option value="	همدان">همدان</option>
-                              <option value="یزد">یزد</option>
-                            </Form.Control>
-                          </Form.Group>
-                        </div>
+
+                        {states === undefined ? (
+                          <p></p>
+                        ) : (
+                          <div class="col-sm-4">
+                            <Form.Group>
+                              <Form.Label>استان</Form.Label>
+                              <Form.Control
+                                controlId="formGridState"
+                                as="select"
+                                defaultValue=" choose...."
+                                id="state"
+                                value={address.state}
+                                onChange={(e) => {
+                                  console.log("e.target.value", e.target.value);
+                                  setAddress({
+                                    ...address,
+                                    state: e.target.value,
+                                  });
+                                }}
+                              >
+                                <option className="text-muted" value="">
+                                  انتخاب کنید...
+                                </option>
+
+                                {Array.from(Array(32), (e, i) => {
+                                  return (
+                                    <option
+                                    value="آذربایجان شرقی"
+                                  >
+                                    {states[i]}
+                                  </option>
+                                  );
+                                })}
+
+                                {/* {states.map((current) => (
+                                  <option
+                                    value="آذربایجان شرقی"
+                                  >
+                                    {current}
+                                  </option>
+                                ))} */}
+                              </Form.Control>
+                            </Form.Group>
+                          </div>
+                        )}
                         <div class="col-sm-4">
                           <Form.Group>
                             <Form.Label>شهر</Form.Label>
