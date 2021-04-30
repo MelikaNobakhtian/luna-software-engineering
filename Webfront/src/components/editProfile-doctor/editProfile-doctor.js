@@ -24,8 +24,7 @@ import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import Snackbar from "@material-ui/core/Snackbar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 function Editprofile(props) {
   const [user, setUser] = useState({
@@ -197,13 +196,6 @@ function Editprofile(props) {
           detail: address.detail,
         };
         const backcity = JSON.stringify(payloadcity);
-        // var info = [];
-        // if (address.state != null) info.push({ state: address.state });
-        // if (address.city != null) info.push({ city: address.city });
-        // if (address.detail != null) info.push({ detail: address.detail });
-        //console.log(info)
-        //if (info.length !== 0) {
-        //const backinfo = JSON.stringify(info);
         axios
           .put(
             API_BASE_URL +
@@ -228,7 +220,6 @@ function Editprofile(props) {
           .catch(function (error) {
             console.log(error);
           });
-        //}
       } else {
         const payloadcity = {
           count: 1,
@@ -262,6 +253,7 @@ function Editprofile(props) {
             ) {
               console.log(response.status);
               setMassage("آدرس شما با موفقیت اضافه شد");
+              setOpenSnack(true);
             }
           })
           .catch(function (error) {
@@ -380,7 +372,13 @@ function Editprofile(props) {
     detail: "",
   });
   const [doctorAddresses, setDoctorAddresses] = useState([]);
-  const [addnumber, setAddNumber] = useState("*");
+  const [editingAddress, setEditingAddress] = useState({
+    index: "",
+    state: "",
+    city: "",
+    detail: "",
+    id:""
+  });
 
   const handleAddNewAddressClick = (e) => {
     e.preventDefault();
@@ -409,9 +407,12 @@ function Editprofile(props) {
         )
         .then(function (response) {
           console.log(response);
-          if (response.message === "You submit your addresses successfully!") {
+          if (
+            response.data.message === "You submit your addresses successfully!"
+          ) {
             console.log(response.status);
             setMassage("آدرس شما با موفقیت اضافه شد");
+            setOpenSnack(true);
           }
         })
         .catch(function (error) {
@@ -422,7 +423,38 @@ function Editprofile(props) {
 
   const handleChangeAddressClick = (e) => {
     e.preventDefault();
-  }
+    const payloadNewAddress = {
+      state: editingAddress.state,
+      city: editingAddress.city,
+      detail: editingAddress.detail,
+    };
+    const backcity = JSON.stringify(payloadNewAddress);
+    console.log(backcity)
+    axios
+      .put(
+        API_BASE_URL +
+          "/doctor/" +
+          Cookies.get("doctorId") +
+          "/update-address/" +
+          editingAddress.id+"/",
+        backcity,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + Cookies.get("userTokenA"),
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+          console.log(response.status);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="main-content">
@@ -728,11 +760,11 @@ function Editprofile(props) {
                         <p>آدرسی برای خود ثبت کنید</p>
                       ) : (
                         <div>
-                          {doctorAddresses.map((current) => (
+                          {Array.from(Array(doctorAddresses.length), (e, i) => (
                             <form class="row g-3">
                               <div class="col-sm-3">
                                 <Form.Group>
-                                  <span class="badge bg-dark">{addnumber}</span>
+                                  <span class="badge bg-dark">{i + 1}</span>
 
                                   <Form.Label className="mx-2">
                                     استان
@@ -741,7 +773,7 @@ function Editprofile(props) {
                                     className="p-1 rounded border"
                                     style={{ backgroundColor: "white" }}
                                   >
-                                    {current.state}
+                                    {doctorAddresses[i].state}
                                   </p>
                                 </Form.Group>
                               </div>
@@ -752,26 +784,36 @@ function Editprofile(props) {
                                     className="p-1 rounded border"
                                     style={{ backgroundColor: "white" }}
                                   >
-                                    {current.city}
+                                    {doctorAddresses[i].city}
                                   </p>
                                 </Form.Group>
                               </div>
-                             <div class="col-sm-4">
+                              <div class="col-sm-4">
                                 <Form.Group>
                                   <Form.Label>آدرس</Form.Label>
                                   <p
                                     className="p-1 rounded border"
                                     style={{ backgroundColor: "white" }}
                                   >
-                                    {current.detail}
+                                    {doctorAddresses[i].detail}
                                   </p>
                                 </Form.Group>
                               </div>
                               <div class="col-1">
                                 <button
-                                  type="submit"
+                                  type="button"
                                   class="btn btn-outline-dark mt-sm-4 mb-3"
-                                  onClick={handleChangeAddressClick}
+                                  onClick={() => {
+                                    setEditingAddress({
+                                      index: i,
+                                      state:doctorAddresses[i].state,
+                                      city: doctorAddresses[i].city,
+                                      detail: doctorAddresses[i].detail,
+                                      id:doctorAddresses[i].id
+                                    });
+                                  }}
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#staticBackdrop"
                                 >
                                   <EditIcon></EditIcon>
                                 </button>
@@ -852,7 +894,7 @@ function Editprofile(props) {
                                   );
                                   setNewAddress({
                                     ...newAddress,
-                                    city: e.target.value,
+                                    detail: e.target.value,
                                   });
                                 }}
                               />
@@ -882,6 +924,130 @@ function Editprofile(props) {
               onClose={handleCloseSnack}
               message={<div style={{ fontSize: 17 }}>{massage}</div>}
             />
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3>ویرایش آدرس</h3>
+                  </div>
+                  {doctorAddresses.length === 0 ? (
+                    <p></p>
+                  ) : (
+                    <div class="modal-body">
+                      <form class="row g-3">
+                        {states === undefined ? (
+                          <p></p>
+                        ) : (
+                          <div class="col-sm-6">
+                          
+                            <Form.Group>
+                              <Form.Label className="">استان</Form.Label>
+                              <Form.Control
+                                controlId="formGridState"
+                                as="select"
+                                defaultValue=" choose...."
+                                id="editingstate"
+                                value={
+                                  editingAddress.state
+                                }
+                                onChange={(e) => {
+                                  //console.log("e.target.value", e.target.value);
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    state: e.target.value,
+                                  });
+                                }}
+                              >
+                                <option className="text-muted" value="">
+                                  انتخاب کنید...
+                                </option>
+
+                                {Array.from(Array(32), (e, i) => {
+                                  return <option value={states[i]}>{states[i]}</option>;
+                                })}
+                              </Form.Control>
+                            </Form.Group>
+                          </div>
+                        )}
+                        <div class="col-sm-6">
+                          <Form.Group>
+                            <Form.Label>شهر</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                //  placeholder="شهر"
+                                id="editingcity"
+                                value={
+                                  editingAddress.city
+                                }
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    editingAddress.city
+                                  );
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    city: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-sm-12">
+                          <Form.Group>
+                            <Form.Label>آدرس</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                // placeholder="آدرس"
+                                id="editingdetail"
+                                value={editingAddress.detail}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    editingAddress.detail
+                                  );
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    detail: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+                  <div class="modal-footer d-flex justify-content-start">
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      data-bs-dismiss="modal"
+                      onClick={handleChangeAddressClick}
+                    >
+                      تایید
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      بستن
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
