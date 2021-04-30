@@ -83,6 +83,7 @@ function Doctorcalender() {
           var resdata = response.data;
           // console.log(resdata.user.id+" id");
           var values = [];
+          var durations=[...durationmode];
           for (var i = 0; i < resdata.length; i++) {
             var starttime = resdata[i].start_time.toString().substring(0, 5);
             var endtime = resdata[i].end_time.toString().substring(0, 5);
@@ -91,10 +92,15 @@ function Doctorcalender() {
               id: resdata[i].address.id, time: starttime, time22: endtime,
               address: address, addressnumber: resdata[i].address_number, duration: resdata[i].duration, durationnumber: resdata[i].duration_number, durationname: resdata[i].time_type
             })
+            if(i>0){
+            durations.push({name: resdata[i].time_type,duration: resdata[i].duration,color:resdata[i].duration_number})
+            }
           }
           console.log(values);
           console.log("values");
           sethozoris(values)
+          setdurationmode(durations);
+          
 
         })
         .catch(function (error) {
@@ -1232,7 +1238,7 @@ function Doctorcalender() {
                       // sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
-                    style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
+                   color={val.durationnumber} style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
