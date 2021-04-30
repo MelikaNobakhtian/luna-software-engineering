@@ -56,7 +56,7 @@ function Doctorcalender() {
   const [snackbarerror, setsnackbarerror] = useState("");
   const [changingdate, setchangingdate] = useState("");
   const [selectedmdeletemodal,setselectedmdeletemodal]=useState({value:"",time:"",time22:"",index:""});
-  const [selectedhdeletemodal,setselectedhdeletemodal]=useState("");
+  const [selectedhdeletemodal,setselectedhdeletemodal]=useState({value:"",time:"",time22:"",index:""});
   const [hidedeletemodal,sethidedeletemodal]=useState(false);
 
   //validation ***
@@ -1226,16 +1226,38 @@ function Doctorcalender() {
                 {hozoris != [] ? hozoris.map((val, index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button key={index} type="button" class="bt btn-sm col-2" style={{ backgroundColor: "#00A896" }} data-bs-toggle="button"
-                    onClick={(val) => {
-                      sessionchange(index, "hozori");
+                  return (<Button data-bs-toggle="modal" data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2" 
+                    onClick={async(val) => {
+                      await setselectedhdeletemodal((prevState)=>({...prevState, value:val,index:index,time:val.time,time22:val.time22}))
+                      // sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
                     style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
-
+                <div dir="rtl" class="modal fade" id="deletebuttonmodalh" tabindex="-1" aria-labelledby="deletebuttonmodahl" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-body d-flex flex-row" dir="rtl"> 
+                      {/* nashodd un aval ba inke modal baz nist miad error undefined mide vaghti ham ke baraye boodan ya naboodan modal on hededelete... ro gozashtam chon tool mikeshe ta set beshe bayad chand bar ghahi ro dokhme ha bezane */}
+                      {/* <h5 class="modal-title" id="deletebuttonmodal">آیا از حذف وقت ویزیت خود در ساعت {magazis[selectedmdeletemodal.index].time}-{magazis[selectedmdeletemodal.index].time22} اطمینان دارید؟</h5> */}
+                        <div class="modal-title" id="deletebuttonmodalh">آیا از حذف این وقت ویزیت خود اطمینان دارید؟</div>
+                        <button type="button" class="btn-close me-auto align-self-center" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                     
+                      <div class="modal-footer">
+                      
+                        <button type="button" class="btn btn-success" style={{backgroundColor:"#008F81",color:"white"}}  data-bs-dismiss="modal" onClick={async()=>{
+                          sessionchange(selectedhdeletemodal.index, "hozori")
+                          //ba in baes takhir bad bayad do bar bezane ghahi ta modal baz beshe
+                          //  await sethidedeletemodal(false)
+                          }}>تایید</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
               </div>
             </div>
