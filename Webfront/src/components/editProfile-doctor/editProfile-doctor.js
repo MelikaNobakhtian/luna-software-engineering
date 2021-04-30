@@ -41,14 +41,14 @@ function Editprofile(props) {
     sub_specialty: "",
   });
   //console.log("lll" + user.lastName);
-  const [address, setAddress] = useState({
-    state: "",
-    city: "",
-    detail: "",
-    id: "",
-  });
+  // const [address, setAddress] = useState({
+  //   state: "",
+  //   city: "",
+  //   detail: "",
+  //   id: "",
+  // });
 
-  const [variable, setvar] = useState("false");
+  //const [variable, setvar] = useState("false");
   const [states, setStates] = useState({ 0: "444", 1: "ttt" });
 
   //const [type, setType] = useState("");
@@ -71,16 +71,16 @@ function Editprofile(props) {
           setStates(response.data.states);
           setDoctorAddresses(response.data.data.addresses);
           //console.log(states);
-          if (response.data.data.addresses.length > 0) {
-            setvar("true");
-            setAddress((prevState) => ({
-              ...prevState,
-              city: response.data.data.addresses[0].city,
-              state: response.data.data.addresses[0].state,
-              detail: response.data.data.addresses[0].detail,
-              id: response.data.data.addresses[0].id,
-            }));
-          }
+          // if (response.data.data.addresses.length > 0) {
+          //   setvar("true");
+          //   setAddress((prevState) => ({
+          //     ...prevState,
+          //     city: response.data.data.addresses[0].city,
+          //     state: response.data.data.addresses[0].state,
+          //     detail: response.data.data.addresses[0].detail,
+          //     id: response.data.data.addresses[0].id,
+          //   }));
+          // }
 
           //if (response.data.addresses.length > 0) setvar("true");
           //console.log(response.data.addresses[0].city)
@@ -93,21 +93,21 @@ function Editprofile(props) {
 
   const handleChange = (e) => {
     //console.log(user);
-    console.log(states);
+    //console.log(states);
     const { id, value } = e.target;
     setUser((prevState) => ({
       ...prevState,
       [id]: value,
     }));
   };
-  const handleChangeaddress = (e) => {
-    console.log(address);
-    const { id, value } = e.target;
-    setAddress((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
+  // const handleChangeaddress = (e) => {
+  //   console.log(address);
+  //   const { id, value } = e.target;
+  //   setAddress((prevState) => ({
+  //     ...prevState,
+  //     [id]: value,
+  //   }));
+  // };
 
   const handleChangeInfosClick = (e) => {
     e.preventDefault();
@@ -116,10 +116,11 @@ function Editprofile(props) {
       user.lastName.length === 0 ||
       user.userName.length === 0 ||
       user.specialty.length === 0 ||
-      user.sub_specialty.length === 0 ||
-      address.state.length === 0 ||
-      address.city.length === 0 ||
-      address.detail.length === 0
+      user.sub_specialty.length === 0 
+      // ||
+      // address.state.length === 0 ||
+      // address.city.length === 0 ||
+      // address.detail.length === 0
     ) {
       setMassage("لطفا همه را وارد کنید");
       setOpenSnack(true);
@@ -189,77 +190,77 @@ function Editprofile(props) {
           console.log(error);
         });
 
-      if (variable === true) {
-        const payloadcity = {
-          state: address.state,
-          city: address.city,
-          detail: address.detail,
-        };
-        const backcity = JSON.stringify(payloadcity);
-        axios
-          .put(
-            API_BASE_URL +
-              "/doctor/" +
-              Cookies.get("doctorId") +
-              "/update-address/" +
-              address.id,
-            backcity,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + Cookies.get("userTokenA"),
-              },
-            }
-          )
-          .then(function (response) {
-            console.log(response);
-            if (response.status === 200) {
-              console.log(response.status);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else {
-        const payloadcity = {
-          count: 1,
-          addresses: [
-            {
-              state: "3",
-              city: address.city,
-              detail: address.detail,
-            },
-          ],
-        };
-        const backcity = JSON.stringify(payloadcity);
-        axios
-          .post(
-            API_BASE_URL +
-              "/doctor/" +
-              Cookies.get("doctorId") +
-              "/set-address/",
-            backcity,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + Cookies.get("userTokenA"),
-              },
-            }
-          )
-          .then(function (response) {
-            console.log(response);
-            if (
-              response.message === "You submit your addresses successfully!"
-            ) {
-              console.log(response.status);
-              setMassage("آدرس شما با موفقیت اضافه شد");
-              setOpenSnack(true);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
+      // if (variable === true) {
+      //   const payloadcity = {
+      //     state: address.state,
+      //     city: address.city,
+      //     detail: address.detail,
+      //   };
+      //   const backcity = JSON.stringify(payloadcity);
+      //   axios
+      //     .put(
+      //       API_BASE_URL +
+      //         "/doctor/" +
+      //         Cookies.get("doctorId") +
+      //         "/update-address/" +
+      //         address.id,
+      //       backcity,
+      //       {
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: "Bearer " + Cookies.get("userTokenA"),
+      //         },
+      //       }
+      //     )
+      //     .then(function (response) {
+      //       console.log(response);
+      //       if (response.status === 200) {
+      //         console.log(response.status);
+      //       }
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     });
+      // } else {
+      //   const payloadcity = {
+      //     count: 1,
+      //     addresses: [
+      //       {
+      //         state: "3",
+      //         city: address.city,
+      //         detail: address.detail,
+      //       },
+      //     ],
+      //   };
+      //   const backcity = JSON.stringify(payloadcity);
+      //   axios
+      //     .post(
+      //       API_BASE_URL +
+      //         "/doctor/" +
+      //         Cookies.get("doctorId") +
+      //         "/set-address/",
+      //       backcity,
+      //       {
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: "Bearer " + Cookies.get("userTokenA"),
+      //         },
+      //       }
+      //     )
+      //     .then(function (response) {
+      //       console.log(response);
+      //       if (
+      //         response.message === "You submit your addresses successfully!"
+      //       ) {
+      //         console.log(response.status);
+      //         setMassage("آدرس شما با موفقیت اضافه شد");
+      //         setOpenSnack(true);
+      //       }
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     });
+      // }
     }
   };
 
@@ -298,15 +299,16 @@ function Editprofile(props) {
         )
         .then(function (response) {
           console.log(response);
-          if (response.status === 200) {
+          if (response.data.message === "Password updated succesfully!") {
             console.log(response.status);
             setMassage("پسورد با موفقیت عوض شد");
             setOpenSnack(true);
-          } else if (response.status === 401) {
-            console.log(response.status);
+          } else if (response.data.message.toString() === "Wrong Password") {
+            //console.log(response.status);
             setMassage("پسورد قبلی غلط است");
             setOpenSnack(true);
           }
+          else console.log(response.data.message)
         })
         .catch(function (error) {
           console.log(error);
@@ -569,65 +571,6 @@ function Editprofile(props) {
                           </Form.Group>
                         </div>
 
-                        {states === undefined ? (
-                          <p></p>
-                        ) : (
-                          <div class="col-sm-4">
-                            <Form.Group>
-                              <Form.Label>استان</Form.Label>
-                              <Form.Control
-                                controlId="formGridState"
-                                as="select"
-                                defaultValue=" choose...."
-                                id="state"
-                                value={address.state}
-                                onChange={(e) => {
-                                  console.log("e.target.value", e.target.value);
-                                  setAddress({
-                                    ...address,
-                                    state: e.target.value,
-                                  });
-                                }}
-                              >
-                                <option className="text-muted" value="">
-                                  انتخاب کنید...
-                                </option>
-
-                                {Array.from(Array(32), (e, i) => {
-                                  return <option value={i}>{states[i]}</option>;
-                                })}
-                              </Form.Control>
-                            </Form.Group>
-                          </div>
-                        )}
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>شهر</Form.Label>
-                            <InputGroup hasValidation>
-                              <Form.Control
-                                type="text"
-                                //  placeholder="شهر"
-                                id="city"
-                                value={address.city}
-                                onChange={handleChangeaddress}
-                              />
-                            </InputGroup>
-                          </Form.Group>
-                        </div>
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>آدرس</Form.Label>
-                            <InputGroup hasValidation>
-                              <Form.Control
-                                type="text"
-                                // placeholder="آدرس"
-                                id="detail"
-                                value={address.detail}
-                                onChange={handleChangeaddress}
-                              />
-                            </InputGroup>
-                          </Form.Group>
-                        </div>
                         <div class="col-sm-4">
                           <Form.Group controlId="formBasicSelect">
                             <Form.Label> تخصص</Form.Label>
