@@ -130,7 +130,7 @@ function Editprofile(props) {
       formdata.append("username", user.userName);
       formdata.append("first_name", user.firstName);
       formdata.append("last_name", user.lastName);
-      formdata.append("profile_photo", user.picture);
+      formdata.append("profile_photo", state.file);
       console.log(formdata);
       axios
         .put(
@@ -332,16 +332,21 @@ function Editprofile(props) {
   };
 
   //get image from user
+  const [state, setState] = useState({
+    navigate: false,
+    file: null,
+  });
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
-    //setState({ file: e.target.files[0] });
+    setState({ file: e.target.files[0] });
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
       const { current } = uploadedImage;
       current.file = file;
       reader.onload = (e) => {
+        //current.src = e.target.result;
         setUser((prevState) => ({
           ...prevState,
           picture: e.target.result,
