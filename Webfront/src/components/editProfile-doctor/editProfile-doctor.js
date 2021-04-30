@@ -24,6 +24,8 @@ import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import Snackbar from "@material-ui/core/Snackbar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 
 function Editprofile(props) {
   const [user, setUser] = useState({
@@ -46,6 +48,7 @@ function Editprofile(props) {
     detail: "",
     id: "",
   });
+
   const [variable, setvar] = useState("false");
   const [states, setStates] = useState({ 0: "444", 1: "ttt" });
 
@@ -67,7 +70,8 @@ function Editprofile(props) {
             sub_specialty: response.data.data.sub_specialty,
           }));
           setStates(response.data.states);
-          console.log(states);
+          setDoctorAddresses(response.data.data.addresses);
+          //console.log(states);
           if (response.data.data.addresses.length > 0) {
             setvar("true");
             setAddress((prevState) => ({
@@ -365,6 +369,56 @@ function Editprofile(props) {
     props.history.push("/login");
   };
 
+  const [newAddress, setNewAddress] = useState({
+    state: "",
+    city: "",
+    detail: "",
+  });
+  const [doctorAddresses, setDoctorAddresses] = useState([]);
+  const [addnumber, setAddNumber] = useState("*");
+
+  const handleAddNewAddressClick = (e) => {
+    e.preventDefault();
+    if (newAddress.state && newAddress.city && newAddress.detail) {
+      const payloadNewAddress = {
+        count: 1,
+        addresses: [
+          {
+            state: newAddress.state,
+            city: newAddress.city,
+            detail: newAddress.detail,
+          },
+        ],
+      };
+      const backcity = JSON.stringify(payloadNewAddress);
+      axios
+        .post(
+          API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/set-address/",
+          backcity,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + Cookies.get("userTokenA"),
+            },
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+          if (response.message === "You submit your addresses successfully!") {
+            console.log(response.status);
+            setMassage("آدرس شما با موفقیت اضافه شد");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+
+  const handleChangeAddressClick = (e) => {
+    e.preventDefault();
+  }
+
   return (
     <div className="main-content">
       <div className="container-fluid p-2">
@@ -395,6 +449,7 @@ function Editprofile(props) {
                     className="btn btn-outline-dark btn-sm"
                     onClick={handleLogout}
                   >
+                    <ExitToAppIcon></ExitToAppIcon>
                     خروج از حساب
                   </div>
                   <div className="btn btn-outline-dark btn-sm">
@@ -502,22 +557,8 @@ function Editprofile(props) {
                                 </option>
 
                                 {Array.from(Array(32), (e, i) => {
-                                  return (
-                                    <option
-                                    value="آذربایجان شرقی"
-                                  >
-                                    {states[i]}
-                                  </option>
-                                  );
+                                  return <option value={i}>{states[i]}</option>;
                                 })}
-
-                                {/* {states.map((current) => (
-                                  <option
-                                    value="آذربایجان شرقی"
-                                  >
-                                    {current}
-                                  </option>
-                                ))} */}
                               </Form.Control>
                             </Form.Group>
                           </div>
@@ -676,6 +717,155 @@ function Editprofile(props) {
                         </div>
                       </form>
                     </Form>
+                    <hr></hr>
+                    <div>
+                      {doctorAddresses.length === 0 ? (
+                        <p>آدرسی برای خود ثبت کنید</p>
+                      ) : (
+                        <div>
+                          {doctorAddresses.map((current) => (
+                            <form class="row g-3">
+                              <div class="col-sm-3">
+                                <Form.Group>
+                                  <span class="badge bg-dark">{addnumber}</span>
+
+                                  <Form.Label className="mx-2">
+                                    استان
+                                  </Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {current.state}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                              <div class="col-sm-4">
+                                <Form.Group>
+                                  <Form.Label>شهر</Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {current.city}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                             <div class="col-sm-4">
+                                <Form.Group>
+                                  <Form.Label>آدرس</Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {current.detail}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                              <div class="col-1">
+                                <button
+                                  type="submit"
+                                  class="btn btn-outline-dark mt-sm-4 mb-3"
+                                  onClick={handleChangeAddressClick}
+                                >
+                                  <EditIcon></EditIcon>
+                                </button>
+                              </div>
+                            </form>
+                          ))}
+                        </div>
+                      )}
+                      <form class="row g-3">
+                        {states === undefined ? (
+                          <p></p>
+                        ) : (
+                          <div class="col-sm-4">
+                            <Form.Group>
+                              <span class="badge bg-dark">آدرس جدید:</span>
+                              <Form.Label className="mx-2">استان</Form.Label>
+                              <Form.Control
+                                controlId="formGridState"
+                                as="select"
+                                defaultValue=" choose...."
+                                id="newstate"
+                                value={newAddress.state}
+                                onChange={(e) => {
+                                  //console.log("e.target.value", e.target.value);
+                                  setNewAddress({
+                                    ...newAddress,
+                                    state: e.target.value,
+                                  });
+                                }}
+                              >
+                                <option className="text-muted" value="">
+                                  انتخاب کنید...
+                                </option>
+
+                                {Array.from(Array(32), (e, i) => {
+                                  return <option value={i}>{states[i]}</option>;
+                                })}
+                              </Form.Control>
+                            </Form.Group>
+                          </div>
+                        )}
+                        <div class="col-sm-4">
+                          <Form.Group>
+                            <Form.Label>شهر</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                //  placeholder="شهر"
+                                id="newcity"
+                                value={newAddress.city}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    newAddress.city
+                                  );
+                                  setNewAddress({
+                                    ...newAddress,
+                                    city: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-sm-4">
+                          <Form.Group>
+                            <Form.Label>آدرس</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                // placeholder="آدرس"
+                                id="newdetail"
+                                value={newAddress.detail}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    newAddress.detail
+                                  );
+                                  setNewAddress({
+                                    ...newAddress,
+                                    city: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-12">
+                          <button
+                            type="submit"
+                            class="btn btn-outline-dark"
+                            onClick={handleAddNewAddressClick}
+                          >
+                            <CheckCircleIcon></CheckCircleIcon>
+                            ذخیره آدرس جدید
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
