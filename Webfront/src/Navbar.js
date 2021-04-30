@@ -32,9 +32,9 @@ function Navbar(props) {
 
   const redirecttoprofile = () => {
     console.log(Cookies.get("doctorId"));
-    if (Cookies.get("doctorId").toString() === "0") {
+    if (Cookies.get("doctorId") === "0") {
       props.history.push("/userProfile");
-    } else if (Cookies.get("doctorId").toString() === "1") {
+    } else if (Cookies.get("doctorId") === "1") {
       props.history.push("/doctorProfile");
     } else {
       props.history.push("/login");
