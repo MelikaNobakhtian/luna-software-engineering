@@ -103,3 +103,40 @@
     font-size: 12px !important;
   }
 }
+
+
+
+
+.editdurationmodal {
+  width: 200 
+ 
+}
+
+@media (max-width: 1500px) {
+  .editdurationmodal {
+  
+    width: 300 !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .editdurationmodal {
+     
+    width: 300 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .editdurationmodal {
+  
+    width: 200 !important;
+  }
+}
+
+/* Large screens */
+@media (min-width: 2500px) {
+  .editdurationmodal {
+  
+    width: 300 !important;
+  }
+}
