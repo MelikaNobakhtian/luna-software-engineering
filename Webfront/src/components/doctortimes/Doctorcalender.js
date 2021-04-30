@@ -25,6 +25,11 @@ import { BiChevronDown } from "react-icons/bi";
 
 //یا همه ی موارد ولی ربای حذف یا یه چیز جدا
 //  بعدا بین md , sm هم فرق و تقویم نشون
+
+
+
+
+//وقت های قبل از امروزش رو هم بتونه روشون بزنه ولی بعد برای همه ی پست و اینا ایف بزارم که نتونه پست کنه و ارور نشون بده
 function Doctorcalender() {
   const [hozoris, sethozoris] = useState([]);
   const [magazis, setmagazis] = useState([]);
@@ -58,10 +63,10 @@ function Doctorcalender() {
   const [selectedmdeletemodal, setselectedmdeletemodal] = useState({ value: "", time: "", time22: "", index: "" });
   const [selectedhdeletemodal, setselectedhdeletemodal] = useState({ value: "", time: "", time22: "", index: "" });
   const [hidedeletemodal, sethidedeletemodal] = useState(false);
-  const [editdurationmodename,seteditdurationmodename]=useState("");
-  const [editdurationmodeduration,seteditdurationmodeduration]=useState("");
-  const [editdurationmodecolor,seteditdurationmodecolor]=useState("");
-  const [editdurationindex,seteditdurationindex]=useState("");
+  const [editdurationmodename, seteditdurationmodename] = useState("");
+  const [editdurationmodeduration, seteditdurationmodeduration] = useState("");
+  const [editdurationmodecolor, seteditdurationmodecolor] = useState("");
+  const [editdurationindex, seteditdurationindex] = useState("");
 
 
   //validation ***
@@ -401,6 +406,7 @@ function Doctorcalender() {
             }
             console.log(thistime + " thistime")
             console.log(values)
+            console.log("values");
           }
 
         }
@@ -1171,13 +1177,13 @@ function Doctorcalender() {
                               </div>
                             </div>
                           }
-                          {index !== 0 ? <AiOutlineEdit size={20} data-bs-toggle="modal"   
-                          onClick={()=>{
-                            seteditdurationindex(index)
-                            //shabih term pish state araye i hamoon moghe update na inja objecti na engar
-                            seteditdurationmodecolor(value.color)
+                          {index !== 0 ? <AiOutlineEdit size={20} data-bs-toggle="modal"
+                            onClick={() => {
+                              seteditdurationindex(index)
+                              //shabih term pish state araye i hamoon moghe update na inja objecti na engar
+                              seteditdurationmodecolor(value.color)
                             }}
-                           data-bs-target="#editduration" color={value.color} class="align-self-center"></AiOutlineEdit> : null}
+                            data-bs-target="#editduration" color={value.color} class="align-self-center"></AiOutlineEdit> : null}
 
                           {index !== 0 ? <BsTrash size={20} color={value.color} class="align-self-center me-2"></BsTrash> : null}
                           {index !== 0 ? <div class="mx-2 ms-2 shadow-1 align-self-center col-12 ms-0 align-items-end" style={{
@@ -1225,47 +1231,121 @@ function Doctorcalender() {
 
                 </div> : null}
                 {/* //width kamtar kon badan */}
-                <div dir="rtl" class="modal fade " id="editduration" data-bs-backdrop="static" data-bs-keyboard="false"  tabindex="-1" aria-labelledby="editduration" aria-hidden="true">
+                <div dir="rtl" class="modal fade " id="editduration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editduration" aria-hidden="true">
                   <div class="modal-dialog  modal-dialog-centered editdurationmodal" >
                     <div class="modal-content">
                       <div class="modal-header d-flex flex-row-reverse" dir="rtl">
-                      <button type="button" class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div style={{fontSize:"clamp(12px,3vw,17px)",fontWeight:"bold",color:"#005249"}} class="modal-title" id="exampleModalLabel" >ویرایش بازه ی زمانی</div>
-                        
-                       
+                        <button type="button" class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div style={{ fontSize: "clamp(12px,3vw,17px)", fontWeight: "bold", color: "#005249" }} class="modal-title" id="exampleModalLabel" >ویرایش بازه ی زمانی</div>
+
+
                       </div>
                       <div class="modal-body d-flex flex-row" dir="rtl">
-                      {/* defualt background color shabih place holderer */}
-                      <div class="mx-1 mt-1 shadow-1" onClick={() => seteditdurationmodecolor(randomColor())} style={{ backgroundColor: editdurationmodecolor, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
-                      {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
-                     {editdurationindex>1?<input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)", borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} class="form-control form-control-sm" lang="fa" dir="rtl" 
-                     value={editdurationmodeduration} placeholder={durationmode[editdurationindex].duration} 
-                     onChange={(event) => seteditdurationmodeduration(event.target.value)}></input>:
-                     <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)", borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} 
-                     class="form-control form-control-sm" lang="fa" dir="rtl" value={editdurationmodeduration} 
-                     placeholder={hduration} onChange={(event) => seteditdurationmodeduration(event.target.value)}></input>}
-                      {/* //baraye payini chera niyaz */}
-                      {editdurationindex!==""?<input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }} lang="fa" dir="rtl" class="form-control form-control-sm" 
-                      placeholder={durationmode[editdurationindex].name} value={editdurationmodename} onChange={(event) =>seteditdurationmodename(event.target.value)}>
-                      </input>:null}
-                        {/* nashodd un aval ba inke modal baz nist miad error undefined mide vaghti ham ke baraye boodan ya naboodan modal on hededelete... ro gozashtam chon tool mikeshe ta set beshe bayad chand bar ghahi ro dokhme ha bezane */}
-                        {/* <h5 class="modal-title" id="deletebuttonmodal">آیا از حذف وقت ویزیت خود در ساعت {magazis[selectedmdeletemodal.index].time}-{magazis[selectedmdeletemodal.index].time22} اطمینان دارید؟</h5> */}
-                        {/* <div class="modal-title" id="editduration">آیا از حذف این وقت ویزیت خود اطمینان دارید؟</div> */}
-                     
+                        {/* defualt background color shabih place holderer */}
+                        <div class="mx-1 mt-1 shadow-1" onClick={() => seteditdurationmodecolor(randomColor())} style={{ backgroundColor: editdurationmodecolor, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
+                        {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
+                        {editdurationindex > 1 ? <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)", borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} class="form-control form-control-sm" lang="fa" dir="rtl"
+                          value={editdurationmodeduration} placeholder={durationmode[editdurationindex].duration}
+                          onChange={(event) => seteditdurationmodeduration(event.target.value)}></input> :
+                          <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)", borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }}
+                            class="form-control form-control-sm" lang="fa" dir="rtl" value={editdurationmodeduration}
+                            placeholder={hduration} onChange={(event) => seteditdurationmodeduration(event.target.value)}></input>}
+                        {/* //baraye payini chera niyaz */}
+                        {editdurationindex !== "" ? <input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }} lang="fa" dir="rtl" class="form-control form-control-sm"
+                          placeholder={durationmode[editdurationindex].name} value={editdurationmodename} onChange={(event) => seteditdurationmodename(event.target.value)}>
+                        </input> : null}
+
+                      </div>
+
+                      <div class="modal-footer">
+
+                        <button type="button" data-bs-target="#editduration2" data-bs-toggle="modal" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }}
+                          data-bs-dismiss="modal" onClick={async () => {
+
+                            axios.get(API_BASE_URL + "/update-appointment/" + 1 + "/in-person?type=" + editdurationmodename)
+                              .then(function (response) {
+                                console.log(response);
+                                if (response.data.message === "No time reserved!") {
+                                  var today = utils("fa").getToday()
+                                  console.log(today)
+                                  //baraye in kar ye tabe tarif kolan tamiz to jahaye dige
+                                  var year = today.year;
+                                  var month = "";
+                                  var day = "";
+                                  if (today.month.toString().lenght === 1) {
+                                    month = "0" + today.month
+                                  }
+                                  else
+                                    month = today.month
+
+                                  if (today.day.toString().lenght === 1) {
+                                    day = "0" + today.day
+                                  }
+                                  else
+                                    day = today.day
+                                  var Today = year + "-" + month + "-" + day;
+                                  console.log("today")
+
+                                  console.log(editdurationmodename+"  edit duration name")
+                                  var info={"type": editdurationmodename,"date":Today}
+                                  var infojson=JSON.stringify(info)
+                                  
+                                  // axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{type: "وقت عادی",date:Today}})
+                                  axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",infojson)
+                                    .then(function (response) {
+                                      console.log(response);
+
+
+                                    })
+                                    .catch(function (error) {
+                                      console.log(error);
+                                    });
+
+                                }
+
+                              })
+                              .catch(function (error) {
+                                console.log(error);
+                              });
+                          }}>تایید</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+
+                <div dir="rtl" class="modal fade " id="editduration2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editduration2" aria-hidden="true">
+                  <div class="modal-dialog  modal-dialog-centered editdurationmodal" >
+                    <div class="modal-content">
+                      <div class="modal-header d-flex flex-row-reverse" dir="rtl">
+                        <button type="button" class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div style={{ fontSize: "clamp(12px,3vw,17px)", fontWeight: "bold", color: "#005249" }} class="modal-title" id="exampleModalLabel" >ویرایش بازه ی زمانی</div>
+
+
+                      </div>
+                      <div class="modal-body d-flex flex-row" dir="rtl">
+                        <div>آیا مطمئنید؟</div>
                       </div>
 
                       <div class="modal-footer">
 
                         <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal" onClick={async () => {
-                          sessionchange(selectedhdeletemodal.index, "hozori")
-                          //ba in baes takhir bad bayad do bar bezane ghahi ta modal baz beshe
-                          //  await sethidedeletemodal(false)
+                          console.log("clicked")
                         }}>تایید</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                       </div>
                     </div>
                   </div>
                 </div>
+
+
+
+
               </div>
 
 
@@ -1302,12 +1382,12 @@ function Doctorcalender() {
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
                 <div dir="rtl" class="modal fade" id="deletebuttonmodalh" tabindex="-1" aria-labelledby="deletebuttonmodahl" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-dialog  modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-body d-flex flex-row" dir="rtl">
                         {/* nashodd un aval ba inke modal baz nist miad error undefined mide vaghti ham ke baraye boodan ya naboodan modal on hededelete... ro gozashtam chon tool mikeshe ta set beshe bayad chand bar ghahi ro dokhme ha bezane */}
                         {/* <h5 class="modal-title" id="deletebuttonmodal">آیا از حذف وقت ویزیت خود در ساعت {magazis[selectedmdeletemodal.index].time}-{magazis[selectedmdeletemodal.index].time22} اطمینان دارید؟</h5> */}
-                        <div class="modal-title" id="deletebuttonmodalh">آیا از حذف این وقت ویزیت خود اطمینان دارید؟</div>
+                        <div class="modal-title ms-auto" id="deletebuttonmodalh">آیا از حذف این وقت ویزیت خود اطمینان دارید؟</div>
                         <button type="button" class="btn-close me-auto align-self-center" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
 
