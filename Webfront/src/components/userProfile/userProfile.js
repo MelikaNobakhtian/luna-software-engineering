@@ -135,14 +135,14 @@ function UserProfile(props) {
         )
         .then(function (response) {
           console.log(response);
-          if (response.message === "Password updated succesfully!") {
+          if (response.data.message === "Password updated succesfully!") {
             setMassage("پسورد با موفقیت عوض شد");
             setOpenSnack(true);
-          } else if (response.message === "Wrong Password") {
+          } else if (response.data.message.toString() === "Wrong Password") {
             console.log(response.status);
             setMassage("پسورد قبلی غلط است");
             setOpenSnack(true);
-          }
+          }else console.log(response.data.message);
         })
         .catch(function (error) {
           console.log(error);

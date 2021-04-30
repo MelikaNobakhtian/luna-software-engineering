@@ -40,18 +40,9 @@ function Editprofile(props) {
     specialty: "",
     sub_specialty: "",
   });
-  //console.log("lll" + user.lastName);
-  // const [address, setAddress] = useState({
-  //   state: "",
-  //   city: "",
-  //   detail: "",
-  //   id: "",
-  // });
-
-  //const [variable, setvar] = useState("false");
+ 
   const [states, setStates] = useState({ 0: "444", 1: "ttt" });
 
-  //const [type, setType] = useState("");
   useEffect(() => {
     if (Cookies.get("userTokenA")) {
       axios
@@ -70,20 +61,6 @@ function Editprofile(props) {
           }));
           setStates(response.data.states);
           setDoctorAddresses(response.data.data.addresses);
-          //console.log(states);
-          // if (response.data.data.addresses.length > 0) {
-          //   setvar("true");
-          //   setAddress((prevState) => ({
-          //     ...prevState,
-          //     city: response.data.data.addresses[0].city,
-          //     state: response.data.data.addresses[0].state,
-          //     detail: response.data.data.addresses[0].detail,
-          //     id: response.data.data.addresses[0].id,
-          //   }));
-          // }
-
-          //if (response.data.addresses.length > 0) setvar("true");
-          //console.log(response.data.addresses[0].city)
         })
         .catch(function (error) {
           console.log(error);
@@ -100,14 +77,6 @@ function Editprofile(props) {
       [id]: value,
     }));
   };
-  // const handleChangeaddress = (e) => {
-  //   console.log(address);
-  //   const { id, value } = e.target;
-  //   setAddress((prevState) => ({
-  //     ...prevState,
-  //     [id]: value,
-  //   }));
-  // };
 
   const handleChangeInfosClick = (e) => {
     e.preventDefault();
@@ -116,11 +85,8 @@ function Editprofile(props) {
       user.lastName.length === 0 ||
       user.userName.length === 0 ||
       user.specialty.length === 0 ||
-      user.sub_specialty.length === 0 
-      // ||
-      // address.state.length === 0 ||
-      // address.city.length === 0 ||
-      // address.detail.length === 0
+      user.sub_specialty.length === 0
+  
     ) {
       setMassage("لطفا همه را وارد کنید");
       setOpenSnack(true);
@@ -190,77 +156,7 @@ function Editprofile(props) {
           console.log(error);
         });
 
-      // if (variable === true) {
-      //   const payloadcity = {
-      //     state: address.state,
-      //     city: address.city,
-      //     detail: address.detail,
-      //   };
-      //   const backcity = JSON.stringify(payloadcity);
-      //   axios
-      //     .put(
-      //       API_BASE_URL +
-      //         "/doctor/" +
-      //         Cookies.get("doctorId") +
-      //         "/update-address/" +
-      //         address.id,
-      //       backcity,
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Authorization: "Bearer " + Cookies.get("userTokenA"),
-      //         },
-      //       }
-      //     )
-      //     .then(function (response) {
-      //       console.log(response);
-      //       if (response.status === 200) {
-      //         console.log(response.status);
-      //       }
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
-      // } else {
-      //   const payloadcity = {
-      //     count: 1,
-      //     addresses: [
-      //       {
-      //         state: "3",
-      //         city: address.city,
-      //         detail: address.detail,
-      //       },
-      //     ],
-      //   };
-      //   const backcity = JSON.stringify(payloadcity);
-      //   axios
-      //     .post(
-      //       API_BASE_URL +
-      //         "/doctor/" +
-      //         Cookies.get("doctorId") +
-      //         "/set-address/",
-      //       backcity,
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Authorization: "Bearer " + Cookies.get("userTokenA"),
-      //         },
-      //       }
-      //     )
-      //     .then(function (response) {
-      //       console.log(response);
-      //       if (
-      //         response.message === "You submit your addresses successfully!"
-      //       ) {
-      //         console.log(response.status);
-      //         setMassage("آدرس شما با موفقیت اضافه شد");
-      //         setOpenSnack(true);
-      //       }
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
-      // }
+     
     }
   };
 
@@ -307,8 +203,7 @@ function Editprofile(props) {
             //console.log(response.status);
             setMassage("پسورد قبلی غلط است");
             setOpenSnack(true);
-          }
-          else console.log(response.data.message)
+          } else console.log(response.data.message);
         })
         .catch(function (error) {
           console.log(error);
@@ -379,7 +274,7 @@ function Editprofile(props) {
     state: "",
     city: "",
     detail: "",
-    id:""
+    id: "",
   });
 
   const handleAddNewAddressClick = (e) => {
@@ -431,14 +326,15 @@ function Editprofile(props) {
       detail: editingAddress.detail,
     };
     const backcity = JSON.stringify(payloadNewAddress);
-    console.log(backcity)
+    console.log(backcity);
     axios
       .put(
         API_BASE_URL +
           "/doctor/" +
           Cookies.get("doctorId") +
           "/update-address/" +
-          editingAddress.id+"/",
+          editingAddress.id +
+          "/",
         backcity,
         {
           headers: {
@@ -749,10 +645,10 @@ function Editprofile(props) {
                                   onClick={() => {
                                     setEditingAddress({
                                       index: i,
-                                      state:doctorAddresses[i].state,
+                                      state: doctorAddresses[i].state,
                                       city: doctorAddresses[i].city,
                                       detail: doctorAddresses[i].detail,
-                                      id:doctorAddresses[i].id
+                                      id: doctorAddresses[i].id,
                                     });
                                   }}
                                   data-bs-toggle="modal"
@@ -890,7 +786,6 @@ function Editprofile(props) {
                           <p></p>
                         ) : (
                           <div class="col-sm-6">
-                          
                             <Form.Group>
                               <Form.Label className="">استان</Form.Label>
                               <Form.Control
@@ -898,9 +793,7 @@ function Editprofile(props) {
                                 as="select"
                                 defaultValue=" choose...."
                                 id="editingstate"
-                                value={
-                                  editingAddress.state
-                                }
+                                value={editingAddress.state}
                                 onChange={(e) => {
                                   //console.log("e.target.value", e.target.value);
                                   setEditingAddress({
@@ -914,7 +807,11 @@ function Editprofile(props) {
                                 </option>
 
                                 {Array.from(Array(32), (e, i) => {
-                                  return <option value={states[i]}>{states[i]}</option>;
+                                  return (
+                                    <option value={states[i]}>
+                                      {states[i]}
+                                    </option>
+                                  );
                                 })}
                               </Form.Control>
                             </Form.Group>
@@ -928,9 +825,7 @@ function Editprofile(props) {
                                 type="text"
                                 //  placeholder="شهر"
                                 id="editingcity"
-                                value={
-                                  editingAddress.city
-                                }
+                                value={editingAddress.city}
                                 onChange={(e) => {
                                   console.log(
                                     "e.target.value",
