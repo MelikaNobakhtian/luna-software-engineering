@@ -67,6 +67,11 @@ function Doctorcalender() {
   const [editdurationmodeduration, seteditdurationmodeduration] = useState("");
   const [editdurationmodecolor, seteditdurationmodecolor] = useState("");
   const [editdurationindex, seteditdurationindex] = useState("");
+  const [deleteallatftertoday,setdeleteallaftertoday]=useState(false);
+  // const [deleteyear,setdeleteyear]=useState("")
+  // const [deletemonth,setdeletemonth]=useState("")
+  // const [deleteday,setdeleteday]=useState("")
+  const [deletedate,setdeletedate]=useState("");
 
 
   //validation ***
@@ -105,7 +110,11 @@ function Doctorcalender() {
             if (i > 0) {
               durations.push({ name: resdata[i].time_type, duration: resdata[i].duration, color: resdata[i].duration_number })
             }
+            if(i===1){
+              sethduration(resdata[i].duration)
+            }
           }
+          console.log(durations);
           console.log(values);
           console.log("values");
           sethozoris(values)
@@ -947,7 +956,7 @@ function Doctorcalender() {
     to: null
   });
   const calenderchange = (value) => {
-
+    
 
     console.log("hi")
     console.log(value + "value")
@@ -967,8 +976,11 @@ function Doctorcalender() {
     }
     var newselectedday = value.from.year + "-" + startmonth + "-" + startday
     if (startselectedday !== newselectedday) {
+      setdurationmode([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" },
+       { name: "وقت عادی", duration: hduration, color: "#008F81" }])
       console.log(newselectedday)
       console.log(startselectedday)
+      // sethaddresses([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }])
       console.log("MOTEFAVET")
       sethozoris([])
       setmagazis([])
@@ -1180,6 +1192,8 @@ function Doctorcalender() {
                           {index !== 0 ? <AiOutlineEdit size={20} data-bs-toggle="modal"
                             onClick={() => {
                               seteditdurationindex(index)
+                              seteditdurationmodename(value.name)
+                              seteditdurationmodeduration(value.duration)
                               //shabih term pish state araye i hamoon moghe update na inja objecti na engar
                               seteditdurationmodecolor(value.color)
                             }}
@@ -1266,41 +1280,50 @@ function Doctorcalender() {
                               .then(function (response) {
                                 console.log(response);
                                 if (response.data.message === "No time reserved!") {
+                                  setdeleteallaftertoday(true);
                                   var today = utils("fa").getToday()
-                                  console.log(today)
-                                  //baraye in kar ye tabe tarif kolan tamiz to jahaye dige
+                                  // console.log(today)
+                                  // //baraye in kar ye tabe tarif kolan tamiz to jahaye dige
                                   var year = today.year;
                                   var month = "";
                                   var day = "";
+                                
                                   if (today.month.toString().lenght === 1) {
-                                    month = "0" + today.month
+                                    month= "0" + today.month
                                   }
                                   else
-                                    month = today.month
+                                    month=today.month
 
                                   if (today.day.toString().lenght === 1) {
-                                    day = "0" + today.day
+                                    day="0" + today.day
                                   }
                                   else
-                                    day = today.day
-                                  var Today = year + "-" + month + "-" + day;
-                                  console.log("today")
+                                    day=today.day
 
-                                  console.log(editdurationmodename+"  edit duration name")
-                                  var info={"type": editdurationmodename,"date":Today}
-                                  var infojson=JSON.stringify(info)
+                                  setdeletedate(year + "-" + month + "-" + day);
                                   
-                                  // axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{type: "وقت عادی",date:Today}})
-                                  axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",infojson)
-                                    .then(function (response) {
-                                      console.log(response);
+                                  // var Today = year + "-" + month + "-" + day;
+                                  // console.log("today")
+
+                                  // console.log(editdurationmodename+"  edit duration name")
+                                  // var info={"type": editdurationmodename,"date":Today}
+                                  // var infojson=JSON.stringify(info)
+                                  
+                                  // // axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{type: "وقت عادی",date:Today}})
+                                  // axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",infojson)
+                                  //   .then(function (response) {
+                                  //     console.log(response);
 
 
-                                    })
-                                    .catch(function (error) {
-                                      console.log(error);
-                                    });
+                                  //   })
+                                  //   .catch(function (error) {
+                                  //     console.log(error);
+                                  //   });
 
+                                }
+                                else{
+                                  setdeletedate(response.data.datetime);
+                                  setdeleteallaftertoday(false)
                                 }
 
                               })
@@ -1329,13 +1352,21 @@ function Doctorcalender() {
 
                       </div>
                       <div class="modal-body d-flex flex-row" dir="rtl">
-                        <div>آیا مطمئنید؟</div>
+                        <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} و بعد از تاریخ {deletedate} هستند حذف خواهند شد</div>
                       </div>
 
                       <div class="modal-footer">
 
                         <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal" onClick={async () => {
-                          console.log("clicked")
+                           axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",JSON.stringify({type:editdurationmodename,date:deletedate}))
+                                    .then(function (response) {
+                                      console.log(response);
+
+
+                                    })
+                                    .catch(function (error) {
+                                      console.log(error);
+                                    });
                         }}>تایید</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                       </div>
