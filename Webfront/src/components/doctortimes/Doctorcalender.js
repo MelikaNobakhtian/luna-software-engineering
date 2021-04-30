@@ -74,16 +74,18 @@ function Doctorcalender() {
 // console.log(stringigydate)
 console.log(stringifydate)
 // ,JSON.stringify({date:"1400-02-10"}
-    axios.get(API_BASE_URL + "/appointment/" + 1 + "/in-person/",{"date":"1400-02-09"})
+    axios.get(API_BASE_URL + "/appointment/" + 1 + "/in-person?date="+startselectedday)
       .then(function (response) {
         console.log(response);
         var resdata=response.data;
         // console.log(resdata.user.id+" id");
         var values=[];
         for(var i=0;i<resdata.length;i++){
-          var address=resdata.address.state+"_"+resdata.address.city+"_"+resdata.address.detail;
-          values.push({id:resdata.address.id,time:resdata.start_time,time22:resdata.end_time,
-            address:address,addressnumber:resdata.address_number,duration:resdata.duration,durationnumber:resdata.duration_number,durationname:resdata.time_type})
+          var starttime=resdata[i].start_time.toString().substring(0,5);
+          var endtime=resdata[i].end_time.toString().substring(0,5);
+          var address=resdata[i].address.state+"_"+resdata[i].address.city+"_"+resdata[i].address.detail;
+          values.push({id:resdata[i].address.id,time:starttime,time22:endtime,
+            address:address,addressnumber:resdata[i].address_number,duration:resdata[i].duration,durationnumber:resdata[i].duration_number,durationname:resdata[i].time_type})
         }
         console.log(values);
         console.log("values");
@@ -902,8 +904,8 @@ console.log(stringifydate)
     to: null
   });
   const calenderchange = (value) => {
-    sethozoris([])
-    setchangingdate(value.from)
+   
+   
     console.log("hi")
     console.log(value + "value")
     var startmonth="";
@@ -920,7 +922,15 @@ console.log(stringifydate)
    else{
       startday=value.from.day
    }
-    setstartseletedday(value.from.year + "-" + startmonth + "-" + startday)
+   var newselectedday=value.from.year + "-" + startmonth + "-" + startday
+   if(startselectedday!==newselectedday){
+    console.log(newselectedday)
+    console.log(startselectedday)
+    console.log("MOTEFAVET")
+    sethozoris([])
+  setchangingdate(value.from)
+  }
+    setstartseletedday(newselectedday)
     console.log(value.to)
     if(value.to!=null){
       var endmonth="";
@@ -1335,7 +1345,7 @@ console.log(stringifydate)
             // backgroundColor="green"
             // theme="dark"
             // background-image="blue"
-
+        
             style={{ borderColor: "green" }}
             // style={{marginLeft:100}}
 
