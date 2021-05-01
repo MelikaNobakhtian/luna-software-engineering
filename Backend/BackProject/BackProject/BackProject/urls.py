@@ -42,5 +42,6 @@ urlpatterns = [
     path('password-reset-complete/', SetNewPasswordAPIView.as_view(),
          name='password-reset-complete'),
     path('check/',Check.as_view(),name="check states"),
+    path('home/',FilterHomepageView.as_view(),name="filter recently joined doctors"),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

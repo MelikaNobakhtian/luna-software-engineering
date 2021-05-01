@@ -34,7 +34,7 @@ function Navbar(props) {
   };
 
   return (
-    <div className="" style={{backgroundColor:"#EBFCFF"}}>
+    <div className="" style={{backgroundColor:"#02C39A"}}>
       <nav
         className="navbar navbar-expand-lg navbar-light"
         dir="rtl"
@@ -140,7 +140,7 @@ function Navbar(props) {
                   </div>
                 )}
               </div>
-              <li className="btn nav-item nav-link pull-left ms-auto" style={{ color: "#00A896", fontWeight: "bold" }}>
+              <li className="btn nav-item nav-link pull-left ms-auto" style={{ color: "#264653", fontWeight: "bold" }}>
               
                   <small>مشاهده ی اتاق ها</small>
               </li>
