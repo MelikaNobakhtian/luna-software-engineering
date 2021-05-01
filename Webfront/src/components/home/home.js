@@ -10,7 +10,7 @@ import { API_BASE_URL } from "../apiConstant/apiConstant";
 import { Avatar } from "@material-ui/core";
 import ReactiveButton from 'reactive-button';
 
-function Home(props) {
+function Home(props){
   const [state, setState] = useState('idle');
   const [doctor, setDoctor] = useState([]);
 
@@ -46,6 +46,7 @@ function Home(props) {
             {doctor.length === 0 ? <div></div> :
               doctor.map((doc) => {
                 if (doc) return (
+                  
                   <div class="col mb-4">
                     <Card  >
                       <div class=" card-header d-flex justify-content-center" style={{ borderRadius: '5%' }} >
@@ -108,3 +109,4 @@ function Home(props) {
 
 
 export default withRouter(Home);
+
