@@ -406,7 +406,8 @@ class DurationAPIView(generics.GenericAPIView):
         doc = DoctorUser.objects.get(pk=pk)
         duration = Duration(doctor=doc,time_type=request.data['time_type'],duration=request.data['duration'],duration_number=request.data['duration_number'])
         duration.save()
-        return Response(request.data,status=status.HTTP_200_OK)
+        serializer = DurationSerializer(duration)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class UpdateDurationAPIView(generics.GenericAPIView):
 
