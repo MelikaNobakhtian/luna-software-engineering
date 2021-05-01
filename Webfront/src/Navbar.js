@@ -152,6 +152,7 @@ function Navbar(props) {
                     className="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
+                    data-testid="redirecttoprofile"
                   >
                     <BsFillPersonFill className="ms-2"></BsFillPersonFill>
                     حساب کاربری
@@ -161,6 +162,7 @@ function Navbar(props) {
                     className="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
+                    data-testid="redirecttoprofile"
                   >
                     <BsFillPersonFill className="ms-2"></BsFillPersonFill>
                     ورود یا ثبت نام

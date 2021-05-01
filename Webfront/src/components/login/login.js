@@ -164,7 +164,7 @@ function Login(props) {
   };
 
   return (
-    <div className="d-flex justify-content-center background">
+    <div data-testid="login" className="d-flex justify-content-center background">
       <div
         className="card-group shadow-lg border border-5 border-success rounded"
         style={{ backgroundColor: "white" }}
