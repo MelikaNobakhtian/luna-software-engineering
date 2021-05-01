@@ -140,3 +140,42 @@
     width: 300 !important;
   }
 }
+
+
+
+
+
+.sumbitbuttons {
+  margin-right: 200 
+ 
+}
+
+@media (max-width: 1500px) {
+  .sumbitbuttons {
+  
+    margin-right: 300 !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .sumbitbuttons {
+     
+    margin-right: 300 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .sumbitbuttons {
+  
+    margin-right: 200 !important;
+    
+  }
+}
+
+/* Large screens */
+@media (min-width: 2500px) {
+  .sumbitbuttons {
+  
+    margin-right: 300 !important;
+  }
+}

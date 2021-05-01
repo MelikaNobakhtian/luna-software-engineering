@@ -53,10 +53,12 @@ function Doctorcalender() {
   const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "", id: "" });
   const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }]);
   const [showdetail, setshowdetail] = useState(false);
-  const [durationmode, setdurationmode] = useState([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" }, { name: "وقت عادی", duration: hduration, color: "#008F81" }])
+  const [durationmode, setdurationmode] = useState([{ name: "همه (برای حذف)", duration: "all" },
+  //  { name: "وقت عادی", duration: hduration, color: "#008F81" }
+  ])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
-  const [selectedduration, setselectedduration] = useState({ name: "وقت عادی", duration: hduration, color: "#008F81" })
+  const [selectedduration, setselectedduration] = useState({ name: "همه (برای حذف)", duration: "all" })
   const [dmhdur, setdmhdur] = useState("");
   const [snackbarerror, setsnackbarerror] = useState("");
   const [changingdate, setchangingdate] = useState("");
@@ -982,7 +984,7 @@ function Doctorcalender() {
     }
     var newselectedday = value.from.year + "-" + startmonth + "-" + startday
     if (startselectedday !== newselectedday) {
-      setdurationmode([{ name: "همه ی بازه های زمانی ( برای حذف )", duration: "all" },
+      setdurationmode([{ name: "همه (برای حذف)", duration: "all" },
       { name: "وقت عادی", duration: hduration, color: "#008F81" }])
       console.log(newselectedday)
       console.log(startselectedday)
@@ -1041,75 +1043,22 @@ function Doctorcalender() {
   return (
     <div >
 
-      {/* وقت absolute dige flex end o ina taghiri ijad na */}
-      {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
+    {/* وقت absolute dige flex end o ina taghiri ijad na */}
+    {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-      <div class="d-flex mb-3 p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
-        <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
-          <div>
-            {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-            {/* flex-lg-row  flex-md-column flex-sm-row flex-column */}
-            <div class="d-flex flex-column  align-items-start  col-sm-auto col-11">
+    <div class="d-flex mb-3 p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
+      <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
+        <div>
+          {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
+          {/* flex-lg-row  flex-md-column flex-sm-row flex-column */}
+          {/* class="d-flex flex-column  align-items-start  col-sm-auto col-11" */}
+          <div class="row col-auto">
 
-              {/* mt - 2 وسط وسط نیست */}
-              <div class="row  align-items-start col-auto ms-4">
-                <div class="col-auto">
-                  <label data-testid="hozoritext" for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
-                </div>
-                {/* class="col-2 me-n3 " */}
-                <div class=" col-auto row align-items-center"
-                // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}}
-                >
-                  {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
-                  {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                  <input id="hozori" value={hduration} onChange={(event) => {
-                    // var values=[...durationmode];
-                    // values[0]={name:"وقت عادی",duration:hduration,}
-                    sethduration(event.target.value)
-                  }} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
-                </div>
-
-              </div>
-              {/* d-block mb-3 d-sm-none d-md-block d-lg-none  */}
-              <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                <Button onClick={() => sendhozori()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
-                  {/* <div class="align-self-center justify-self-center"> */}
-              تایید
-              {/* {/* </div> */}
-                </Button>
-              </div>
-
-              {/* تا sm */}
-              {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
-                <div class="carousel-inner"> */}
-              <div>
-                {hfields.map((hfield, index) => (
-                  <div key={index} >
-                    {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3      col-lg-11 mx-auto*/}
-                    <div class="carousel-item-active  d-block d-flex flex-row mt-3 align-items-center ">
-                      <BsPlusCircleFill color="gray" onClick={() => handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <AiFillMinusCircle color="gray" onClick={() => handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
-                      <div class="input-group   input-group-sm " dir="ltr">
-                        <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
-                          class="form-control " placeholder="8" aria-label="Username"></input>
-                        <span class="input-group-text">:</span>
-                        <input type="number" name="startt" value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
-                          class="form-control" placeholder="00" aria-label="Server"></input>
-                        <span class="input-group-text">-</span>
-                        <input type="numebr" name="end" value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
-                          class="form-control" placeholder="8" aria-label="Username"></input>
-                        <span class="input-group-text">:</span>
-                        <input type="number" name="endd" value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
-                          class="form-control" placeholder="30" aria-label="Server"></input>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-              </div>
-              <div class="d-flex flex-row mt-3 " style={{ marginBottom: "-0.25rem" }}>
+            {/* mt - 2 وسط وسط نیست */}
+            {/* <div class="row  align-items-start col-auto ms-5"> */}
+             <div class="d-flex flex-row ms-5 " style={{  }}>
                 {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
-                  <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {add.address}
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
@@ -1164,8 +1113,8 @@ function Doctorcalender() {
                 </div> : null}
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
-                {durationmode.length >= 1 ? <div class="dropdown shadow-sm me-5" dir="rtl" >
-                  <div class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                {durationmode.length >= 1 ? <div class="dropdown shadow-s me-sm-5 me-2" dir="rtl" >
+                  <div class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </div>
                   <ul class="dropdown-menu dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
@@ -1404,7 +1353,72 @@ function Doctorcalender() {
 
 
 
+              {/* </div> */}
+              {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
+              {/* {durationmode.length >= 1 ? */}
+         
+              {/* null */}
+              {/* <div class="col-auto">
+                <label data-testid="hozoritext" for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
+              </div> */}
+              {/* class="col-2 me-n3 " */}
+              {/* <div class=" col-auto row align-items-center"
+              // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}}
+              >
+                {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
+                {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
+                {/* <input id="hozori" value={hduration} onChange={(event) => {
+                  // var values=[...durationmode];
+                  // values[0]={name:"وقت عادی",duration:hduration,}
+                  sethduration(event.target.value)
+                }} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
               </div>
+
+            </div>
+            {/* d-block mb-3 d-sm-none d-md-block d-lg-none    col-md-2 col-lg-2 col-sm-3 col-3   */}
+            {/* <div style={{position:"absolute" ,backgroundColor:"lightgreen"}}> */}
+            
+            <div style={{ backgroundColor: "white",position:"relative"}}  class="col-md-2 col-lg-3 col-sm-4 col-3  me-auto  round-3  ">
+              <div onClick={() => sendhozori()} class=" btn btn-primary btn-sm h-100  btn-block col-12 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D" }}>
+                {/* <div class="align-self-center justify-self-center"> */}
+                {/* class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " */}
+            تایید
+            {/* {/* </div> */}
+              </div>
+            {/* </div> */}
+            </div>
+           </div>
+            
+
+              {/* تا sm */}
+              {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
+                <div class="carousel-inner"> */}
+              <div>
+                {hfields.map((hfield, index) => (
+                  <div key={index} >
+                    {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3      col-lg-11 mx-auto*/}
+                    <div class="carousel-item-active  d-block d-flex flex-row mt-3 align-items-center ">
+                      <BsPlusCircleFill color="gray" onClick={() => handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <AiFillMinusCircle color="gray" onClick={() => handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
+                      <div class="input-group   input-group-sm " dir="ltr">
+                        <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
+                          class="form-control " placeholder="8" aria-label="Username"></input>
+                        <span class="input-group-text">:</span>
+                        <input type="number" name="startt" value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
+                          class="form-control" placeholder="00" aria-label="Server"></input>
+                        <span class="input-group-text">-</span>
+                        <input type="numebr" name="end" value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
+                          class="form-control" placeholder="8" aria-label="Username"></input>
+                        <span class="input-group-text">:</span>
+                        <input type="number" name="endd" value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
+                          class="form-control" placeholder="30" aria-label="Server"></input>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+              
 
 
               {/* </div> */}
