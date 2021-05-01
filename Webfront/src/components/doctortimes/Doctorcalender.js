@@ -8,7 +8,7 @@ import Navbar from "../../Navbar"
 import "./Doctortimes.css";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
-import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup, Modal } from 'react-bootstrap';
+import { Toast, Button, FormGroup, Label, input, FormText, Col, InputGroup, Modal } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import { BsPlusCircleFill, BsTrash, BsCheck } from "react-icons/bs";
 import { AiFillMinusCircle, AiOutlineConsoleSql, AiOutlineEdit } from "react-icons/ai";
@@ -22,6 +22,8 @@ import { API_BASE_URL } from "../apiConstant/apiConstant";
 import axios from "axios";
 import { duration } from "@material-ui/core";
 import { BiChevronDown } from "react-icons/bi";
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 //یا همه ی موارد ولی ربای حذف یا یه چیز جدا
 //  بعدا بین md , sm هم فرق و تقویم نشون
@@ -268,10 +270,10 @@ function Doctorcalender() {
       //***** */
       var doctorid = Cookies.get("doctorId");
       console.log(doctorid + " doctorid");
-      var duration=Cookies.get("onlineduration");
+      var duration = Cookies.get("onlineduration");
       for (var i = 0; i < magazis.length; i++) {
         // var start = startselectedday + " " + magazis[i].time
-        values.push({ duration:duration , doc_id: 1, start_time: magazis[i].time, end_time: magazis[i].time22 });
+        values.push({ duration: duration, doc_id: 1, start_time: magazis[i].time, end_time: magazis[i].time22 });
       }
       console.log(" all the magazis values :)")
       var informations = { start_day: startselectedday, end_day: endselectedday, appointments: values }
@@ -751,7 +753,7 @@ function Doctorcalender() {
       setemptymduration("لطفا فیلد مربوط به مدت زمان هر وقت مجازی خود را پر کنید")
       setOpenSnack(true);
     }
-    if (mfields[0].start !== "" && mfields[0].startt !== "" && mfields[0].end !== "" && mfields[0].endd !== "" && Cookies.get("onlineduration") !==undefined) {
+    if (mfields[0].start !== "" && mfields[0].startt !== "" && mfields[0].end !== "" && mfields[0].endd !== "" && Cookies.get("onlineduration") !== undefined) {
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
       var timee = parseInt(mfields[0].startt);
@@ -778,8 +780,8 @@ function Doctorcalender() {
         }
         var noww = timecopy + ":" + time2
         var dur = "00:" + duration
-        console.log(noww+" noww")
-        console.log(mend+" mend")
+        console.log(noww + " noww")
+        console.log(mend + " mend")
         if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
           finish = true;
           break;
@@ -1173,7 +1175,7 @@ function Doctorcalender() {
                   <div class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </div>
-                  <ul class="dropdown-menu dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
+                  <ul class="dropdown-menu mega-dropdown dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
 
                     {durationmode.map((value, index) => {
                       var indexx = index + 1;
@@ -1239,15 +1241,35 @@ function Doctorcalender() {
 
                     {/* edit & delete modals */}
 
-                    <div class=" d-flex flex-row mt-2 mx-1 " data-ref="one" >
-                      <BsPlusCircleFill color="gray" onClick={() => {
-
-                        // var col=randomColor()
+                    <div
+                      // initialValues={{ dmdur: 'نوع بازه ی زمانی', dmhdur: 'مدت زمان'}}
+                      // validationSchema={Yup.object({
+                      //   dmdur: Yup.number().integer()
+                      //     .max(60, 'red')
+                      //     .required('Required'),
+                      //   dmhdur: Yup.string()
+                      //     .max(40, "نوع بازه ی زمانی شما بیش تر از 40 کاراکتر نمیتواند باشد")
+                      //     .required('Required'),
+                      //   email: Yup.string().email('Invalid email address').required('Required'),
+                      // })}
+                      // onSubmit={(values, { setSubmitting }) => {
+                         // var col=randomColor()
 
                         // ttttt
 
 
-                        var formdata = new FormData()
+                     
+                      class=" d-flex flex-row mt-2 mx-1 " data-ref="one" >
+                      <BsPlusCircleFill color="gray" onClick={()=>{
+                        console.log(dmdur+"dmdur")
+                        console.log(dmhdur+" dmhdur")
+                        
+                        if(dmhdur===""|| dmhdur>60|| dmdur===""||durationmode.findIndex((element)=>element.name===dmdur)===-1){
+                          setsnackbarerror("مدت زمان و نام بازه ی زمانی نباید خالی باشند و نام بازه ی زمانی نباید تکراری باشد و حداکثر مقدار مدت زمان 60 دقیقه است")
+                          setOpenSnack(true);
+                        }
+                        else{
+                          var formdata = new FormData()
                         formdata.append("time_type", dmdur)
                         formdata.append("duration", dmhdur)
                         formdata.append("duration_number", col)
@@ -1274,14 +1296,21 @@ function Doctorcalender() {
                         console.log(dmhdur + " dmhdur")
 
                         console.log(durationmode + " durationmode")
+                        }
 
                         //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
-
-                      }} class="min-vw-20 min-vh-20 mt-1 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      }
+                      } class="min-vw-20 min-vh-20 mt-1 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <div class="mx-1 mt-1 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
                       {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
-                      <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)", borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} class="form-control form-control-sm" lang="fa" dir="rtl" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
-                      <input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }} lang="fa" dir="rtl" class="form-control form-control-sm" placeholder={"نوع بازه ی زمانی"} value={dmdur} onChange={(event) => setdmdur(event.target.value)}>
+                      <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)",
+                       borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} class="form-control form-control-sm"
+                        lang="fa" dir="rtl" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
+                      {/* {Formik.touchecd.dmdur && Formik.error.dmdur? */}
+                   
+                      <input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }} 
+                      lang="fa" dir="rtl" class="form-control form-control-sm" placeholder={"نوع بازه ی زمانی"} value={dmdur}
+                       onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div>
                   </ul>
@@ -1397,11 +1426,11 @@ function Doctorcalender() {
                     <div class="modal-content">
                       <div class="modal-header d-flex flex-row-reverse" dir="rtl">
                         <button type="button"
-                        onClick={()=>{
-                          if(ischangingmduration===true)
-                            setmduration(Cookies.get("onlineduration"))
-                        }}
-                         class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
+                          onClick={() => {
+                            if (ischangingmduration === true)
+                              setmduration(Cookies.get("onlineduration"))
+                          }}
+                          class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
                         <div style={{ fontSize: "clamp(12px,3vw,17px)", fontWeight: "bold", color: "#005249" }} class="modal-title" id="exampleModalLabel" >ویرایش بازه ی زمانی</div>
 
 
@@ -1490,7 +1519,7 @@ function Doctorcalender() {
                                     formdata.append("date", deletedate)
                                     formdata.append("type", editdurationmodename)
 
-                                    if (deletedate != "All") {
+                                    if (deletedate !== "All") {
                                       axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", formdata)
                                         .then(function (response) {
                                           console.log(response);
@@ -1534,12 +1563,12 @@ function Doctorcalender() {
                             else {
                               if (deletedate !== "All") {
                                 var formdata2 = new FormData()
-                              formdata2.append("date", deletedate)
-                              console.log("here")
+                                formdata2.append("date", deletedate)
+                                console.log("here")
                                 axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/online/", formdata2)
                                   .then(function (response) {
                                     console.log(response);
-                                    Cookies.set("onlineduration",mduration)
+                                    Cookies.set("onlineduration", mduration)
                                   })
                                   .catch(function (error) {
                                     console.log(error);
@@ -1549,7 +1578,7 @@ function Doctorcalender() {
                                 axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/online/")
                                   .then(function (response) {
                                     console.log(response);
-                                    Cookies.set("onlineduration",mduration)
+                                    Cookies.set("onlineduration", mduration)
 
 
                                   })
@@ -1565,11 +1594,11 @@ function Doctorcalender() {
 
                           }>تایید</button>
                         <button type="button"
-                        onClick={()=>{
-                          if(ischangingmduration===true)
-                            setmduration(Cookies.get("onlineduration"))
-                        }}
-                        class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                          onClick={() => {
+                            if (ischangingmduration === true)
+                              setmduration(Cookies.get("onlineduration"))
+                          }}
+                          class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                       </div>
                     </div>
                   </div>
@@ -1665,7 +1694,7 @@ function Doctorcalender() {
          " style={{ borderRadius: 10, backgroundColor: "#F8F8F0", height: "30vh" }}>
 
               <div class=" " style={{ height: "26.5vh" }}>
-                {hozoris != [] ? hozoris.map((val, index) => {
+                {hozoris !== [] ? hozoris.map((val, index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
                   return (<Button data-bs-toggle="modal" data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2"
@@ -2005,7 +2034,6 @@ function Doctorcalender() {
             minimumDate={utils("fa").getToday()}
             calendarTodayClassName="custom-today-day"
             colorPrimaryLight="rgba(2, 195, 154, 0.4)"
-            shouldHighlightWeekends
             calendarClassName="responsive-calendar custom-calendar"
             value={selectedDayRange}
             onChange={
