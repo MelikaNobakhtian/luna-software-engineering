@@ -179,6 +179,25 @@ function Doctorcalender() {
       .catch(function (error) {
         console.log(error);
       });
+
+
+      axios.get(API_BASE_URL + "/doctor/" + 1 + "/duration")
+      .then(function (response) {
+         console.log(response)
+         var value=[]
+         value.push({ name: "همه (برای حذف)", duration: "all" })
+         for(var i=0;i<response.data.length;i++){
+         value.push({name:response.data[i].time_type,duration:response.data[i].duration,
+          color:response.data[i].duration_number})
+         }
+         console.log(value)
+         console.log("value")
+         setdurationmode(value)
+     
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
 
@@ -984,8 +1003,8 @@ function Doctorcalender() {
     }
     var newselectedday = value.from.year + "-" + startmonth + "-" + startday
     if (startselectedday !== newselectedday) {
-      setdurationmode([{ name: "همه (برای حذف)", duration: "all" },
-      { name: "وقت عادی", duration: hduration, color: "#008F81" }])
+      // setdurationmode([{ name: "همه (برای حذف)", duration: "all" },
+      // { name: "وقت عادی", duration: hduration, color: "#008F81" }])
       console.log(newselectedday)
       console.log(startselectedday)
       // sethaddresses([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }])
