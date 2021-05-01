@@ -54,7 +54,7 @@ function Doctorcalender() {
   const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }]);
   const [showdetail, setshowdetail] = useState(false);
   const [durationmode, setdurationmode] = useState([{ name: "همه (برای حذف)", duration: "all" },
-  //  { name: "وقت عادی", duration: hduration, color: "#008F81" }
+    //  { name: "وقت عادی", duration: hduration, color: "#008F81" }
   ])
   const [dm, setdm] = useState("_");
   const [dmdur, setdmdur] = useState("");
@@ -69,12 +69,14 @@ function Doctorcalender() {
   const [editdurationmodeduration, seteditdurationmodeduration] = useState("");
   const [editdurationmodecolor, seteditdurationmodecolor] = useState("");
   const [editdurationindex, seteditdurationindex] = useState("");
+
   const [deleteallatftertoday, setdeleteallaftertoday] = useState(false);
   // const [deleteyear,setdeleteyear]=useState("")
   // const [deletemonth,setdeletemonth]=useState("")
   // const [deleteday,setdeleteday]=useState("")
   const [deletedate, setdeletedate] = useState("");
   const [mdurationbeforechange, setmdurationbeforchange] = useState("")
+  const [getduration,setgetduration]=useState(true);
 
 
   //validation ***
@@ -101,7 +103,7 @@ function Doctorcalender() {
           var resdata = response.data;
           // console.log(resdata.user.id+" id");
           var values = [];
-          var durations = [...durationmode];
+          // var durations = [...durationmode];
           for (var i = 0; i < resdata.length; i++) {
             var starttime = resdata[i].start_time.toString().substring(0, 5);
             var endtime = resdata[i].end_time.toString().substring(0, 5);
@@ -111,18 +113,18 @@ function Doctorcalender() {
               address: address, addressnumber: resdata[i].address_number, duration: resdata[i].duration, durationnumber: resdata[i].duration_number, durationname: resdata[i].time_type
             })
             // i=0 ham bayad bashe chon rabti nadaran vali kod dorost beshe ye dafe avaz mikonam
-            if (i > 0) {
-              durations.push({ name: resdata[i].time_type, duration: resdata[i].duration, color: resdata[i].duration_number })
-            }
-            if (i === 1) {
-              sethduration(resdata[i].duration)
-            }
+            // if (i > 0) {
+            //   durations.push({ name: resdata[i].time_type, duration: resdata[i].duration, color: resdata[i].duration_number })
+            // }
+            // if (i === 1) {
+            //   sethduration(resdata[i].duration)
+            // }
           }
-          console.log(durations);
+          // console.log(durations);
           console.log(values);
           console.log("values");
           sethozoris(values)
-          setdurationmode(durations);
+          // setdurationmode(durations);
 
 
         })
@@ -181,24 +183,34 @@ function Doctorcalender() {
       });
 
 
-      axios.get(API_BASE_URL + "/doctor/" + 1 + "/duration")
-      .then(function (response) {
-         console.log(response)
-         var value=[]
-         value.push({ name: "همه (برای حذف)", duration: "all" })
-         for(var i=0;i<response.data.length;i++){
-         value.push({name:response.data[i].time_type,duration:response.data[i].duration,
-          color:response.data[i].duration_number})
-         }
-         console.log(value)
-         console.log("value")
-         setdurationmode(value)
-     
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    
   }, []);
+  useEffect(() => {
+    var doctorid = Cookies.get("doctorId");
+
+    axios.get(API_BASE_URL + "/doctor/" + 1 + "/duration")
+    .then(function (response) {
+      console.log(response)
+      var value = []
+      value.push({ name: "همه (برای حذف)", duration: "all" })
+      for (var i = 0; i < response.data.length; i++) {
+        value.push({
+          name: response.data[i].time_type, duration: response.data[i].duration,
+          color: response.data[i].duration_number, durationid: response.data[i].id
+        })
+      }
+      console.log(value)
+      console.log("value")
+      setdurationmode(value)
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    
+  }, [getduration]);
+ 
 
 
 
@@ -1062,20 +1074,20 @@ function Doctorcalender() {
   return (
     <div >
 
-    {/* وقت absolute dige flex end o ina taghiri ijad na */}
-    {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
+      {/* وقت absolute dige flex end o ina taghiri ijad na */}
+      {/* <div class="d-flex flex-row col-10 col-sm-2 mt-5" style={{justifyContent:"flex-end"}}> */}
 
-    <div class="d-flex mb-3 p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
-      <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
-        <div>
-          {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
-          {/* flex-lg-row  flex-md-column flex-sm-row flex-column */}
-          {/* class="d-flex flex-column  align-items-start  col-sm-auto col-11" */}
-          <div class="row col-auto">
+      <div class="d-flex mb-3 p-2 flex-md-row flex-column col-11 my-1 mx-auto bd-highlight  mt-md-3 mt-2" style={{ backgroundColor: "white", alignSelf: "center" }}>
+        <div class="order-md-1 order-2 col-lg-7 col-md-7 col-sm-12 col-12" style={{ backgroundColor: "white" }}>
+          <div>
+            {/* بین col-md , col-sm   نشون که بشه تقویم هم جا داد */}
+            {/* flex-lg-row  flex-md-column flex-sm-row flex-column */}
+            {/* class="d-flex flex-column  align-items-start  col-sm-auto col-11" */}
+            <div class="row col-auto">
 
-            {/* mt - 2 وسط وسط نیست */}
-            {/* <div class="row  align-items-start col-auto ms-5"> */}
-             <div class="d-flex flex-row ms-5 " style={{  }}>
+              {/* mt - 2 وسط وسط نیست */}
+              {/* <div class="row  align-items-start col-auto ms-5"> */}
+              <div class="d-flex flex-row ms-5 " style={{}}>
                 {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
                   <a class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {add.address}
@@ -1195,29 +1207,29 @@ function Doctorcalender() {
                       <BsPlusCircleFill color="gray" onClick={() => {
 
                         // var col=randomColor()
-                      
+
                         // ttttt
-                      
-             
-                        var formdata=new FormData()
-                        formdata.append("time_type",dmdur)
-                        formdata.append("duration",dmhdur)
-                        formdata.append("duration_number",col)
+
+
+                        var formdata = new FormData()
+                        formdata.append("time_type", dmdur)
+                        formdata.append("duration", dmhdur)
+                        formdata.append("duration_number", col)
 
                         axios.post(API_BASE_URL + "/doctor/" + 1 + "/duration/", formdata)
                           .then(function (response) {
                             console.log(response)
-                            setselectedduration({ name: dmdur, duration: dmhdur, color: col })
+                            setselectedduration({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
                             var values = [...durationmode];
-                        values.push({ name: dmdur, duration: dmhdur, color: col })
-                        // setdmhdur("مدت زمان")
-                        // setdmdur("نوع بازه ی زمانی")
-                        setcol(randomColor());
-                        console.log(values + " values")
-                        setdurationmode(values)
-                        console.log(durationmode)
-                        //*** ye snackbar vahed baraye hameja besazim */
-                        // alert("بازه ی زمانی شما با موفقیت اضافه شد")
+                            values.push({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
+                            // setdmhdur("مدت زمان")
+                            // setdmdur("نوع بازه ی زمانی")
+                            setcol(randomColor());
+                            console.log(values + " values")
+                            setdurationmode(values)
+                            console.log(durationmode)
+                            //*** ye snackbar vahed baraye hameja besazim */
+                            // alert("بازه ی زمانی شما با موفقیت اضافه شد")
                           })
                           .catch(function (error) {
                             console.log(error);
@@ -1228,7 +1240,7 @@ function Doctorcalender() {
                         console.log(durationmode + " durationmode")
 
                         //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
-                        
+
                       }} class="min-vw-20 min-vh-20 mt-1 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <div class="mx-1 mt-1 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
                       {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
@@ -1353,15 +1365,43 @@ function Doctorcalender() {
                       <div class="modal-footer">
 
                         <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal" onClick={async () => {
-                          axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", JSON.stringify({ type: editdurationmodename, date: deletedate }))
+                          console.log(durationmode[editdurationindex].durationid)
+                          var formdata = new FormData();
+                          console.log(editdurationmodeduration+"duration")
+                          formdata.append("duration", editdurationmodeduration)
+                          formdata.append("time_type", editdurationmodename)
+                          formdata.append("duration_number", editdurationmodecolor)
+                          console.log(formdata)
+                          console.log(editdurationmodeduration)
+                          console.log(editdurationmodename)
+                          console.log(editdurationmodecolor)
+                          console.log("formdata")
+                          axios.put(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/",formdata)
                             .then(function (response) {
                               console.log(response);
+                              var formdata = new FormData();
+                              formdata.append("date", deletedate)
+                              formdata.append("type", editdurationmodename)
 
+                              axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
+                                .then(function (response) {
+                                  console.log(response);
+                                  if(getduration===true)
+                                  setgetduration(false)
+                                  else
+                                  setgetduration(true);
+
+
+                                })
+                                .catch(function (error) {
+                                  console.log(error);
+                                });
 
                             })
                             .catch(function (error) {
                               console.log(error);
                             });
+
                         }}>تایید</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                       </div>
@@ -1372,16 +1412,16 @@ function Doctorcalender() {
 
 
 
-              {/* </div> */}
-              {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
-              {/* {durationmode.length >= 1 ? */}
-         
-              {/* null */}
-              {/* <div class="col-auto">
+                {/* </div> */}
+                {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
+                {/* {durationmode.length >= 1 ? */}
+
+                {/* null */}
+                {/* <div class="col-auto">
                 <label data-testid="hozoritext" for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت حضوری شما؟</label>
               </div> */}
-              {/* class="col-2 me-n3 " */}
-              {/* <div class=" col-auto row align-items-center"
+                {/* class="col-2 me-n3 " */}
+                {/* <div class=" col-auto row align-items-center"
               // style={{height:"clamp(10px,4vh,60px)" , width:"clamp(20px,4.5vw,40px)",borderRadius:100,backgroundColor:"white"}}
               >
                 {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
@@ -1395,19 +1435,19 @@ function Doctorcalender() {
 
             </div>
             {/* d-block mb-3 d-sm-none d-md-block d-lg-none    col-md-2 col-lg-2 col-sm-3 col-3   */}
-            {/* <div style={{position:"absolute" ,backgroundColor:"lightgreen"}}> */}
-            
-            <div style={{ backgroundColor: "white",position:"relative"}}  class="col-md-2 col-lg-3 col-sm-4 col-3  me-auto  round-3  ">
-              <div onClick={() => sendhozori()} class=" btn btn-primary btn-sm h-100  btn-block col-12 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D" }}>
-                {/* <div class="align-self-center justify-self-center"> */}
-                {/* class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " */}
+                {/* <div style={{position:"absolute" ,backgroundColor:"lightgreen"}}> */}
+
+                <div style={{ backgroundColor: "white", position: "relative" }} class="col-md-2 col-lg-3 col-sm-4 col-3  me-auto  round-3  ">
+                  <div onClick={() => sendhozori()} class=" btn btn-primary btn-sm h-100  btn-block col-12 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D" }}>
+                    {/* <div class="align-self-center justify-self-center"> */}
+                    {/* class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " */}
             تایید
             {/* {/* </div> */}
+                  </div>
+                  {/* </div> */}
+                </div>
               </div>
-            {/* </div> */}
-            </div>
-           </div>
-            
+
 
               {/* تا sm */}
               {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
@@ -1437,7 +1477,7 @@ function Doctorcalender() {
                 ))}
 
               </div>
-              
+
 
 
               {/* </div> */}
