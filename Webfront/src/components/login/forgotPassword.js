@@ -3,9 +3,9 @@ import axios from "axios";
 //import Cookies from "js-cookie";
 import {
   BrowserRouter as Router,
-    useRouteMatch,
-    useParams,
-    withRouter
+  useRouteMatch,
+  useParams,
+  withRouter,
 } from "react-router-dom";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 
@@ -21,9 +21,15 @@ function ForgotPassword(props) {
 
   useEffect(() => {
     axios
-      .get(API_BASE_URL + "/password-reset/" + props.match.params.tokenId+"/"+props.match.params.token)
+      .get(
+        API_BASE_URL +
+          "/password-reset/" +
+          props.match.params.tokenId +
+          "/" +
+          props.match.params.token
+      )
       .then(function (response) {
-        console.log(response)
+        console.log(response);
         if (response.data.success === true) {
           setUidb64(response.data.uidb64);
           setToken(response.data.token);
@@ -66,8 +72,7 @@ function ForgotPassword(props) {
       };
       const back = JSON.stringify(payload);
       axios
-        .post(API_BASE_URL + "/password-reset-complete/", back,
-        {
+        .post(API_BASE_URL + "/password-reset-complete/", back, {
           headers: { "content-type": "application/json" },
         })
         .then(function (response) {
@@ -76,12 +81,12 @@ function ForgotPassword(props) {
               ...prevState,
               backError: "لینک منقضی شده است",
             }));
-          } else if (response.status === 200) {
+          } else if (response.message === "Password reset success") {
             setState((prevState) => ({
               ...prevState,
               backError: "رمز شما با موفقیت عوض شد",
             }));
-            redirectToLogin()
+            redirectToLogin();
           }
         })
         .catch(function (error) {

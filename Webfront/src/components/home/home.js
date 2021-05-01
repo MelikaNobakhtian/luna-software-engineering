@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 //import { API_BASE_URL } from "../apiConstant/apiConstant";
 
 function Home(props) {
-  return <div>home</div>;
+  return <div data-testid="home">home</div>;
 }
 
 export default withRouter(Home);
