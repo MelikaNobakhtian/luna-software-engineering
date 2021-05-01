@@ -51,9 +51,30 @@ function Navbar(props) {
 
   const GoToSearch = (e) => {
     //props.history.push("/searchResult/" + JSON.stringify(searchedDoctor));
-    props.history.push(
-      `/searchResult/${searchedDoctor.name}&${searchedDoctor.lastname}&${searchedDoctor.specialty}&${searchedDoctor.city}&${searchedDoctor.state}`
-    );
+    let url = "/searchResult/";
+    if (searchedDoctor.name.length) {
+      url = url + "search=" + searchedDoctor.name + "&";
+    }
+    if (searchedDoctor.lastname.length) {
+      url = url + "search=" + searchedDoctor.lastname + "&";
+    }
+    if (searchedDoctor.specialty.length) {
+      url = url + "search=" + searchedDoctor.specialty + "&";
+    }
+    if (searchedDoctor.city.length) {
+      url = url + "search=" + searchedDoctor.city + "&";
+    }
+    if (searchedDoctor.state.length) {
+      url = url + "search=" + searchedDoctor.state + "&";
+    }
+    if (url === "/searchResult/") {
+      url = url + " ";
+    }
+
+    // props.history.push(
+    //   `/searchResult/${searchedDoctor.name}&${searchedDoctor.lastname}&${searchedDoctor.specialty}&${searchedDoctor.city}&${searchedDoctor.state}`
+    // );
+    props.history.push(url);
     setSearchedDoctor({
       name: "",
       lastname: "",
@@ -64,8 +85,12 @@ function Navbar(props) {
   };
 
   return (
-    <div  className="" style={{ backgroundColor: "#EBFCFF" }}>
-      <nav data-testid="navbar" className="navbar navbar-expand-lg navbar-light" dir="rtl">
+    <div className="" style={{ backgroundColor: "#EBFCFF" }}>
+      <nav
+        data-testid="navbar"
+        className="navbar navbar-expand-lg navbar-light"
+        dir="rtl"
+      >
         <div className="container-fluid">
           <div
             className="navbar-brand"

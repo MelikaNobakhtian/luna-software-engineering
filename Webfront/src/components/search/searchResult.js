@@ -19,7 +19,7 @@ function SearchResult(props) {
   useEffect(() => {
     axios
       .get(
-        `${API_BASE_URL}/doctors?search=${props.match.params.search}&search-fields=first_name&search-fields=last_name&search-fields=specialty&search-fields=city&search-fields=state`,
+        `${API_BASE_URL}/doctors?${props.match.params.search}search-fields=first_name&search-fields=last_name&search-fields=specialty&search-fields=city&search-fields=state`,
         {
           headers: {
             Authorization: "Token " + Cookies.get("userToken"),

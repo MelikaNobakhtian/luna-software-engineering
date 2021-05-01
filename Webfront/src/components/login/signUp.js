@@ -95,12 +95,14 @@ function SignUp(props) {
       email.length &&
       passwords.password.length &&
       passwords.confirmPassword.length &&
-      name.length.length &&
+      name.length &&
       lastname.length
     ) {
       var formd = new FormData();
       if (isDoctor % 2 === 1) {
-        if (state.file.length) {
+        //console.log("1")
+        if (state.file) {
+          //console.log("2")
           formd.append("username", username);
           formd.append("email", email);
           formd.append("password", passwords.password);
@@ -143,6 +145,7 @@ function SignUp(props) {
             });
         } else {
           setFileErr(" بارگذاری مدرک ضروری است !");
+          //console.log("3")
         }
       } else {
         const payload = {
@@ -186,7 +189,18 @@ function SignUp(props) {
             console.log(error);
           });
       }
-    } else window.alert("مشخصات را کامل کنید");
+    } else {
+      window.alert("مشخصات را کامل کنید");
+      console.log(
+        username +
+          email +
+          passwords.password +
+          passwords.confirmPassword +
+          name +
+          lastname +
+          state.file
+      );
+    }
   }
 
   function validatorname(value) {
@@ -433,7 +447,7 @@ function SignUp(props) {
                 className="btn btn-dark "
                 onClick={() => imageUploader.current.click()}
               >
-                انتخاب عکس
+                انتخاب عکس مدرک
               </div>
             </div>
             <div>
@@ -441,7 +455,7 @@ function SignUp(props) {
                 ثبت نام
               </Button>
               <span className="btn mt-3" onClick={() => redirectToLogin()}>
-                قبلاً ثبت ‌نام کرده‌اید؟
+                ثبت ‌نام کرده‌اید؟
               </span>
             </div>
           </Form>
