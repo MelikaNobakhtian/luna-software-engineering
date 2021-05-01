@@ -77,6 +77,8 @@ function Doctorcalender() {
   const [deletedate, setdeletedate] = useState("");
   const [mdurationbeforechange, setmdurationbeforchange] = useState("")
   const [getduration,setgetduration]=useState(true);
+  const [deletedurationindex,setdeletedurationindex]=useState("");
+  const[iseditingduration,setiseditingduration]=useState();
 
 
   //validation ***
@@ -1177,6 +1179,7 @@ function Doctorcalender() {
                           }
                           {index !== 0 ? <AiOutlineEdit size={20} data-bs-toggle="modal"
                             onClick={() => {
+                              setiseditingduration(true)
                               seteditdurationindex(index)
                               seteditdurationmodename(value.name)
                               seteditdurationmodeduration(value.duration)
@@ -1185,7 +1188,15 @@ function Doctorcalender() {
                             }}
                             data-bs-target="#editduration" color={value.color} class="align-self-center"></AiOutlineEdit> : null}
 
-                          {index !== 0 ? <BsTrash size={20} color={value.color} class="align-self-center me-2"></BsTrash> : null}
+                          {index !== 0 ? <BsTrash size={20} color={value.color} data-bs-toggle="modal" data-bs-target="#editduration"
+                           onClick={() => {
+                             setiseditingduration(false);
+                              seteditdurationindex(index)
+                              seteditdurationmodename(value.name)
+                              seteditdurationmodeduration(value.duration)
+                              //shabih term pish state araye i hamoon moghe update na inja objecti na engar
+                              seteditdurationmodecolor(value.color)
+                            }}class="align-self-center me-2"></BsTrash> : null}
                           {index !== 0 ? <div class="mx-2 ms-2 shadow-1 align-self-center col-12 ms-0 align-items-end" style={{
                             backgroundColor: value.color,
                             borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"
@@ -1261,7 +1272,7 @@ function Doctorcalender() {
 
 
                       </div>
-                      <div class="modal-body d-flex flex-row" dir="rtl">
+                      {iseditingduration===true?<div class="modal-body d-flex flex-row" dir="rtl">
                         {/* defualt background color shabih place holderer */}
                         <div class="mx-1 mt-1 shadow-1" onClick={() => seteditdurationmodecolor(randomColor())} style={{ backgroundColor: editdurationmodecolor, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
                         {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
@@ -1276,7 +1287,10 @@ function Doctorcalender() {
                           placeholder={durationmode[editdurationindex].name} value={editdurationmodename} onChange={(event) => seteditdurationmodename(event.target.value)}>
                         </input> : null}
 
-                      </div>
+                      </div>:
+                       <div class="modal-body d-flex flex-row" dir="rtl">
+                         <div>آیا از حذف کردن این نوع بازه ی زمانی خود اطمینان دارید؟</div>
+                       </div>}
 
                       <div class="modal-footer">
 
@@ -1364,7 +1378,8 @@ function Doctorcalender() {
 
                       <div class="modal-footer">
 
-                        <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal" onClick={async () => {
+                        <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal"
+                         onClick={async () => {
                           console.log(durationmode[editdurationindex].durationid)
                           var formdata = new FormData();
                           console.log(editdurationmodeduration+"duration")
@@ -1376,6 +1391,7 @@ function Doctorcalender() {
                           console.log(editdurationmodename)
                           console.log(editdurationmodecolor)
                           console.log("formdata")
+                          if(iseditingduration===true){
                           axios.put(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/",formdata)
                             .then(function (response) {
                               console.log(response);
@@ -1390,6 +1406,7 @@ function Doctorcalender() {
                                   setgetduration(false)
                                   else
                                   setgetduration(true);
+                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
 
 
                                 })
@@ -1401,6 +1418,36 @@ function Doctorcalender() {
                             .catch(function (error) {
                               console.log(error);
                             });
+                          }
+                          else{
+                            axios.delete(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/")
+                            .then(function (response) {
+                              console.log(response);
+                              var formdata = new FormData();
+                              formdata.append("date", deletedate)
+                              formdata.append("type", editdurationmodename)
+
+                              axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
+                                .then(function (response) {
+                                  console.log(response);
+                                  if(getduration===true)
+                                  setgetduration(false)
+                                  else
+                                  setgetduration(true);
+                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+
+
+                                })
+                                .catch(function (error) {
+                                  console.log(error);
+                                });
+
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
+
+                          }
 
                         }}>تایید</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
@@ -1566,7 +1613,7 @@ function Doctorcalender() {
               
                 {/* ms-auto me-auto nashod */}
                 {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
-                <div style={{ backgroundColor: "lightblue", position: "relative" }} class="  me-auto my-auto col-md-2 col-lg-3 col-sm-4 col-3 round-3  ">
+                <div style={{ position: "relative" }} class="  me-auto my-auto col-md-2 col-lg-3 col-sm-4 col-3 round-3  ">
                   <div onClick={() => sendmagazis()} type="button round-3" class="btn btn-primary btn-sm col-12 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                     {/* <div class="align-self-center justify-self-center"> */}
                تایید
