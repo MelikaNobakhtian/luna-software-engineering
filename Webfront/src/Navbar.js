@@ -68,7 +68,7 @@ function Navbar(props) {
       url = url + "search=" + searchedDoctor.state + "&";
     }
     if (url === "/searchResult/") {
-      url = url + " ";
+      url = url + "search=";
     }
 
     // props.history.push(
