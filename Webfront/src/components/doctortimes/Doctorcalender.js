@@ -310,7 +310,8 @@ function Doctorcalender() {
 
   }
   const handleaddhfield = () => {
-    if (hduration === "") {
+    if (selectedduration.duration === "all") {
+      console.log("selected duration is all")
       if (add.address === "... برای آدرس") {
         setemptymduration(undefined)
         setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
@@ -329,7 +330,7 @@ function Doctorcalender() {
     }
 
 
-    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && hduration !== "" && add.address !== "... برای آدرس") {
+    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && selectedduration.duration !== "all" && add.address !== "... برای آدرس") {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -1302,26 +1303,27 @@ function Doctorcalender() {
                                 console.log(response);
                                 if (response.data.message === "No time reserved!") {
                                   setdeleteallaftertoday(true);
-                                  var today = utils("fa").getToday()
-                                  // console.log(today)
-                                  // //baraye in kar ye tabe tarif kolan tamiz to jahaye dige
-                                  var year = today.year;
-                                  var month = "";
-                                  var day = "";
+                                  setdeletedate("All")
+                                  // var today = utils("fa").getToday()
+                                  // // console.log(today)
+                                  // // //baraye in kar ye tabe tarif kolan tamiz to jahaye dige
+                                  // var year = today.year;
+                                  // var month = "";
+                                  // var day = "";
 
-                                  if (today.month.toString().lenght === 1) {
-                                    month = "0" + today.month
-                                  }
-                                  else
-                                    month = today.month
+                                  // if (today.month.toString().lenght === 1) {
+                                  //   month = "0" + today.month
+                                  // }
+                                  // else
+                                  //   month = today.month
 
-                                  if (today.day.toString().lenght === 1) {
-                                    day = "0" + today.day
-                                  }
-                                  else
-                                    day = today.day
+                                  // if (today.day.toString().lenght === 1) {
+                                  //   day = "0" + today.day
+                                  // }
+                                  // else
+                                  //   day = today.day
 
-                                  setdeletedate(year + "-" + month + "-" + day);
+                                  // setdeletedate(year + "-" + month + "-" + day);
 
                                   // var Today = year + "-" + month + "-" + day;
                                   // console.log("today")
@@ -1373,7 +1375,9 @@ function Doctorcalender() {
 
                       </div>
                       <div class="modal-body d-flex flex-row" dir="rtl">
-                        <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} و بعد از تاریخ {deletedate} هستند حذف خواهند شد</div>
+                        {deletedate!=="All"?<div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} و بعد از تاریخ {deletedate} هستند حذف خواهند شد</div>:
+                        <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} هستند حذف خواهند شد</div>}
+
                       </div>
 
                       <div class="modal-footer">
@@ -1396,10 +1400,14 @@ function Doctorcalender() {
                             .then(function (response) {
                               console.log(response);
                               var formdata = new FormData();
+                              console.log(deletedate)
+                              console.log("deletedate")
                               formdata.append("date", deletedate)
+                              console.log(editdurationmodename)
                               formdata.append("type", editdurationmodename)
-
-                              axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
+                      
+                              if(deletedate!="All"){
+                              axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
                                 .then(function (response) {
                                   console.log(response);
                                   if(getduration===true)
@@ -1413,6 +1421,23 @@ function Doctorcalender() {
                                 .catch(function (error) {
                                   console.log(error);
                                 });
+                              }
+                              else{
+                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{date:deletedate,type:editdurationmodename}})
+                                .then(function (response) {
+                                  console.log(response);
+                                  if(getduration===true)
+                                  setgetduration(false)
+                                  else
+                                  setgetduration(true);
+                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+
+
+                                })
+                                .catch(function (error) {
+                                  console.log(error);
+                                });
+                              }
 
                             })
                             .catch(function (error) {
@@ -1427,7 +1452,8 @@ function Doctorcalender() {
                               formdata.append("date", deletedate)
                               formdata.append("type", editdurationmodename)
 
-                              axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
+                              if(deletedate!="All"){
+                              axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
                                 .then(function (response) {
                                   console.log(response);
                                   if(getduration===true)
@@ -1441,6 +1467,23 @@ function Doctorcalender() {
                                 .catch(function (error) {
                                   console.log(error);
                                 });
+                              }
+                              else{
+                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{date:deletedate,type:editdurationmodename}})
+                                .then(function (response) {
+                                  console.log(response);
+                                  if(getduration===true)
+                                  setgetduration(false)
+                                  else
+                                  setgetduration(true);
+                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+
+
+                                })
+                                .catch(function (error) {
+                                  console.log(error);
+                                });
+                              }
 
                             })
                             .catch(function (error) {
@@ -1780,10 +1823,10 @@ function Doctorcalender() {
           onClose={handleCloseSnack}
           message={
             <div>
-              {hmmconflictmessage != undefined ? <div style={{ fontSize: 14 }}>{hmmconflictmessage}</div> : <div style={{ fontSize: 14 }}>{hmhconflictmessage}</div>}
+              {/* {hmmconflictmessage != undefined ? <div style={{ fontSize: 14 }}>{hmmconflictmessage}</div> : <div style={{ fontSize: 14 }}>{hmhconflictmessage}</div>}
               {emptyhduration != undefined ? <div>{emptyhduration}</div> : null}
               {emptymduration != undefined ? <div>{emptymduration}</div> : null}
-              {snackbarerror != "" ? <div>{snackbarerror}</div> : null}
+              {snackbarerror != "" ? <div>{snackbarerror}</div> : null} */}
             </div>
 
           }
