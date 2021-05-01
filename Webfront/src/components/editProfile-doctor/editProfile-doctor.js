@@ -7,7 +7,7 @@ import {
   // Label,
   // Input,
   // FormText,
-  Col,
+  //Col,
   InputGroup,
 } from "react-bootstrap";
 import {
@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import { API_BASE_URL } from "../apiConstant/apiConstant";
 import Snackbar from "@material-ui/core/Snackbar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 function Editprofile(props) {
   const [user, setUser] = useState({
@@ -39,15 +40,9 @@ function Editprofile(props) {
     specialty: "",
     sub_specialty: "",
   });
-  //console.log("lll" + user.lastName);
-  const [address, setAddress] = useState({
-    state: "",
-    city: "",
-    detail: "",
-  });
-  const [variable, setvar] = useState("false");
+ 
+  const [states, setStates] = useState({ 0: "444", 1: "ttt" });
 
-  //const [type, setType] = useState("");
   useEffect(() => {
     if (Cookies.get("userTokenA")) {
       axios
@@ -64,18 +59,8 @@ function Editprofile(props) {
             specialty: response.data.data.specialty,
             sub_specialty: response.data.data.sub_specialty,
           }));
-          if (response.data.data.addresses.length > 0) {
-            setvar("true");
-            setAddress((prevState) => ({
-              ...prevState,
-              city: response.data.data.addresses[0].city,
-              state: response.data.data.addresses[0].state,
-              detail: response.data.data.addresses[0].detail,
-            }));
-          }
-
-          //if (response.data.addresses.length > 0) setvar("true");
-          //console.log(response.data.addresses[0].city)
+          setStates(response.data.states);
+          setDoctorAddresses(response.data.data.addresses);
         })
         .catch(function (error) {
           console.log(error);
@@ -84,17 +69,10 @@ function Editprofile(props) {
   }, []);
 
   const handleChange = (e) => {
-    console.log(user);
+    //console.log(user);
+    //console.log(states);
     const { id, value } = e.target;
     setUser((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
-  const handleChangeaddress = (e) => {
-    console.log(address);
-    const { id, value } = e.target;
-    setAddress((prevState) => ({
       ...prevState,
       [id]: value,
     }));
@@ -107,10 +85,8 @@ function Editprofile(props) {
       user.lastName.length === 0 ||
       user.userName.length === 0 ||
       user.specialty.length === 0 ||
-      user.sub_specialty.length === 0 ||
-      address.state.length === 0 ||
-      address.city.length === 0 ||
-      address.detail.length === 0
+      user.sub_specialty.length === 0
+  
     ) {
       setMassage("لطفا همه را وارد کنید");
       setOpenSnack(true);
@@ -120,7 +96,7 @@ function Editprofile(props) {
       formdata.append("username", user.userName);
       formdata.append("first_name", user.firstName);
       formdata.append("last_name", user.lastName);
-      formdata.append("profile_photo", user.picture);
+      formdata.append("profile_photo", state.file);
       console.log(formdata);
       axios
         .put(
@@ -180,81 +156,7 @@ function Editprofile(props) {
           console.log(error);
         });
 
-      if (variable === true) {
-        const payloadcity = {
-          state: address.state,
-          city: address.city,
-          detail: address.detail,
-        };
-        const backcity = JSON.stringify(payloadcity);
-        // var info = [];
-        // if (address.state != null) info.push({ state: address.state });
-        // if (address.city != null) info.push({ city: address.city });
-        // if (address.detail != null) info.push({ detail: address.detail });
-        //console.log(info)
-        //if (info.length !== 0) {
-        //const backinfo = JSON.stringify(info);
-        axios
-          .put(
-            API_BASE_URL +
-              "/doctor/" +
-              Cookies.get("doctorId") +
-              "/update-address/" +
-              "48/",
-            backcity,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + Cookies.get("userTokenA"),
-              },
-            }
-          )
-          .then(function (response) {
-            console.log(response);
-            if (response.status === 200) {
-              console.log(response.status);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        //}
-      } else {
-        const payloadcity = {
-          count: 1,
-          addresses: [
-            {
-              state: "3",
-              city: address.city,
-              detail: address.detail,
-            }
-          ]
-        };
-        const backcity = JSON.stringify(payloadcity);
-        axios
-          .post(
-            API_BASE_URL +
-              "/doctor/" +
-              Cookies.get("doctorId") +
-              "/set-address/",
-            backcity,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + Cookies.get("userTokenA"),
-              },
-            }
-          )
-          .then(function (response) {
-            console.log(response);
-            if (response.status === 200) {
-              console.log(response.status);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
+     
     }
   };
 
@@ -293,15 +195,15 @@ function Editprofile(props) {
         )
         .then(function (response) {
           console.log(response);
-          if (response.status === 200) {
+          if (response.data.message === "Password updated succesfully!") {
             console.log(response.status);
             setMassage("پسورد با موفقیت عوض شد");
             setOpenSnack(true);
-          } else if (response.status === 401) {
-            console.log(response.status);
+          } else if (response.data.message.toString() === "Wrong Password") {
+            //console.log(response.status);
             setMassage("پسورد قبلی غلط است");
             setOpenSnack(true);
-          }
+          } else console.log(response.data.message);
         })
         .catch(function (error) {
           console.log(error);
@@ -319,16 +221,21 @@ function Editprofile(props) {
   };
 
   //get image from user
+  const [state, setState] = useState({
+    navigate: false,
+    file: null,
+  });
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
-    //setState({ file: e.target.files[0] });
+    setState({ file: e.target.files[0] });
     const [file] = e.target.files;
     if (file) {
       const reader = new FileReader();
       const { current } = uploadedImage;
       current.file = file;
       reader.onload = (e) => {
+        //current.src = e.target.result;
         setUser((prevState) => ({
           ...prevState,
           picture: e.target.result,
@@ -356,22 +263,116 @@ function Editprofile(props) {
     props.history.push("/login");
   };
 
+  const [newAddress, setNewAddress] = useState({
+    state: "",
+    city: "",
+    detail: "",
+  });
+  const [doctorAddresses, setDoctorAddresses] = useState([]);
+  const [editingAddress, setEditingAddress] = useState({
+    index: "",
+    state: "",
+    city: "",
+    detail: "",
+    id: "",
+  });
+
+  const handleAddNewAddressClick = (e) => {
+    e.preventDefault();
+    if (newAddress.state && newAddress.city && newAddress.detail) {
+      const payloadNewAddress = {
+        count: 1,
+        addresses: [
+          {
+            state: newAddress.state,
+            city: newAddress.city,
+            detail: newAddress.detail,
+          },
+        ],
+      };
+      const backcity = JSON.stringify(payloadNewAddress);
+      axios
+        .post(
+          API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/set-address/",
+          backcity,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + Cookies.get("userTokenA"),
+            },
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+          if (
+            response.data.message === "You submit your addresses successfully!"
+          ) {
+            console.log(response.status);
+            setMassage("آدرس شما با موفقیت اضافه شد");
+            setOpenSnack(true);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+
+  const handleChangeAddressClick = (e) => {
+    e.preventDefault();
+    const payloadNewAddress = {
+      state: editingAddress.state,
+      city: editingAddress.city,
+      detail: editingAddress.detail,
+    };
+    const backcity = JSON.stringify(payloadNewAddress);
+    console.log(backcity);
+    axios
+      .put(
+        API_BASE_URL +
+          "/doctor/" +
+          Cookies.get("doctorId") +
+          "/update-address/" +
+          editingAddress.id +
+          "/",
+        backcity,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + Cookies.get("userTokenA"),
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+          console.log(response.status);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="main-content">
       <div className="container-fluid p-2">
-        {Cookies.get("doctorId") === 0 ? (
+        {Cookies.get("doctorId") === undefined ? (
           <div className="text-center">لطفا وارد حساب خود شوید</div>
         ) : (
           <div className="d-flex flex-wrap">
             <div className="col-12 col-md-4 ">
-              <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
+              <div
+                className="card border-dark border p-2 m-1 shadow"
+                style={{ backgroundColor: "#EEEDE8" }}
+              >
                 <div class="card-header d-flex justify-content-center">
                   <div className="text-center">
                     <Avatar
                       src={user.picture}
                       ref={uploadedImage}
                       alt="عکس"
-                      className=""
+                      className="mx-auto"
                       style={{ width: 120, height: 120 }}
                     />
                     <h5 className="username mt-2">{user.userName}</h5>
@@ -380,12 +381,13 @@ function Editprofile(props) {
                 </div>
                 <div class="card-body flex row g-2">
                   <div
-                    className="btn btn-outline-light btn-sm"
+                    className="btn btn-outline-dark btn-sm"
                     onClick={handleLogout}
                   >
+                    <ExitToAppIcon></ExitToAppIcon>
                     خروج از حساب
                   </div>
-                  <div className="btn btn-outline-light btn-sm">
+                  <div className="btn btn-outline-dark btn-sm">
                     <EditIcon></EditIcon>
                     ویرایش اطلاعات
                   </div>
@@ -393,7 +395,10 @@ function Editprofile(props) {
               </div>
             </div>
             <div className="col-12 col-md-8 ">
-              <div className="card border-dark border-2 text-white p-2 m-1 App-color4 shadow-lg">
+              <div
+                className="card border-dark border p-2 m-1 shadow-"
+                style={{ backgroundColor: "#EEEDE8" }}
+              >
                 <div class="card-header d-flex">
                   <h4>اطلاعات شخصی</h4>
                 </div>
@@ -461,98 +466,7 @@ function Editprofile(props) {
                             </InputGroup>
                           </Form.Group>
                         </div>
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>استان</Form.Label>
-                            <Form.Control
-                              controlId="formGridState"
-                              as="select"
-                              defaultValue=" choose...."
-                              id="state"
-                              value={address.state}
-                              onChange={(e) => {
-                                console.log("e.target.value", e.target.value);
-                                setAddress({
-                                  ...address,
-                                  state: e.target.value,
-                                });
-                              }}
-                            >
-                              <option className="text-muted" value="">
-                                انتخاب کنید...
-                              </option>
-                              <option value="آذربایجان شرقی">
-                                آذربایجان شرقی
-                              </option>
-                              <option value="	آذربایجان غربی">
-                                آذربایجان غربی
-                              </option>
-                              <option value="اردبیل">اردبیل</option>
-                              <option value="اصفهان">اصفهان</option>
-                              <option value="البرز">البرز</option>
-                              <option value="ایلام">ایلام</option>
-                              <option value="بوشهر">بوشهر</option>
-                              <option value="تهران">تهران</option>
-                              <option value="چهارمحال و بختیاری">
-                                چهارمحال و بختیاری
-                              </option>
-                              <option value="خراسان جنوبی">خراسان جنوبی</option>
-                              <option value="خراسان رضوی">خراسان رضوی</option>
-                              <option value="خراسان شمالی	">خراسان شمالی</option>
-                              <option value="خوزستان">خوزستان</option>
-                              <option value="	زنجان">زنجان</option>
-                              <option value="سمنان">سمنان</option>
-                              <option value="سیستان و بلوچستان	">
-                                سیستان و بلوچستان
-                              </option>
-                              <option value="فارس">فارس</option>
-                              <option value="قزوین">قزوین</option>
-                              <option value="	قم">قم</option>
-                              <option value="	کردستان">کردستان</option>
-                              <option value="کرمان">کرمان</option>
-                              <option value="کرمانشاه">کرمانشاه</option>
-                              <option value="کهگیلویه و بویراحمد">
-                                کهگیلویه و بویراحمد
-                              </option>
-                              <option value="	گلستان">گلستان</option>
-                              <option value="گیلان">گیلان</option>
-                              <option value="لرستان">لرستان</option>
-                              <option value="	مازندران">مازندران</option>
-                              <option value="مرکزی">مرکزی</option>
-                              <option value="	هرمزگان">هرمزگان</option>
-                              <option value="	همدان">همدان</option>
-                              <option value="یزد">یزد</option>
-                            </Form.Control>
-                          </Form.Group>
-                        </div>
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>شهر</Form.Label>
-                            <InputGroup hasValidation>
-                              <Form.Control
-                                type="text"
-                                //  placeholder="شهر"
-                                id="city"
-                                value={address.city}
-                                onChange={handleChangeaddress}
-                              />
-                            </InputGroup>
-                          </Form.Group>
-                        </div>
-                        <div class="col-sm-4">
-                          <Form.Group>
-                            <Form.Label>آدرس</Form.Label>
-                            <InputGroup hasValidation>
-                              <Form.Control
-                                type="text"
-                                // placeholder="آدرس"
-                                id="detail"
-                                value={address.detail}
-                                onChange={handleChangeaddress}
-                              />
-                            </InputGroup>
-                          </Form.Group>
-                        </div>
+
                         <div class="col-sm-4">
                           <Form.Group controlId="formBasicSelect">
                             <Form.Label> تخصص</Form.Label>
@@ -608,7 +522,7 @@ function Editprofile(props) {
                                 style={{ display: "none", color: "white" }}
                               />
                               <div
-                                className="btn btn-outline-light rounded"
+                                className="btn btn-outline-dark rounded"
                                 onClick={() => imageUploader.current.click()}
                               >
                                 <AddPhotoAlternateIcon></AddPhotoAlternateIcon>
@@ -620,7 +534,7 @@ function Editprofile(props) {
                         <div class="col-12 ">
                           <button
                             type="submit"
-                            class="btn btn-outline-light"
+                            class="btn btn-outline-dark"
                             onClick={handleChangeInfosClick}
                           >
                             <CheckCircleIcon></CheckCircleIcon>
@@ -670,7 +584,7 @@ function Editprofile(props) {
                         <div class="col-12">
                           <button
                             type="submit"
-                            class="btn btn-outline-light"
+                            class="btn btn-outline-dark"
                             onClick={handleChangePassClick}
                           >
                             <CheckCircleIcon></CheckCircleIcon>
@@ -679,6 +593,165 @@ function Editprofile(props) {
                         </div>
                       </form>
                     </Form>
+                    <hr></hr>
+                    <div>
+                      {doctorAddresses.length === 0 ? (
+                        <p>آدرسی برای خود ثبت کنید</p>
+                      ) : (
+                        <div>
+                          {Array.from(Array(doctorAddresses.length), (e, i) => (
+                            <form class="row g-3">
+                              <div class="col-sm-3">
+                                <Form.Group>
+                                  <span class="badge bg-dark">{i + 1}</span>
+
+                                  <Form.Label className="mx-2">
+                                    استان
+                                  </Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {doctorAddresses[i].state}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                              <div class="col-sm-4">
+                                <Form.Group>
+                                  <Form.Label>شهر</Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {doctorAddresses[i].city}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                              <div class="col-sm-4">
+                                <Form.Group>
+                                  <Form.Label>آدرس</Form.Label>
+                                  <p
+                                    className="p-1 rounded border"
+                                    style={{ backgroundColor: "white" }}
+                                  >
+                                    {doctorAddresses[i].detail}
+                                  </p>
+                                </Form.Group>
+                              </div>
+                              <div class="col-1">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-dark mt-sm-4 mb-3"
+                                  onClick={() => {
+                                    setEditingAddress({
+                                      index: i,
+                                      state: doctorAddresses[i].state,
+                                      city: doctorAddresses[i].city,
+                                      detail: doctorAddresses[i].detail,
+                                      id: doctorAddresses[i].id,
+                                    });
+                                  }}
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#staticBackdrop"
+                                >
+                                  <EditIcon></EditIcon>
+                                </button>
+                              </div>
+                            </form>
+                          ))}
+                        </div>
+                      )}
+                      <form class="row g-3">
+                        {states === undefined ? (
+                          <p></p>
+                        ) : (
+                          <div class="col-sm-4">
+                            <Form.Group>
+                              <span class="badge bg-dark">آدرس جدید:</span>
+                              <Form.Label className="mx-2">استان</Form.Label>
+                              <Form.Control
+                                controlId="formGridState"
+                                as="select"
+                                defaultValue=" choose...."
+                                id="newstate"
+                                value={newAddress.state}
+                                onChange={(e) => {
+                                  //console.log("e.target.value", e.target.value);
+                                  setNewAddress({
+                                    ...newAddress,
+                                    state: e.target.value,
+                                  });
+                                }}
+                              >
+                                <option className="text-muted" value="">
+                                  انتخاب کنید...
+                                </option>
+
+                                {Array.from(Array(32), (e, i) => {
+                                  return <option value={i}>{states[i]}</option>;
+                                })}
+                              </Form.Control>
+                            </Form.Group>
+                          </div>
+                        )}
+                        <div class="col-sm-4">
+                          <Form.Group>
+                            <Form.Label>شهر</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                //  placeholder="شهر"
+                                id="newcity"
+                                value={newAddress.city}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    newAddress.city
+                                  );
+                                  setNewAddress({
+                                    ...newAddress,
+                                    city: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-sm-4">
+                          <Form.Group>
+                            <Form.Label>آدرس</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                // placeholder="آدرس"
+                                id="newdetail"
+                                value={newAddress.detail}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    newAddress.detail
+                                  );
+                                  setNewAddress({
+                                    ...newAddress,
+                                    detail: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-12">
+                          <button
+                            type="submit"
+                            class="btn btn-outline-dark"
+                            onClick={handleAddNewAddressClick}
+                          >
+                            <CheckCircleIcon></CheckCircleIcon>
+                            ذخیره آدرس جدید
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -690,6 +763,129 @@ function Editprofile(props) {
               onClose={handleCloseSnack}
               message={<div style={{ fontSize: 17 }}>{massage}</div>}
             />
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3>ویرایش آدرس</h3>
+                  </div>
+                  {doctorAddresses.length === 0 ? (
+                    <p></p>
+                  ) : (
+                    <div class="modal-body">
+                      <form class="row g-3">
+                        {states === undefined ? (
+                          <p></p>
+                        ) : (
+                          <div class="col-sm-6">
+                            <Form.Group>
+                              <Form.Label className="">استان</Form.Label>
+                              <Form.Control
+                                controlId="formGridState"
+                                as="select"
+                                defaultValue=" choose...."
+                                id="editingstate"
+                                value={editingAddress.state}
+                                onChange={(e) => {
+                                  //console.log("e.target.value", e.target.value);
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    state: e.target.value,
+                                  });
+                                }}
+                              >
+                                <option className="text-muted" value="">
+                                  انتخاب کنید...
+                                </option>
+
+                                {Array.from(Array(32), (e, i) => {
+                                  return (
+                                    <option value={states[i]}>
+                                      {states[i]}
+                                    </option>
+                                  );
+                                })}
+                              </Form.Control>
+                            </Form.Group>
+                          </div>
+                        )}
+                        <div class="col-sm-6">
+                          <Form.Group>
+                            <Form.Label>شهر</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                //  placeholder="شهر"
+                                id="editingcity"
+                                value={editingAddress.city}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    editingAddress.city
+                                  );
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    city: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                        <div class="col-sm-12">
+                          <Form.Group>
+                            <Form.Label>آدرس</Form.Label>
+                            <InputGroup hasValidation>
+                              <Form.Control
+                                type="text"
+                                // placeholder="آدرس"
+                                id="editingdetail"
+                                value={editingAddress.detail}
+                                onChange={(e) => {
+                                  console.log(
+                                    "e.target.value",
+                                    editingAddress.detail
+                                  );
+                                  setEditingAddress({
+                                    ...editingAddress,
+                                    detail: e.target.value,
+                                  });
+                                }}
+                              />
+                            </InputGroup>
+                          </Form.Group>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+                  <div class="modal-footer d-flex justify-content-start">
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      data-bs-dismiss="modal"
+                      onClick={handleChangeAddressClick}
+                    >
+                      تایید
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      بستن
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

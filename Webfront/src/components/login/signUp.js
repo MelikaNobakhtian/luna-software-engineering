@@ -51,8 +51,7 @@ function SignUp(props) {
     file: null,
   });
   const [profileImg, setProfileImg] = useState("");
-  
- 
+
   const uploadedImage = React.useRef(null);
   const imageUploader = React.useRef(null);
   const handleImageUpload = (e) => {
@@ -63,100 +62,144 @@ function SignUp(props) {
       reader.readAsDataURL(file);
     }
 
-    console.log(state.file)
+    console.log(state.file);
   };
 
+  // const imageHandler = (e) => {
+  //   if (e.target?.files?.length > 0) {
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       if (reader.readyState === 2) {
+  //         setProfileImg(reader.result);
+  //       }
+  //     };
+  //     reader.readAsDataURL(e.target.files[0]);
 
-const  imageHandler = (e) => {
-    if(e.target?.files?.length > 0){
-        const reader = new FileReader();
-    reader.onload = () => {
-        if (reader.readyState === 2) {
+  //     setProfileImg(e.target.files[0]);
+  //   } else {
+  //     setProfileImg("");
+  //   }
+  // };
 
-            setProfileImg(reader.result)
-        }
-    }
-    reader.readAsDataURL(e.target.files[0]);
+  // {
+  //   console.log(profileImg + "ffilee");
+  // }
 
-    setProfileImg(e.target.files[0]);
-    }
-    else{
-        setProfileImg("");
-    }
-    
-};
-
-  {console.log(profileImg+"ffilee")}
   function handleSubmit(event) {
     event.preventDefault();
     setEmailErr("");
     setPassErr("");
-    var formd = new FormData();
-    if (isDoctor % 2 === 1) {
-      
-      formd.append('username',username)
-      formd.append('email',email)
-      formd.append('password',passwords.password)
-      formd.append('password2',passwords.confirmPassword)
-      formd.append('first_name',name)
-      formd.append('last_name',lastname)
-      formd.append('degree',state.file)
-      console.log(profileImg.split(':')[1])
-      console.log(formd)
-      axios
-        .post(API_BASE_URL + "/register-doctor/", formd, {
-          headers: { "content-Type": "application/json" },
-        })
-        .then(function (response) {
-          console.log(response);
-          if (response.status === 200) {
-            // Cookies.set("userTokenR", response.data.token.refresh);
-            // Cookies.set("userTokenA", response.data.token.access);
-            // Cookies.set("userId", response.data.user_id);
-            // Cookies.set("doctorId", response.data.doctor_id);
-            // props.history.push("/login");
 
-            ////ایمیل تایید برای شما فرستاده شد
-          } else {
+    if (
+      username.length &&
+      email.length &&
+      passwords.password.length &&
+      passwords.confirmPassword.length &&
+      name.length &&
+      lastname.length
+    ) {
+      var formd = new FormData();
+      if (isDoctor % 2 === 1) {
+        //console.log("1")
+        if (state.file) {
+          //console.log("2")
+          formd.append("username", username);
+          formd.append("email", email);
+          formd.append("password", passwords.password);
+          formd.append("password2", passwords.confirmPassword);
+          formd.append("first_name", name);
+          formd.append("last_name", lastname);
+          formd.append("degree", state.file);
+          console.log(profileImg.split(":")[1]);
+          console.log(formd);
+          axios
+            .post(API_BASE_URL + "/register-doctor/", formd, {
+              headers: { "content-Type": "application/json" },
+            })
+            .then(function (response) {
+              console.log(response);
+              if (response.statusText === "OK") {
+                if (response.message === "Passwords must match") {
+                  setConfirmPassErr("پسورد وارد شده تطابق ندارد !");
+                } else if (
+                  response.message ===
+                  "The username should only contain alphanumeric characters"
+                ) {
+                  setUsernameErr("نام کاربری فقط می‌تواند شامل حرف و عدد باشد");
+                }
+                // Cookies.set("userTokenR", response.data.token.refresh);
+                // Cookies.set("userTokenA", response.data.token.access);
+                // Cookies.set("userId", response.data.user_id);
+                // Cookies.set("doctorId", response.data.doctor_id);
+                // props.history.push("/login");
+                else {
+                  window.alert("ایمیل تایید برای شما فرستاده شد");
+                }
+              } else {
+                console.log(response);
+                window.alert("ایمیل تایید برای شما فرستاده شد");
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          setFileErr(" بارگذاری مدرک ضروری است !");
+          //console.log("3")
+        }
+      } else {
+        const payload = {
+          username: username,
+          email: email,
+          password: passwords.password,
+          password2: passwords.confirmPassword,
+          first_name: name,
+          last_name: lastname,
+        };
+        const back = JSON.stringify(payload);
+        console.log(back);
+        axios
+          .post(API_BASE_URL + "/register/", back, {
+            headers: { "content-type": "application/json" },
+          })
+          .then(function (response) {
             console.log(response);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            if (response.statusText === "OK") {
+              // Cookies.set("userTokenR", response.data.token.refresh);
+              // Cookies.set("userTokenA", response.data.token.access);
+              // Cookies.set("userId", response.data.user_id);
+              // Cookies.set("doctorId", response.data.doctor_id);
+              // props.history.push("/login");
+              ////ایمیل تایید برای شما فرستاده شد
+              if (response.message === "Passwords must match") {
+                setConfirmPassErr("پسورد وارد شده تطابق ندارد !");
+              } else if (
+                response.message ===
+                "The username should only contain alphanumeric characters"
+              ) {
+                setUsernameErr("نام کاربری فقط می‌تواند شامل حرف و عدد باشد");
+              } else {
+                window.alert("ایمیل تایید برای شما فرستاده شد");
+              }
+            } else {
+              console.log(response);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     } else {
-      const payload = {
-        username: username,
-        email: email,
-        password: passwords.password,
-        password2: passwords.confirmPassword,
-        first_name: name,
-        last_name: lastname,
-      };
-      const back = JSON.stringify(payload);
-      console.log(back)
-      axios
-        .post(API_BASE_URL + "/register/", back, {
-          headers: { "content-type": "application/json" },
-        })
-        .then(function (response) {
-          console.log(response);
-          if (response.status === 201) {
-            // Cookies.set("userTokenR", response.data.token.refresh);
-            // Cookies.set("userTokenA", response.data.token.access);
-            // Cookies.set("userId", response.data.user_id);
-            // Cookies.set("doctorId", response.data.doctor_id);
-            // props.history.push("/login");
-
-            ////ایمیل تایید برای شما فرستاده شد
-
-          } else {
-            console.log(response);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      window.alert("مشخصات را کامل کنید");
+      console.log(
+        username +
+          email +
+          passwords.password +
+          passwords.confirmPassword +
+          name +
+          lastname +
+          state.file
+      );
     }
   }
 
@@ -184,9 +227,8 @@ const  imageHandler = (e) => {
   function validatoremail(value) {
     setEmail(value);
     let errors = "";
-    if (value.length === 0) 
-    errors = "پر کرن ایمیل ضروری است !";
-   else if (!regex_email.test(String(value).toLowerCase())) {
+    if (value.length === 0) errors = "پر کرن ایمیل ضروری است !";
+    else if (!regex_email.test(String(value).toLowerCase())) {
       errors = " ایمیل صحیح را وارد نمایید !";
     }
     setEmailErr(errors);
@@ -390,36 +432,32 @@ const  imageHandler = (e) => {
               </label>
             </div>
             <div class="col-12 ">
-                      <input
-                        class="form-control"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        ref={imageUploader}
-                        style={{ display: "none", color: "white" }}
-                      />
-                        {/* <Form.Group>
+              <input
+                class="form-control"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                ref={imageUploader}
+                style={{ display: "none", color: "white" }}
+              />
+              {/* <Form.Group>
                           <Form.File id="uploadImg" accept="image/*" className="butChoose" onChange={imageHandler} />
                         </Form.Group> */}
-                      <div
-                        className="btn btn-dark "
-                        onClick={() => imageUploader.current.click()}
-                      >
-                     انتخاب عکس 
-                      </div>
-                    </div>
-            <div>
-         
-            <Button className="mt-3" block type="submit" variant="success">
-              ثبت نام
-            </Button>
-            <span className="btn mt-3" onClick={() => redirectToLogin()}>
-                قبلاً ثبت ‌نام کرده‌اید؟
-            </span>
-
+              <div
+                className="btn btn-dark "
+                onClick={() => imageUploader.current.click()}
+              >
+                انتخاب عکس مدرک
+              </div>
             </div>
-
-            
+            <div>
+              <Button className="mt-3" block type="submit" variant="success">
+                ثبت نام
+              </Button>
+              <span className="btn mt-3" onClick={() => redirectToLogin()}>
+                ثبت ‌نام کرده‌اید؟
+              </span>
+            </div>
           </Form>
         </div>
       </div>

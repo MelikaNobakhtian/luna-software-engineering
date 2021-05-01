@@ -11,30 +11,9 @@ import { Avatar } from "@material-ui/core";
 import ReactiveButton from 'reactive-button';
 
 function Home(props) {
+
   const [state, setState] = useState('idle');
-  const [doctor, setDoctor] = useState([{
-    id: "15",
-    user: {
-      "id": 28,
-      "password": "pbkdf2_sha256$216000$NsKTzsQCFHmy$SHNr8kvIjMpqIozqeu5aYc63qfNMdYY9Lwf2yoK4Qns=",
-      "last_login": null,
-      "is_superuser": false,
-      "username": "FAhm",
-      "first_name": "F",
-      "last_name": "Omid",
-      "email": "fateme.ahmadi1522@gmail.com",
-      "profile_photo": "/media/default.png",
-      "is_verified": false,
-      "is_staff": false,
-      "created": "2021-04-22T17:39:21.715630Z",
-      "auth_provider": "email",
-      "groups": [],
-      "user_permissions": []
-    },
-    "specialty": "saba",
-    "sub_specialty": "",
-    "addresses": []
-  }]);
+  const [doctor, setDoctor] = useState([]);
 
   useEffect(() => {
     axios
@@ -62,7 +41,7 @@ function Home(props) {
   return (
     <div>
 
-      <div className="home">
+      <div data-testid="home" className="home">
         <div className="homePage" >
           <div class="row row-cols-1 row-cols-md-3 row-cols-sm-2"  >
             {doctor.length === 0 ? <div></div> :
@@ -93,7 +72,7 @@ function Home(props) {
                           doc.addresses.map((address) => {
                             if (address) return (
                               <Card.Text style={{ color: "#6F6D6D" }}>
-                                {"● " + address.state + "،" + address.city + "،" + address.detail}
+                                {"◝ " + address.state + "،" + address.city + "،" + address.detail}
                               </Card.Text>
 
                             )

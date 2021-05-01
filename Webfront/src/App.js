@@ -18,8 +18,9 @@ import UserProfile from "./components/userProfile/userProfile";
 import ForgotPassword from "./components/login/forgotPassword";
 import Verification from "./components/login/verification";
 import Doctorcalender from "./components/doctortimes/Doctorcalender";
-import Cookies from "js-cookie";
+//import Cookies from "js-cookie";
 import Home from "./components/home/home";
+import SearchResult from "./components/search/searchResult"
 
 function App() {
   function PrivateRoute({ component: Component, ...rest }) {
@@ -44,7 +45,7 @@ function App() {
   }
   return (
     <Router>
-      <div className="text-right" style={{ direction: "rtl" }}>
+      <div data-testid="router" className="text-right" style={{ direction: "rtl" }}>
         <Switch>
           <Route path="/" exact={true}>
             <Navbar />
@@ -64,6 +65,13 @@ function App() {
             <Navbar />
             <Doctorcalender />
           </Route>
+
+          <Route path="/searchResult/:search">
+            <Navbar />
+            <SearchResult />
+          </Route>
+
+
 
           <Route path="*">
               <div class="alert alert-warning" role="alert">
