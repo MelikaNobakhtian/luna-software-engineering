@@ -50,7 +50,17 @@ function Navbar(props) {
   };
 
   const GoToSearch = (e) => {
-    props.history.push("/searchResult/" + JSON.stringify(searchedDoctor));
+    //props.history.push("/searchResult/" + JSON.stringify(searchedDoctor));
+    props.history.push(
+      `/searchResult/${searchedDoctor.name}&${searchedDoctor.lastname}&${searchedDoctor.specialty}&${searchedDoctor.city}&${searchedDoctor.state}`
+    );
+    setSearchedDoctor({
+      name: "",
+      lastname: "",
+      specialty: "",
+      state: "",
+      city: "",
+    });
   };
 
   return (
@@ -246,7 +256,11 @@ function Navbar(props) {
                 onChange={handleChange}
               />
             </div>
-            <div className="btn btn-primary col-4 mx-2" onClick={GoToSearch}>
+            <div
+              data-bs-dismiss="offcanvas"
+              className="btn btn-primary col-4 mx-2"
+              onClick={GoToSearch}
+            >
               بگرد
             </div>
           </form>
