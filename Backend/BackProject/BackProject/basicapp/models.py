@@ -72,7 +72,12 @@ class DoctorUser(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    
+    first_name = models.CharField(max_length=50,default='unknown')
+    last_name = models.CharField(max_length=100,default='unknown')
+    state = models.CharField(max_length=255,default='unknown')
+    city = models.CharField(max_length=255,default='unknown')
+
+
 class Address(models.Model):
     state = models.CharField(max_length=30)
     doc = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
@@ -92,3 +97,12 @@ class Appointment(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
     address_number = models.IntegerField(null=True)
     duration_number = models.CharField(max_length=200,null=True)
+
+class Duration(models.Model):
+
+    doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    duration = models.IntegerField()
+    time_type = models.CharField(max_length=100)
+    duration_number = models.CharField(max_length=200)
+
+    

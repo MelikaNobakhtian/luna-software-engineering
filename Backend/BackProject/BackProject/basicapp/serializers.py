@@ -253,3 +253,18 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
+
+
+class DurationSerializer(serializers.ModelSerializer):
+    
+    doctor = DoctorProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = Duration
+        fields = '__all__'
+
+class UpdateDurationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Duration
+        fields = ['time_type','duration','duration_number']

@@ -391,8 +391,36 @@ class UpdateInPersonAppointmentView(generics.GenericAPIView):
 
     def delete(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,is_online=False,time_type=request.data['type']).delete()
+        time_type = request.GET.get("type")
+        Appointment.objects.filter(doctor=doc,is_online=False,time_type=time_type).delete()
         return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
+
+class DurationAPIView(generics.GenericAPIView):
+
+    def get(self,request,pk):
+        durations = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk))
+        serializer = DurationSerializer(durations,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def post(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        duration = Duration(doctor=doc,time_type=request.data['time_type'],duration=request.data['duration'],duration_number=request.data['duration_number'])
+        duration.save()
+        return Response(request.data,status=status.HTTP_200_OK)
+
+class UpdateDurationAPIView(generics.GenericAPIView):
+
+    def put(self,request,pk,doc_id):
+        duration = Duration.objects.get(pk=pk)
+        serializer = UpdateDurationSerializer(duration , data=request.data , partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def delete(self,request,pk,doc_id):
+        Duration.objects.get(pk=pk).delete()
+        return Response({'message':'successful!'},status=status.HTTP_200_OK)
+
 
 
 
