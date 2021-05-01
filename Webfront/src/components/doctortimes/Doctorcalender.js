@@ -10,7 +10,7 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup, Modal } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
-import { BsPlusCircleFill, BsTrash,BsCheck } from "react-icons/bs";
+import { BsPlusCircleFill, BsTrash, BsCheck } from "react-icons/bs";
 import { AiFillMinusCircle, AiOutlineConsoleSql, AiOutlineEdit } from "react-icons/ai";
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
@@ -76,10 +76,12 @@ function Doctorcalender() {
   // const [deleteday,setdeleteday]=useState("")
   const [deletedate, setdeletedate] = useState("");
   const [mdurationbeforechange, setmdurationbeforchange] = useState("")
-  const [getduration,setgetduration]=useState(true);
-  const [deletedurationindex,setdeletedurationindex]=useState("");
-  const[iseditingduration,setiseditingduration]=useState();
-
+  const [getduration, setgetduration] = useState(true);
+  const [deletedurationindex, setdeletedurationindex] = useState("");
+  const [iseditingduration, setiseditingduration] = useState();
+  const [iseditingmduration, setiseditingmduration] = useState();
+  const [ischangingmduration, setischangingmduration] = useState(false);
+  // const [showmchangingdurationmodal,setshowmchangingdurationmodal]=useState("nothing")
 
   //validation ***
   //age to calendar avaz ham dobare dare get mikone
@@ -137,6 +139,7 @@ function Doctorcalender() {
 
       axios.get(API_BASE_URL + "/appointment/" + 1 + "/online?date=" + startselectedday)
         .then(function (response) {
+
           console.log(response);
           var resdata = response.data;
           // console.log(resdata.user.id+" id");
@@ -164,6 +167,23 @@ function Doctorcalender() {
 
   //age shod yekari ke in ba rerender shodan balayi dobare get nakone
   useEffect(() => {
+
+    if (Cookies.get("onlineduration") === undefined) {
+      console.log(Cookies.get("onlineduration"))
+    }
+    else {
+
+      Cookies.set("alaki", 2)
+      var a = Cookies.get("onlineduration")
+      console.log(parseInt(a))
+      console.log("parseint")
+      console.log(a)
+      console.log(Cookies.get("alaki"))
+      console.log(Cookies.get("salam"))
+      console.log(Cookies.get("onlineduration"));
+      console.log("undefined nist")
+      setmduration(Cookies.get("onlineduration"));
+    }
     var doctorid = Cookies.get("doctorId");
 
     axios.get(API_BASE_URL + "/doctor/" + 1 + "/")
@@ -185,34 +205,34 @@ function Doctorcalender() {
       });
 
 
-    
+
   }, []);
   useEffect(() => {
     var doctorid = Cookies.get("doctorId");
 
     axios.get(API_BASE_URL + "/doctor/" + 1 + "/duration")
-    .then(function (response) {
-      console.log(response)
-      var value = []
-      value.push({ name: "همه (برای حذف)", duration: "all" })
-      for (var i = 0; i < response.data.length; i++) {
-        value.push({
-          name: response.data[i].time_type, duration: response.data[i].duration,
-          color: response.data[i].duration_number, durationid: response.data[i].id
-        })
-      }
-      console.log(value)
-      console.log("value")
-      setdurationmode(value)
+      .then(function (response) {
+        console.log(response)
+        var value = []
+        value.push({ name: "همه (برای حذف)", duration: "all" })
+        for (var i = 0; i < response.data.length; i++) {
+          value.push({
+            name: response.data[i].time_type, duration: response.data[i].duration,
+            color: response.data[i].duration_number, durationid: response.data[i].id
+          })
+        }
+        console.log(value)
+        console.log("value")
+        setdurationmode(value)
 
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-    
+
   }, [getduration]);
- 
+
 
 
 
@@ -239,8 +259,8 @@ function Doctorcalender() {
 
     if (startselectedday === "") {
       // setemptymduration(undefined)
-      setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
-      setOpenSnack(true);
+      // setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      // setOpenSnack(true);
     }
     else {
 
@@ -248,10 +268,10 @@ function Doctorcalender() {
       //***** */
       var doctorid = Cookies.get("doctorId");
       console.log(doctorid + " doctorid");
-
+      var duration=Cookies.get("onlineduration");
       for (var i = 0; i < magazis.length; i++) {
         // var start = startselectedday + " " + magazis[i].time
-        values.push({ duration: mduration, doc_id: 1, start_time: magazis[i].time, end_time: magazis[i].time22 });
+        values.push({ duration:duration , doc_id: 1, start_time: magazis[i].time, end_time: magazis[i].time22 });
       }
       console.log(" all the magazis values :)")
       var informations = { start_day: startselectedday, end_day: endselectedday, appointments: values }
@@ -272,8 +292,8 @@ function Doctorcalender() {
   const sendhozori = () => {
     if (startselectedday === "") {
       // setemptymduration(undefined)
-      setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
-      setOpenSnack(true);
+      // setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      // setOpenSnack(true);
     }
     else if (hozoris.length !== 0) {
 
@@ -422,7 +442,7 @@ function Doctorcalender() {
               tconflict = time.time;
               t2conflict = time.time22;
               sethmmconflictmessage(undefined)
-              sethmhconflictmessage("بازه ی انتخابی شما در ساعت " + " " + t2conflict + "_" + tconflict + " " + "با بازه های مجازی شما تداخل دارد")
+              setsnackbarerror("بازه ی انتخابی شما در ساعت " + " " + t2conflict + "_" + tconflict + " " + "با بازه های مجازی شما تداخل دارد")
               setOpenSnack(true);
               return true;
             }
@@ -731,13 +751,13 @@ function Doctorcalender() {
       setemptymduration("لطفا فیلد مربوط به مدت زمان هر وقت مجازی خود را پر کنید")
       setOpenSnack(true);
     }
-    if (mfields[0].start != "" && mfields[0].startt != "" && mfields[0].end != "" && mfields[0].endd != "" && mduration != "") {
+    if (mfields[0].start !== "" && mfields[0].startt !== "" && mfields[0].end !== "" && mfields[0].endd !== "" && Cookies.get("onlineduration") !==undefined) {
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
       var timee = parseInt(mfields[0].startt);
       const endt = parseInt(mfields[0].end);
       const enddt = parseInt(mfields[0].endd)
-      const duration = parseInt(mduration)
+      const duration = parseInt(Cookies.get("onlineduration"))
 
       var values = [...magazis];
       var finish = false;
@@ -758,6 +778,8 @@ function Doctorcalender() {
         }
         var noww = timecopy + ":" + time2
         var dur = "00:" + duration
+        console.log(noww+" noww")
+        console.log(mend+" mend")
         if (moment(noww, "HH:mm").format("HH:mm") > moment(mend, "HH:mm").format("HH:mm")) {
           finish = true;
           break;
@@ -828,7 +850,7 @@ function Doctorcalender() {
               tconflict = time.time;
               t2conflict = time.time22;
               sethmhconflictmessage(undefined)
-              sethmmconflictmessage("بازه ی انتخابی شما در ساعت " + " " + t2conflict + "_" + tconflict + " " + "با بازه های حضوری شما تداخل دارد")
+              setsnackbarerror("بازه ی انتخابی شما در ساعت " + " " + t2conflict + "_" + tconflict + " " + "با بازه های حضوری شما تداخل دارد")
               setOpenSnack(true);
               return true;
             }
@@ -1180,6 +1202,7 @@ function Doctorcalender() {
                           }
                           {index !== 0 ? <AiOutlineEdit size={20} data-bs-toggle="modal"
                             onClick={() => {
+                              setischangingmduration(false);
                               setiseditingduration(true)
                               seteditdurationindex(index)
                               seteditdurationmodename(value.name)
@@ -1190,14 +1213,15 @@ function Doctorcalender() {
                             data-bs-target="#editduration" color={value.color} class="align-self-center"></AiOutlineEdit> : null}
 
                           {index !== 0 ? <BsTrash size={20} color={value.color} data-bs-toggle="modal" data-bs-target="#editduration"
-                           onClick={() => {
-                             setiseditingduration(false);
+                            onClick={() => {
+                              setischangingmduration(false);
+                              setiseditingduration(false);
                               seteditdurationindex(index)
                               seteditdurationmodename(value.name)
                               seteditdurationmodeduration(value.duration)
                               //shabih term pish state araye i hamoon moghe update na inja objecti na engar
                               seteditdurationmodecolor(value.color)
-                            }}class="align-self-center me-2"></BsTrash> : null}
+                            }} class="align-self-center me-2"></BsTrash> : null}
                           {index !== 0 ? <div class="mx-2 ms-2 shadow-1 align-self-center col-12 ms-0 align-items-end" style={{
                             backgroundColor: value.color,
                             borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)"
@@ -1273,7 +1297,7 @@ function Doctorcalender() {
 
 
                       </div>
-                      {iseditingduration===true?<div class="modal-body d-flex flex-row" dir="rtl">
+                      {iseditingduration === true ? <div class="modal-body d-flex flex-row" dir="rtl">
                         {/* defualt background color shabih place holderer */}
                         <div class="mx-1 mt-1 shadow-1" onClick={() => seteditdurationmodecolor(randomColor())} style={{ backgroundColor: editdurationmodecolor, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
                         {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
@@ -1288,10 +1312,10 @@ function Doctorcalender() {
                           placeholder={durationmode[editdurationindex].name} value={editdurationmodename} onChange={(event) => seteditdurationmodename(event.target.value)}>
                         </input> : null}
 
-                      </div>:
-                       <div class="modal-body d-flex flex-row" dir="rtl">
-                         <div>آیا از حذف کردن این نوع بازه ی زمانی خود اطمینان دارید؟</div>
-                       </div>}
+                      </div> :
+                        <div class="modal-body d-flex flex-row" dir="rtl">
+                          <div>آیا از حذف کردن این نوع بازه ی زمانی خود اطمینان دارید؟</div>
+                        </div>}
 
                       <div class="modal-footer">
 
@@ -1366,134 +1390,186 @@ function Doctorcalender() {
 
 
                 <div dir="rtl" class="modal fade " id="editduration2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editduration2" aria-hidden="true">
-                  <div class="modal-dialog  modal-dialog-centered editdurationmodal" >
+                  <div onClose={() => {
+                    console.log("modal closed")
+                    // setshowmchangingdurationmodal("nothing")
+                  }} class="modal-dialog  modal-dialog-centered editdurationmodal" >
                     <div class="modal-content">
                       <div class="modal-header d-flex flex-row-reverse" dir="rtl">
-                        <button type="button" class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button"
+                        onClick={()=>{
+                          if(ischangingmduration===true)
+                            setmduration(Cookies.get("onlineduration"))
+                        }}
+                         class="btn-close align-self-center mx-auto ms-2 justify-self-start " data-bs-dismiss="modal" aria-label="Close"></button>
                         <div style={{ fontSize: "clamp(12px,3vw,17px)", fontWeight: "bold", color: "#005249" }} class="modal-title" id="exampleModalLabel" >ویرایش بازه ی زمانی</div>
 
 
                       </div>
-                      <div class="modal-body d-flex flex-row" dir="rtl">
-                        {deletedate!=="All"?<div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} و بعد از تاریخ {deletedate} هستند حذف خواهند شد</div>:
-                        <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} هستند حذف خواهند شد</div>}
+                      {ischangingmduration === false ? <div class="modal-body d-flex flex-row" dir="rtl">
+                        {deletedate !== "All" ? <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} و بعد از تاریخ {deletedate} هستند حذف خواهند شد</div> :
+                          <div>در صورت تایید همه ی ویزیت هایی که از نوع بازه ی زمانی {editdurationmodename} هستند حذف خواهند شد</div>}
 
-                      </div>
+                      </div> : <div class="modal-body d-flex flex-row" dir="rtl">
+                        {deletedate !== "All" ? <div>در صورت تایید همه ی ویزیت هایی بعد از تاریخ {deletedate} هستند حذف خواهند شد</div> :
+                          <div>درصورت تایید تمامی زمان های ویزیتی که قبلا تعیین کردید حذف خواهند شد</div>}
+
+                      </div>}
 
                       <div class="modal-footer">
 
                         <button type="button" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }} data-bs-dismiss="modal"
-                         onClick={async () => {
-                          console.log(durationmode[editdurationindex].durationid)
-                          var formdata = new FormData();
-                          console.log(editdurationmodeduration+"duration")
-                          formdata.append("duration", editdurationmodeduration)
-                          formdata.append("time_type", editdurationmodename)
-                          formdata.append("duration_number", editdurationmodecolor)
-                          console.log(formdata)
-                          console.log(editdurationmodeduration)
-                          console.log(editdurationmodename)
-                          console.log(editdurationmodecolor)
-                          console.log("formdata")
-                          if(iseditingduration===true){
-                          axios.put(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/",formdata)
-                            .then(function (response) {
-                              console.log(response);
+                          onClick={async () => {
+                            // setshowmchangingdurationmodal("nothing")
+                            if (ischangingmduration === false) {
+                              console.log(durationmode[editdurationindex].durationid)
                               var formdata = new FormData();
-                              console.log(deletedate)
-                              console.log("deletedate")
-                              formdata.append("date", deletedate)
+                              console.log(editdurationmodeduration + "duration")
+                              formdata.append("duration", editdurationmodeduration)
+                              formdata.append("time_type", editdurationmodename)
+                              formdata.append("duration_number", editdurationmodecolor)
+                              console.log(formdata)
+                              console.log(editdurationmodeduration)
                               console.log(editdurationmodename)
-                              formdata.append("type", editdurationmodename)
-                      
-                              if(deletedate!="All"){
-                              axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
-                                .then(function (response) {
-                                  console.log(response);
-                                  if(getduration===true)
-                                  setgetduration(false)
-                                  else
-                                  setgetduration(true);
-                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+                              console.log(editdurationmodecolor)
+                              console.log("formdata")
+                              if (iseditingduration === true) {
+                                axios.put(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/", formdata)
+                                  .then(function (response) {
+                                    console.log(response);
+                                    var formdata = new FormData();
+                                    console.log(deletedate)
+                                    console.log("deletedate")
+                                    formdata.append("date", deletedate)
+                                    console.log(editdurationmodename)
+                                    formdata.append("type", editdurationmodename)
+
+                                    if (deletedate != "All") {
+                                      axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", formdata)
+                                        .then(function (response) {
+                                          console.log(response);
+                                          if (getduration === true)
+                                            setgetduration(false)
+                                          else
+                                            setgetduration(true);
+                                          setselectedduration({ name: "همه (برای حذف)", duration: "all" })
 
 
-                                })
-                                .catch(function (error) {
-                                  console.log(error);
-                                });
+                                        })
+                                        .catch(function (error) {
+                                          console.log(error);
+                                        });
+                                    }
+                                    else {
+                                      axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
+                                        .then(function (response) {
+                                          console.log(response);
+                                          if (getduration === true)
+                                            setgetduration(false)
+                                          else
+                                            setgetduration(true);
+                                          setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+
+
+                                        })
+                                        .catch(function (error) {
+                                          console.log(error);
+                                        });
+                                    }
+
+                                  })
+                                  .catch(function (error) {
+                                    console.log(error);
+                                  });
                               }
-                              else{
-                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{date:deletedate,type:editdurationmodename}})
-                                .then(function (response) {
-                                  console.log(response);
-                                  if(getduration===true)
-                                  setgetduration(false)
-                                  else
-                                  setgetduration(true);
-                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+                              else {
+                                axios.delete(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/")
+                                  .then(function (response) {
+                                    console.log(response);
+                                    var formdata = new FormData();
+                                    formdata.append("date", deletedate)
+                                    formdata.append("type", editdurationmodename)
+
+                                    if (deletedate != "All") {
+                                      axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", formdata)
+                                        .then(function (response) {
+                                          console.log(response);
+                                          if (getduration === true)
+                                            setgetduration(false)
+                                          else
+                                            setgetduration(true);
+                                          setselectedduration({ name: "همه (برای حذف)", duration: "all" })
 
 
-                                })
-                                .catch(function (error) {
-                                  console.log(error);
-                                });
+                                        })
+                                        .catch(function (error) {
+                                          console.log(error);
+                                        });
+                                    }
+                                    else {
+                                      axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
+                                        .then(function (response) {
+                                          console.log(response);
+                                          if (getduration === true)
+                                            setgetduration(false)
+                                          else
+                                            setgetduration(true);
+                                          setselectedduration({ name: "همه (برای حذف)", duration: "all" })
+
+
+                                        })
+                                        .catch(function (error) {
+                                          console.log(error);
+                                        });
+                                    }
+
+                                  })
+                                  .catch(function (error) {
+                                    console.log(error);
+                                  });
+
                               }
 
-                            })
-                            .catch(function (error) {
-                              console.log(error);
-                            });
+                            }
+                            else {
+                              if (deletedate !== "All") {
+                                var formdata2 = new FormData()
+                              formdata2.append("date", deletedate)
+                              console.log("here")
+                                axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/online/", formdata2)
+                                  .then(function (response) {
+                                    console.log(response);
+                                    Cookies.set("onlineduration",mduration)
+                                  })
+                                  .catch(function (error) {
+                                    console.log(error);
+                                  });
+                              }
+                              else {
+                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/online/")
+                                  .then(function (response) {
+                                    console.log(response);
+                                    Cookies.set("onlineduration",mduration)
+
+
+                                  })
+                                  .catch(function (error) {
+                                    console.log(error);
+                                  });
+                              }
+
+
+
+                            }
                           }
-                          else{
-                            axios.delete(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/")
-                            .then(function (response) {
-                              console.log(response);
-                              var formdata = new FormData();
-                              formdata.append("date", deletedate)
-                              formdata.append("type", editdurationmodename)
 
-                              if(deletedate!="All"){
-                              axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",formdata)
-                                .then(function (response) {
-                                  console.log(response);
-                                  if(getduration===true)
-                                  setgetduration(false)
-                                  else
-                                  setgetduration(true);
-                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
-
-
-                                })
-                                .catch(function (error) {
-                                  console.log(error);
-                                });
-                              }
-                              else{
-                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/",{params:{date:deletedate,type:editdurationmodename}})
-                                .then(function (response) {
-                                  console.log(response);
-                                  if(getduration===true)
-                                  setgetduration(false)
-                                  else
-                                  setgetduration(true);
-                                  setselectedduration({ name: "همه (برای حذف)", duration: "all" })
-
-
-                                })
-                                .catch(function (error) {
-                                  console.log(error);
-                                });
-                              }
-
-                            })
-                            .catch(function (error) {
-                              console.log(error);
-                            });
-
-                          }
-
-                        }}>تایید</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                          }>تایید</button>
+                        <button type="button"
+                        onClick={()=>{
+                          if(ischangingmduration===true)
+                            setmduration(Cookies.get("onlineduration"))
+                        }}
+                        class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                       </div>
                     </div>
                   </div>
@@ -1643,17 +1719,83 @@ function Doctorcalender() {
                   >
                     {/* //width toye screen bozorg yeho ziadi ziad vali height taghriban hammon */}
                     {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
-                    <input id="hozori" value={mduration} onChange={(val) => setmduration(val.target.value)} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
+                    <input id="hozori" value={mduration} onChange={(val) => {
+                      if (Cookies.get("onlineduration") === undefined || iseditingmduration === true) {
+                        setmduration(val.target.value)
+                      }
+                      else {
+
+                        console.log("nemitoni taghir bedi:)")
+                      }
+
+                    }}
+                      onClick={() => {
+                        //kar nemikone   faghat to halat responsive kar mikone
+                        console.log("touched")
+                        if (iseditingmduration === false) {
+                          setsnackbarerror("برای ویرایش روی دکمه ی سبز رنگ ویرایش کلیک کنید")
+                          setOpenSnack(true);
+                        }
+                      }}
+
+                      class="col-auto form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                   </div>
-                  
+
                 </div>
-                <div class="me-sm-3 me-auto shadow-sm align-itmes-center"  style={{ backgroundColor: "green", borderRadius: 100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
-                <BsCheck color="white" class="algin-self-center justify-self-center me-1"></BsCheck>
+                <div class="me-sm-3 me-auto shadow-sm align-itmes-center" style={{ backgroundColor: "green", borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
+                  {Cookies.get("onlineduration") !== mduration ? <BsCheck
+                    data-bs-target="#editduration2" data-bs-toggle="modal"
+                    onClick={() => {
+
+                      setiseditingmduration(false)
+                      setischangingmduration(true);
+
+                      axios.get(API_BASE_URL + "/update-appointment/" + 1 + "/online/")
+                        .then(function (response) {
+                          console.log(response);
+
+
+                          if (response.data.message === "No time reserved!") {
+                            setdeletedate("All");
+                          }
+                          else {
+                            setdeletedate(response.data.datetime);
+                            console.log(response.data.datetime);
+                          }
+
+
+
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
+
+                      // Cookies.set("onlineduration", mduration)
+
+
+                    }}
+                    color="white" class="algin-self-center justify-self-center me-1"></BsCheck> :
+                    <BsCheck
+
+                      onClick={() => {
+                        console.log("clicked")
+                      }}
+                      color="white" class="algin-self-center justify-self-center me-1"></BsCheck>}
                 </div>
-                <div class="me-sm-1 mx-auto shadow-sm align-itmes-center"  style={{ backgroundColor: "green", borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
-                <AiOutlineEdit color="white" class="algin-self-center justify-self-center me-1"></AiOutlineEdit>
+                <div class="me-sm-1 mx-auto shadow-sm align-itmes-center" style={{ backgroundColor: "green", borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
+                  <AiOutlineEdit
+                    onClick={() => {
+                      setsnackbarerror("میتوانید مدت زمان هر وقت مجازی خود را ویرایش کنید")
+                      setOpenSnack(true);
+                      setiseditingmduration(true)
+
+
+
+
+                    }}
+                    color="white" class="algin-self-center justify-self-center me-1"></AiOutlineEdit>
                 </div>
-              
+
                 {/* ms-auto me-auto nashod */}
                 {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
                 <div style={{ position: "relative" }} class="  me-auto my-auto col-md-2 col-lg-3 col-sm-4 col-3 round-3  ">
@@ -1825,8 +1967,8 @@ function Doctorcalender() {
             <div>
               {/* {hmmconflictmessage != undefined ? <div style={{ fontSize: 14 }}>{hmmconflictmessage}</div> : <div style={{ fontSize: 14 }}>{hmhconflictmessage}</div>}
               {emptyhduration != undefined ? <div>{emptyhduration}</div> : null}
-              {emptymduration != undefined ? <div>{emptymduration}</div> : null}
-              {snackbarerror != "" ? <div>{snackbarerror}</div> : null} */}
+              {emptymduration != undefined ? <div>{emptymduration}</div> : null}*/}
+              {snackbarerror !== "" ? <div>{snackbarerror}</div> : null}
             </div>
 
           }
