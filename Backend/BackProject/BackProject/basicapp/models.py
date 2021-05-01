@@ -72,6 +72,10 @@ class DoctorUser(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+    first_name = models.CharField(max_length=50,default='unknown')
+    last_name = models.CharField(max_length=100,default='unknown')
+    state = models.CharField(max_length=255,default='unknown')
+    city = models.CharField(max_length=255,default='unknown')
     
 class Address(models.Model):
     state = models.CharField(max_length=30)
@@ -84,8 +88,9 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
     doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
     duration = models.IntegerField()
-    start_datetime = jmodels.jDateTimeField()
-    end_datetime = jmodels.jDateTimeField()
+    date = jmodels.jDateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
     is_online = models.BooleanField(default=True)
     time_type = models.CharField(max_length=150,null=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)

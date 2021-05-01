@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from rest_framework import generics, status, views, permissions
+from rest_framework import generics, status, views, permissions,filters
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -91,7 +91,7 @@ class RegisterDoctorView(generics.GenericAPIView):
         degree = request.data.get('degree')
         print(degree)
         print()
-        new_doc = DoctorUser(user=user,degree=degree)
+        new_doc = DoctorUser(user=user,degree=degree,first_name=user.first_name,last_name=user.last_name)
         new_doc.save()
         print('***********')
         token = RefreshToken.for_user(user).access_token
@@ -123,7 +123,6 @@ class VerifyEmail(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'message': 'Invalid token'}, status=status.HTTP_200_OK)
 
-
 class LoginAPIView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -132,7 +131,6 @@ class LoginAPIView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             return Response({"data":serializer.data}, status=status.HTTP_200_OK)
         return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
-
 
 class DoctorProfileView(APIView):
     
@@ -183,6 +181,12 @@ class UpdateDoctorAddressView(generics.UpdateAPIView):
         serializer = self.serializer_class(address,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            doc.state = Address.objects.get(pk=add_pk).state
+            adds = Address.objects.filter(doc=doc)
+            doc.city = ""
+            for a in adds:
+                doc.city = doc.city + a.city
+            doc.save()
             return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
         return Response({'failure':True},status=status.HTTP_200_OK)
@@ -198,6 +202,11 @@ class SetDoctorAddressView(APIView):
         while counter < count:
             add = request.data.get('addresses')[counter]
             new_add = Address(state=states[add['state']],doc=doc,city=add['city'],detail=add['detail'])
+            doc.state = states[add['state']]
+            if doc.city != "unknown" :
+                doc.city = doc.city + add['city']
+            else:
+                doc.city = add['city']
             new_add.save()
             counter+=1
             
@@ -322,3 +331,52 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+
+# class AdvancedSearchDoctorView(generics.ListCreateAPIView):
+#     def get(self,request):
+#         doctors = DoctorUser.objects.all()
+#         users = User.objects.all()
+#         addresses = Address.objects.all()
+#         search_fields = {}
+#         search_fields['state'] = self.request.query_params.get('state', None)
+#         search_fields['city'] = self.request.query_params.get('city', None)
+#         search_fields['first_name'] = self.request.query_params.get('first_name', None)
+#         search_fields['last_name'] = self.request.query_params.get('last_name', None)
+#         search_fields['specialty'] = self.request.query_params.get('specialty', None)
+#         # search_fields['sub_specialty'] = self.request.query_params.get('sub_specialty', None)
+
+#         print(search_fields)
+
+#         if search_fields['first_name'] is not None:
+#             users = users.filter(first_name=search_fields['first_name'])
+#             doctors = SearchInUserSerializer(users,many=True).data
+
+#         if search_fields['last_name'] is not None:
+#             users = users.filter(first_name=search_fields['last_name'])
+#             doctors = SearchInUserSerializer(users,many=True).data
+#         print(doctors)
+#         if search_fields['specialty'] is not None:        
+#             doctors = DoctorProfileSerializer(doctors.filter(specialty=search_fields['specialty']),many=True).data
+#         print(doctors)
+#         if search_fields['state'] is not None:
+#             addresses = addresses.filter(state=search_fields['state'])
+#             doctors = SearchInAddressSerializer(addresses,context={"doctors":doctors},many=True).data
+
+#         if search_fields['city'] is not None:
+#             addresses = addresses.filter(city=search_fields['city'])
+#             doctors = SearchInAddressSerializer(addresses,context={"doctors":doctors},many=True).data
+
+#         if doctors == []:
+#             return Response({"message":"No doctors found","doctors":doctors})
+
+#         return Response({"message":"successfully found these doctors","doctors":doctors})
+
+class DynamicSearchFilter(filters.SearchFilter):
+    def get_search_fields(self, view, request):
+        return request.GET.getlist('search-fields', [])
+
+class DynamicDoctorAPIView(generics.ListCreateAPIView):
+    filter_backends = (DynamicSearchFilter,)
+    queryset = DoctorUser.objects.all()
+    serializer_class = DoctorSerializer
+    search_fields = ['first_name','last_name','specialty','state','city']
