@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
         if password is None:
             raise TypeError('Password should not be none')
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(username, email,'ad','ad', password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -76,7 +76,8 @@ class DoctorUser(models.Model):
     last_name = models.CharField(max_length=100,default='unknown')
     state = models.CharField(max_length=255,default='unknown')
     city = models.CharField(max_length=255,default='unknown')
-    
+
+
 class Address(models.Model):
     state = models.CharField(max_length=30)
     doc = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
@@ -96,3 +97,12 @@ class Appointment(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
     address_number = models.IntegerField(null=True)
     duration_number = models.CharField(max_length=200,null=True)
+
+class Duration(models.Model):
+
+    doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    duration = models.IntegerField()
+    time_type = models.CharField(max_length=100)
+    duration_number = models.CharField(max_length=200)
+
+    

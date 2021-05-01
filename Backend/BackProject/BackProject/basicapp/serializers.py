@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from datetime import timedelta
+import jdatetime
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -199,3 +201,95 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorUser
         fields = "__all__"
+
+class OnlineAppointmentSerializer(serializers.ModelSerializer):
+    
+    doc_id = serializers.IntegerField()
+    date_str = serializers.CharField()
+
+    class Meta:
+        model = Appointment
+        fields = ['duration','start_time','doc_id','end_time','date_str']
+
+    def parse_date(self,date_str):
+        date_arr = date_str.split('-')
+        year = int(date_arr[0])
+        month = int (date_arr[1])
+        day = int(date_arr[2])
+        return jdatetime.date(year,month,day)
+
+    def validate(self,attrs):
+
+        doc_id = attrs.get('doc_id', '')
+        duration= attrs.get('duration', '')
+        start_time = attrs.get('start_time', '')
+        end_time = attrs.get('end_time','')
+        date = self.parse_date(attrs.get('date_str',''))
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = Appointment(duration=duration,doctor=doc,start_time=start_time,end_time=end_time,date=date)
+        apt.save()
+
+        return attrs
+
+class InPersonAppointmentSerializer(serializers.ModelSerializer):
+    
+    doc_id = serializers.IntegerField()
+    address_id = serializers.IntegerField()
+    address = AddressSerializer(read_only=True)
+    date_str = serializers.CharField()
+    
+    class Meta:
+        model = Appointment
+        fields = ['duration','start_time','doc_id','address_id','address','time_type','address_number','duration_number','date_str','end_time']
+
+    def parse_date(self,date_str):
+        date_arr = date_str.split('-')
+        year = int(date_arr[0])
+        month = int (date_arr[1])
+        day = int(date_arr[2])
+        return jdatetime.date(year,month,day)
+
+
+    def validate(self,attrs):
+        date = self.parse_date(attrs.get('date_str',''))
+        doc_id = attrs.get('doc_id', '')
+        address_id = attrs.get('address_id', '')
+        time_type = attrs.get('time_type', '')
+        duration= attrs.get('duration', '')
+        start_time = attrs.get('start_time', '')
+        address_number = attrs.get('address_number', '')
+        duration_number = attrs.get('duration_number', '')
+        end_time = attrs.get('end_time','')
+        doc = DoctorUser.objects.get(pk=doc_id)
+        address = Address.objects.get(pk=address_id)
+        apt = Appointment(date=date,duration=duration,doctor=doc,start_time=start_time,end_time=end_time
+                          ,address=address,time_type=time_type,is_online=False,address_number=address_number,duration_number=duration_number)
+        apt.save()
+
+        return attrs
+
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    
+    doctor = DoctorProfileSerializer(read_only=True)
+    patient = UserProfileSerializer(read_only=True)
+    address = AddressSerializer(read_only=True)
+    
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+
+
+class DurationSerializer(serializers.ModelSerializer):
+    
+    doctor = DoctorProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = Duration
+        fields = '__all__'
+
+class UpdateDurationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Duration
+        fields = ['time_type','duration','duration_number']
