@@ -10,7 +10,7 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker, { Calendar, utils } from "react-modern-calendar-datepicker";
 import { Toast, Button, Form, FormGroup, Label, input, FormText, Col, InputGroup, Modal } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
-import { BsPlusCircleFill, BsTrash } from "react-icons/bs";
+import { BsPlusCircleFill, BsTrash,BsCheck } from "react-icons/bs";
 import { AiFillMinusCircle, AiOutlineConsoleSql, AiOutlineEdit } from "react-icons/ai";
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
@@ -1538,9 +1538,9 @@ function Doctorcalender() {
               </div>
             </div>
             {/* //  flex-column flex-lg-row  */}
-            <div class="d-flex flex-column flex-column col-sm-auto col-11 align-items-start mt-3 ">
+            <div class="d-flex flex-column flex-column col-auto align-items-start mt-3 ">
 
-              <div class="d-flex flex-row  mt-2 col-auto ms-4 ">
+              <div class="d-flex flex-row col-12 mt-2  ms-5 " >
                 {/* <div>درصورتی که مدت زمان هر وقت مجازی خود را تغییر دهید تمامی ویزیت های شما بعد از آخرین ویزیتی که توسط شخصی گرفته شده پاک میشوند</div> */}
                 <div class="row  align-items-start">
                   <div class="col-auto">
@@ -1555,15 +1555,23 @@ function Doctorcalender() {
                     {/* نوشته ی توش ریسپانسیو کوچیک نمیشه */}
                     <input id="hozori" value={mduration} onChange={(val) => setmduration(val.target.value)} class="col-auto" class="form-control" style={{ height: "clamp(10px,4.5vh,65px)", width: "clamp(45px,5.5vw,45px)", borderRadius: 100, backgroundColor: "white" }} aria-describedby="passwordHelpInline"></input>
                   </div>
+                  
                 </div>
+                <div class="me-sm-3 me-auto shadow-sm align-itmes-center"  style={{ backgroundColor: "green", borderRadius: 100,height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
+                <BsCheck color="white" class="algin-self-center justify-self-center me-1"></BsCheck>
+                </div>
+                <div class="me-sm-1 mx-auto shadow-sm align-itmes-center"  style={{ backgroundColor: "green", borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}>
+                <AiOutlineEdit color="white" class="algin-self-center justify-self-center me-1"></AiOutlineEdit>
+                </div>
+              
                 {/* ms-auto me-auto nashod */}
                 {/* d-block mb-3 d-sm-none d-md-block d-lg-none */}
-                <div style={{ backgroundColor: "white", position: "absolute", marginRight: "clamp(50px,60vw,255px)", marginTop: "-0.25rem" }} class="col-md-2 col-lg-3 col-sm-5 col-3  d-flex flex-row-reverse align-items-start round-3  ">
-                  <Button onClick={() => sendmagazis()} type="button round-3" class="btn btn-primary btn-sm mb-3 col-lg-6 col-sm-6 me-4 col-md-8 col-8 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
+                <div style={{ backgroundColor: "lightblue", position: "relative" }} class="  me-auto my-auto col-md-2 col-lg-3 col-sm-4 col-3 round-3  ">
+                  <div onClick={() => sendmagazis()} type="button round-3" class="btn btn-primary btn-sm col-12 " style={{ backgroundColor: "#05668D", borderRadius: 100, borderColor: "#05668D", position: "relative" }}>
                     {/* <div class="align-self-center justify-self-center"> */}
-              تایید
-              {/* {/* </div> */}
-                  </Button>
+               تایید
+               {/* {/* </div> */}
+                  </div>
                 </div>
               </div>
               {/* تا sm */}
