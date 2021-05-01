@@ -45,7 +45,7 @@ function App() {
   }
   return (
     <Router>
-      <div className="text-right" style={{ direction: "rtl" }}>
+      <div data-testid="router" className="text-right" style={{ direction: "rtl" }}>
         <Switch>
           <Route path="/" exact={true}>
             <Navbar />

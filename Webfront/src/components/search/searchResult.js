@@ -49,7 +49,7 @@ function SearchResult(props) {
     }, 2000);
   };
   return (
-    <div className="main-content m-5">
+    <div data-testid="searchResult" className="main-content m-5">
       <div className="home">
         <div className="homePage">
           {doctors === undefined || doctors.length === 0 ? (

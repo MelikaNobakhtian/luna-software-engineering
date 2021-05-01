@@ -64,8 +64,8 @@ function Navbar(props) {
   };
 
   return (
-    <div className="" style={{ backgroundColor: "#EBFCFF" }}>
-      <nav className="navbar navbar-expand-lg navbar-light" dir="rtl">
+    <div  className="" style={{ backgroundColor: "#EBFCFF" }}>
+      <nav data-testid="navbar" className="navbar navbar-expand-lg navbar-light" dir="rtl">
         <div className="container-fluid">
           <div
             className="navbar-brand"
@@ -260,6 +260,7 @@ function Navbar(props) {
               data-bs-dismiss="offcanvas"
               className="btn btn-primary col-4 mx-2"
               onClick={GoToSearch}
+              data-testid="goToSearch"
             >
               بگرد
             </div>
