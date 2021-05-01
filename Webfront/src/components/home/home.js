@@ -10,20 +10,42 @@ import { API_BASE_URL } from "../apiConstant/apiConstant";
 import { Avatar } from "@material-ui/core";
 import ReactiveButton from 'reactive-button';
 
-function Home(props){
+function Home(props) {
   const [state, setState] = useState('idle');
-  const [doctor, setDoctor] = useState([]);
+  const [doctor, setDoctor] = useState([{
+    id: "15",
+    user: {
+      "id": 28,
+      "password": "pbkdf2_sha256$216000$NsKTzsQCFHmy$SHNr8kvIjMpqIozqeu5aYc63qfNMdYY9Lwf2yoK4Qns=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "FAhm",
+      "first_name": "F",
+      "last_name": "Omid",
+      "email": "fateme.ahmadi1522@gmail.com",
+      "profile_photo": "/media/default.png",
+      "is_verified": false,
+      "is_staff": false,
+      "created": "2021-04-22T17:39:21.715630Z",
+      "auth_provider": "email",
+      "groups": [],
+      "user_permissions": []
+    },
+    "specialty": "saba",
+    "sub_specialty": "",
+    "addresses": []
+  }]);
 
   useEffect(() => {
-      axios
-        .get(API_BASE_URL + "/home/?filter=recent")
-        .then((d) => {
-          console.log(d)
-          setDoctor(d.data.doctors);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    axios
+      .get(API_BASE_URL + "/home/?filter=recent")
+      .then((d) => {
+        console.log(d)
+        setDoctor(d.data.doctors);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   }, []);
 
@@ -46,7 +68,7 @@ function Home(props){
             {doctor.length === 0 ? <div></div> :
               doctor.map((doc) => {
                 if (doc) return (
-                  
+
                   <div class="col mb-4">
                     <Card  >
                       <div class=" card-header d-flex justify-content-center" style={{ borderRadius: '5%' }} >
@@ -76,23 +98,25 @@ function Home(props){
 
                             )
                           })}
+                        <Card.Footer>
 
-                        <ReactiveButton
-                          buttonState={state}
-                          onClick={onClickHandler}
-                          color={'green'}
-                          idleText={'نوبت دهی'}
-                          loadingText={'Loading'}
-                          successText={'Success'}
-                          type={'button'}
-                          className={'class1 class2'}
-                          style={{ borderRadius: '5px' }}
-                          shadow={true}
-                          size={'normal'}
-                          messageDuration={2000}
-                          buttonRef={null}
-                          animation={true}
-                        />
+                          <ReactiveButton
+                            buttonState={state}
+                            onClick={onClickHandler}
+                            color={'green'}
+                            idleText={'نوبت دهی'}
+                            loadingText={'Loading'}
+                            successText={'Success'}
+                            type={'button'}
+                            className={'class1 class2'}
+                            style={{ borderRadius: '5px' }}
+                            shadow={true}
+                            size={'normal'}
+                            messageDuration={2000}
+                            buttonRef={null}
+                            animation={true}
+                          />
+                        </Card.Footer>
                       </Card.Body>
                     </Card>
                   </div>
