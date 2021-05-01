@@ -90,13 +90,11 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
 
-
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     class Meta:
         fields = ['email']
-
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)

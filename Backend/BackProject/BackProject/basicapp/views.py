@@ -123,7 +123,6 @@ class VerifyEmail(views.APIView):
         except jwt.exceptions.DecodeError as identifier:
             return Response({'message': 'Invalid token'}, status=status.HTTP_200_OK)
 
-
 class LoginAPIView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -132,7 +131,6 @@ class LoginAPIView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             return Response({"data":serializer.data}, status=status.HTTP_200_OK)
         return Response({"message":serializer.errors}, status=status.HTTP_200_OK)
-
 
 class DoctorProfileView(APIView):
     
@@ -322,3 +320,13 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
+
+class FilterHomepageView(APIView):
+    
+    def get(self,request):
+        filter = self.request.query_params.get('filter', None)
+
+        if filter=='recent':
+                    doc_list = DoctorUser.objects.order_by('-user')
+                    serializer = DoctorProfileSerializer(doc_list,many=True)
+                    return Response({"doctors" : serializer.data})
