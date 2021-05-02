@@ -1928,13 +1928,21 @@ function Doctorcalender() {
                 {hozoris !== [] ? hozoris.map((val, index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  return (<Button data-bs-toggle="modal" data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2"
+                  {/* <div class="bt btn-sm col-2  d-flex flex-row col-auto "  data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname} > */}
+                  return (
+                   
+                    <Button data-bs-toggle="modal"   data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2"
                     onClick={async (val) => {
                       await setselectedhdeletemodal((prevState) => ({ ...prevState, value: val, index: index, time: val.time, time22: val.time22 }))
                       // sessionchange(index, "hozori");
                       // setbuttoncolor("red")
                     }}
-                    color={val.durationnumber} style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>{val.time}  ({val.addressnumber})</Button>
+                    color={val.durationnumber} style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>
+                    <div data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname}>
+                    {val.time}  ({val.addressnumber})
+                    </div>
+                    </Button>
+                  
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
