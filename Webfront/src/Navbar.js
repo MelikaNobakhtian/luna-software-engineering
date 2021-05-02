@@ -31,15 +31,18 @@ function Navbar(props) {
   });
 
   const redirecttoprofile = () => {
-    console.log(Cookies.get("doctorId"));
+    console.log(Cookies.get("doctorId")+ " doctor id");
     if (Cookies.get("doctorId") === "0") {
       props.history.push("/userProfile");
-    } else if (Cookies.get("doctorId") === "1") {
+    } else if (parseInt(Cookies.get("doctorId"))>=1) {
       props.history.push("/doctorProfile");
     } else {
       props.history.push("/login");
     }
   };
+
+  
+
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -85,8 +88,8 @@ function Navbar(props) {
   };
 
   return (
-
-    <div className="" style={{backgroundColor:"#02C39A"}}>
+    // 02C39A
+    <div className="" style={{ backgroundColor: "#EBFCFF" }}>
       <nav
         data-testid="navbar"
         className="navbar navbar-expand-lg navbar-light"
@@ -96,6 +99,7 @@ function Navbar(props) {
           <div
             className="navbar-brand"
             style={{ color: "#028090", fontWeight: "bolder" }}
+            onClick={()=>props.history.push("/")}
           >
             پزشک
             <button
@@ -138,7 +142,7 @@ function Navbar(props) {
           </button>
           <div className="collapse navbar-collapse mb-5 mb-lg-0" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="btn nav-item nav-link ms-auto">گرٝتن نوبت</li>
+              <li className="btn nav-item nav-link ms-auto">گرفتن نوبت</li>
 
               {/* <li className="nav-item">
           <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
@@ -159,7 +163,7 @@ function Navbar(props) {
           <div
             className="collapse navbar-collapse flex-row-reverse"
             id="navbarNav"
-            // style={{backgroundColor:"green"}}
+          // style={{backgroundColor:"green"}}
           >
             <ul className="navbar-nav  ">
               {/* <li className="nav-item dropdown" data-bs-toggle="collapse" dir ="ltr"  >
@@ -174,7 +178,26 @@ function Navbar(props) {
         </li> */}
               <div className="nav-item mt-lg-auto mb-lg-auto mb-2 mt-n5  ms-5">
                 {Cookies.get("doctorId") !== undefined ? (
-                  <div
+                  <li className="nav-item dropdown" data-bs-toggle="collapse" dir="rtl"  >
+                    <div className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" dir="rtl" data-bs-toggle="dropdown" aria-expanded="false">
+                      <BsFillPersonFill className="ms-2"></BsFillPersonFill>
+           حساب کاربری
+          </div>
+                    <ul className="dropdown-menu align-self-start  " aria-labelledby="navbarDropdownMenuLink">
+                      <li><div className="dropdown-item btn p-1 d-flex flex-row" dir="rtl"
+                        style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
+                        onClick={() => redirecttoprofile()}
+                        data-testid="redirecttoprofile">
+                        <BsFillPersonFill className="ms-2 me-2 align-self-center"></BsFillPersonFill>
+                    حساب کاربری</div></li>
+                     {Cookies.get("doctorId")>=1? <li><div 
+                      onClick={()=>props.history.push("/doctorcal")}
+                      className="dropdown-item d-flex flex-row" >وقت های شما</div></li>:null}
+
+
+                    </ul>
+                  </li>
+                  /* <div
                     className="btn p-1 "
                     style={{ fontSize: "clamp(15px,1.2vw,20px)" }}
                     onClick={() => redirecttoprofile()}
@@ -182,7 +205,7 @@ function Navbar(props) {
                   >
                     <BsFillPersonFill className="ms-2"></BsFillPersonFill>
                     حساب کاربری
-                  </div>
+                  </div> */
                 ) : (
                   <div
                     className="btn p-1 "

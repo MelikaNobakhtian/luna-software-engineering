@@ -141,6 +141,9 @@ function SignUp(props) {
               }
             })
             .catch(function (error) {
+              console.log("error")
+              console.log(error.error)
+              console.log(error.response)
               console.log(error);
             });
         } else {
