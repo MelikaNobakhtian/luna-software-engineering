@@ -119,7 +119,7 @@ function Doctorcalender() {
       // console.log(stringigydate)
       console.log(stringifydate)
       // ,JSON.stringify({date:"1400-02-10"}
-      axios.get(API_BASE_URL + "/appointment/" + 1 + "/in-person?date=" + startselectedday)
+      axios.get(API_BASE_URL + "/appointment/" + Cookies.get("doctorId") + "/in-person?date=" + startselectedday)
         .then(function (response) {
           console.log(response);
           var resdata = response.data;
@@ -155,7 +155,7 @@ function Doctorcalender() {
         });
 
 
-      axios.get(API_BASE_URL + "/appointment/" + 1 + "/online?date=" + startselectedday)
+      axios.get(API_BASE_URL + "/appointment/" + Cookies.get("doctorId") + "/online?date=" + startselectedday)
         .then(function (response) {
 
           console.log(response);
@@ -204,12 +204,16 @@ function Doctorcalender() {
     }
     var doctorid = Cookies.get("doctorId");
 
-    axios.get(API_BASE_URL + "/doctor/" + 1 + "/")
+    axios.get(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/")
       .then(function (response) {
         // console.log(response)
         console.log(response.data.addresses);
+        console.log("addresses")
+        console.log(response)
+        console.log("get koli")
         var Alltheaddresses = response.data.addresses;
         var values = [...haddresses];
+        console.log( response.data.addresses.length+" lenght")
         for (var i = 0; i < Alltheaddresses.length; i++) {
           values.push({ add1: Alltheaddresses[i].state + "_" + Alltheaddresses[i].city + "_" + Alltheaddresses[i].detail, id: Alltheaddresses[i].id })
         }
@@ -228,7 +232,7 @@ function Doctorcalender() {
   useEffect(() => {
     var doctorid = Cookies.get("doctorId");
 
-    axios.get(API_BASE_URL + "/doctor/" + 1 + "/duration")
+    axios.get(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/duration")
       .then(function (response) {
         console.log(response)
         var value = []
@@ -295,7 +299,7 @@ function Doctorcalender() {
       var informations = { start_day: startselectedday, end_day: endselectedday, appointments: values }
       console.log(informations)
       // if(axios)
-      axios.post(API_BASE_URL + "/appointment/" + 1 + "/online/", JSON.stringify(informations), {
+      axios.post(API_BASE_URL + "/appointment/" + Cookies.get("doctorId") + "/online/", JSON.stringify(informations), {
         headers: { "content-type": "application/json" },
       })
         .then(function (response) {
@@ -338,7 +342,7 @@ function Doctorcalender() {
       console.log(informations)
       console.log(" all the magazis values :)")
 
-      axios.post(API_BASE_URL + "/appointment/" + 1 + "/in-person/", JSON.stringify(informations), {
+      axios.post(API_BASE_URL + "/appointment/" + Cookies.get("doctorId") + "/in-person/", JSON.stringify(informations), {
         headers: { "content-type": "application/json" },
       })
         .then(function (response) {
@@ -1312,8 +1316,8 @@ function Doctorcalender() {
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      if (value.add1.toString().length > 30) {
-                        var thisadd = value.add1.toString().substring(0, 30) + " ..."
+                      if (value.add1.toString().length > 25) {
+                        var thisadd = value.add1.toString().substring(0, 25) + " ..."
                         console.log(thisadd)
 
                       }
@@ -1329,7 +1333,7 @@ function Doctorcalender() {
                       <BiChevronDown size={20} class="m-1" color="#028090"></BiChevronDown>
                       </div> */}
 
-                        {value.add1.toString().length > 30 && index > 0 ? <div dir="ltr" style={{ fontSize: "clamp(12px,2vw,15px)" }} class="dropdown-item d-flex flex-row-reverse mx-auto"
+                        {value.add1.toString().length > 25 && index > 0 ? <div dir="ltr" style={{ fontSize: "clamp(12px,2vw,15px)" }} class="dropdown-item d-flex flex-row-reverse mx-auto"
                           data-bs-toggle="tooltip" data-bs-placement="left"
                           onClick={() => {
                             setlittleadd(thisadd)
@@ -1466,7 +1470,7 @@ function Doctorcalender() {
                           formdata.append("duration", dmhdur)
                           formdata.append("duration_number", col)
 
-                          axios.post(API_BASE_URL + "/doctor/" + 1 + "/duration/", formdata)
+                          axios.post(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/duration/", formdata)
                             .then(function (response) {
                               console.log(response)
                               setselectedduration({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
@@ -1545,7 +1549,7 @@ function Doctorcalender() {
                         <button type="button" data-bs-target="#editduration2" data-bs-toggle="modal" class="btn btn-success" style={{ backgroundColor: "#008F81", color: "white" }}
                           data-bs-dismiss="modal" onClick={async () => {
 
-                            axios.get(API_BASE_URL + "/update-appointment/" + 1 + "/in-person?type=" + editdurationmodename)
+                            axios.get(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/in-person?type=" + editdurationmodename)
                               .then(function (response) {
                                 console.log(response);
                                 if (response.data.message === "No time reserved!") {
@@ -1657,7 +1661,7 @@ function Doctorcalender() {
                               console.log(editdurationmodecolor)
                               console.log("formdata")
                               if (iseditingduration === true) {
-                                axios.put(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/", formdata)
+                                axios.put(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/update-duration/" + durationmode[editdurationindex].durationid + "/", formdata)
                                   .then(function (response) {
                                     console.log(response);
                                     var formdata = new FormData();
@@ -1668,7 +1672,7 @@ function Doctorcalender() {
                                     formdata.append("type", editdurationmodename)
 
                                     if (deletedate != "All") {
-                                      axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", formdata)
+                                      axios.put(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/in-person/", formdata)
                                         .then(function (response) {
                                           console.log(response);
                                           if (getduration === true)
@@ -1684,7 +1688,7 @@ function Doctorcalender() {
                                         });
                                     }
                                     else {
-                                      axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
+                                      axios.delete(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
                                         .then(function (response) {
                                           console.log(response);
                                           if (getduration === true)
@@ -1706,7 +1710,7 @@ function Doctorcalender() {
                                   });
                               }
                               else {
-                                axios.delete(API_BASE_URL + "/doctor/" + 1 + "/update-duration/" + durationmode[editdurationindex].durationid + "/")
+                                axios.delete(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/update-duration/" + durationmode[editdurationindex].durationid + "/")
                                   .then(function (response) {
                                     console.log(response);
                                     var formdata = new FormData();
@@ -1714,7 +1718,7 @@ function Doctorcalender() {
                                     formdata.append("type", editdurationmodename)
 
                                     if (deletedate !== "All") {
-                                      axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", formdata)
+                                      axios.put(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/in-person/", formdata)
                                         .then(function (response) {
                                           console.log(response);
                                           if (getduration === true)
@@ -1730,7 +1734,7 @@ function Doctorcalender() {
                                         });
                                     }
                                     else {
-                                      axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
+                                      axios.delete(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/in-person/", { params: { date: deletedate, type: editdurationmodename } })
                                         .then(function (response) {
                                           console.log(response);
                                           if (getduration === true)
@@ -1759,7 +1763,7 @@ function Doctorcalender() {
                                 var formdata2 = new FormData()
                                 formdata2.append("date", deletedate)
                                 console.log("here")
-                                axios.put(API_BASE_URL + "/update-appointment/" + 1 + "/online/", formdata2)
+                                axios.put(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/online/", formdata2)
                                   .then(function (response) {
                                     console.log(response);
                                     Cookies.set("onlineduration", mduration)
@@ -1769,7 +1773,7 @@ function Doctorcalender() {
                                   });
                               }
                               else {
-                                axios.delete(API_BASE_URL + "/update-appointment/" + 1 + "/online/")
+                                axios.delete(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/online/")
                                   .then(function (response) {
                                     console.log(response);
                                     Cookies.set("onlineduration", mduration)
@@ -1844,6 +1848,7 @@ function Doctorcalender() {
               <div>
               {addressisempty==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>انتخاب آدرس الزامی است</div>:null}
               {addressiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی آدرس ها فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
+           
               {durationiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی بازه های زمانی فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
                 {hfields.map((hfield, index) => (
                   <div
@@ -2019,7 +2024,7 @@ function Doctorcalender() {
                       setiseditingmduration(false)
                       setischangingmduration(true);
 
-                      axios.get(API_BASE_URL + "/update-appointment/" + 1 + "/online/")
+                      axios.get(API_BASE_URL + "/update-appointment/" + Cookies.get("doctorId") + "/online/")
                         .then(function (response) {
                           console.log(response);
 
