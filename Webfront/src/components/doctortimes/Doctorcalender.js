@@ -90,6 +90,11 @@ function Doctorcalender() {
   const [hstarttborder,sethstarttborder]=useState("lightgray")
   const [hsendborder,sethendborder]=useState("lightgray")
   const [hsenddborder,sethenddborder]=useState("lightgray")
+  const [mstartborder,setmstartborder]=useState("lightgray")
+  const [mstarttborder,setmstarttborder]=useState("lightgray")
+  const [msendborder,setmendborder]=useState("lightgray")
+  const [msenddborder,setmenddborder]=useState("lightgray")
+  const [mdurationisempty,setmdurationisempty]=useState("lightgray")
   const [addressisempty,setaddressisempty]=useState("gray")
   const [addressiswrong,setaddressiswrong]=useState("gray")
   const [durationiswrong,setdurationiswrong]=useState("gray");
@@ -166,9 +171,9 @@ function Doctorcalender() {
           console.log(values);
           console.log("values");
           setmagazis(values)
-          setmduration(resdata[0].duration)
+          // setmduration(resdata[0].duration)
           //age biad modat zaman online ro avaz bokone chii kodum duration befahmam duration jadid
-          setmdurationbeforchange(resdata[0].duration)
+          // setmdurationbeforchange(resdata[0].duration)
 
         })
         .catch(function (error) {
@@ -386,7 +391,7 @@ function Doctorcalender() {
       sethstarttborder("red")
     }
     else{
-      sethstartborder("lightgray")
+      sethstarttborder("lightgray")
     }
     if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
       sethendborder("red")
@@ -585,7 +590,7 @@ function Doctorcalender() {
       sethstarttborder("red")
     }
     else{
-      sethstartborder("lightgray")
+      sethstarttborder("lightgray")
     }
     if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
       sethendborder("red")
@@ -850,12 +855,45 @@ function Doctorcalender() {
   }
 
   const handleaddmfield = () => {
-    if (mduration === "") {
-      setemptyhduration(undefined)
-      setemptymduration("لطفا فیلد مربوط به مدت زمان هر وقت مجازی خود را پر کنید")
-      setOpenSnack(true);
+    if (Cookies.get("onlineduration") === undefined) {
+      setmdurationisempty("red")
+     }
+     else{
+       setmdurationisempty("lightgray")
+     }
+    if(mfields[0].start === ""||parseInt(mfields[0].start)>24){
+      console.log(" start red shod")
+      setmstartborder("red")
+      console.log(hstartborder)
     }
-    if (mfields[0].start !== "" && mfields[0].startt !== "" && mfields[0].end !== "" && mfields[0].endd !== "" && Cookies.get("onlineduration") !== undefined) {
+    else{
+      console.log("start ghermez nashod")
+
+      setmstartborder("lightgray")
+    }
+    if(mfields[0].startt === ""||parseInt(mfields[0].startt)>59){
+      setmstarttborder("red")
+    }
+    else{
+      setmstarttborder("lightgray")
+    }
+    if(mfields[0].end === ""||parseInt(mfields[0].end)>24){
+      setmendborder("red")
+    }
+    else{
+      setmendborder("lightgray")
+    }
+    if(mfields[0].endd === ""||parseInt(mfields[0].endd)>59){
+      setmenddborder("red")
+    }
+    else{
+      setmenddborder("lightgray")
+    }
+
+    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>24 ||
+     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>24||Cookies.get("onlineduration") === undefined))  {
+
+  
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
       var timee = parseInt(mfields[0].startt);
@@ -988,7 +1026,44 @@ function Doctorcalender() {
 
   }
   const handleremovemfield = (index) => {
-    if (mfields[0].start != "" && mfields[0].startt != "" && mfields[0].end != "" && mfields[0].endd != "" && mduration != "") {
+    if (Cookies.get("onlineduration") === undefined) {
+      setmdurationisempty("red")
+     }
+     else{
+       setmdurationisempty("lightgray")
+     }
+    if(mfields[0].start === ""||parseInt(mfields[0].start)>24){
+      console.log(" start red shod")
+      setmstartborder("red")
+      console.log(hstartborder)
+    }
+    else{
+      console.log("start ghermez nashod")
+
+      setmstartborder("lightgray")
+    }
+    if(mfields[0].startt === ""||parseInt(mfields[0].startt)>59){
+      setmstarttborder("red")
+    }
+    else{
+      setmstarttborder("lightgray")
+    }
+    if(mfields[0].end === ""||parseInt(mfields[0].end)>24){
+      setmendborder("red")
+    }
+    else{
+      setmendborder("lightgray")
+    }
+    if(mfields[0].endd === ""||parseInt(mfields[0].endd)>59){
+      setmenddborder("red")
+    }
+    else{
+      setmenddborder("lightgray")
+    }
+
+    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>24 ||
+     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>24||Cookies.get("onlineduration") === undefined))  {
+
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
       var timee = parseInt(mfields[0].startt);
@@ -1125,7 +1200,13 @@ function Doctorcalender() {
   });
   const calenderchange = (value) => {
 
-
+    setaddressiswrong("gray")
+    setaddressisempty("gray")
+    setdurationiswrong("gray")
+    sethstartborder("lightgray")
+    sethstarttborder("lightgray")
+    sethendborder("lightgray")
+    sethenddborder("lightgray")
     console.log("hi")
     console.log(value + "value")
     var startmonth = "";
@@ -1884,7 +1965,7 @@ function Doctorcalender() {
                 {/* <div>درصورتی که مدت زمان هر وقت مجازی خود را تغییر دهید تمامی ویزیت های شما بعد از آخرین ویزیتی که توسط شخصی گرفته شده پاک میشوند</div> */}
                 <div class="row  align-items-start">
                   <div class="col-auto">
-                    <label for="hozori" class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
+                    <label for="hozori" style={{borderColor:mdurationisempty}} class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
                   </div>
                   {/* class="col-2 me-n3 " */}
                   {/* algin item mishe bardashte baraye balayi ham */}
@@ -1980,6 +2061,7 @@ function Doctorcalender() {
                   </div>
                 </div>
               </div>
+              {mdurationisempty==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>ابتدا مدت زمان هر وقت مجازی خود را وارد کنید</div>:null}
               {/* تا sm */}
               <div class="d-flex flex-row">
                 {mfields.map((mfield, index) => (
@@ -1989,16 +2071,16 @@ function Doctorcalender() {
                       <BsPlusCircleFill color="gray" onClick={() => handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <AiFillMinusCircle color="gray" onClick={() => handleremovemfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
-                        <input type="number" name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
-                          class="form-control " placeholder="8" aria-label="Username"></input>
+                        <input type="number" style={{borderColor:mstartborder}} name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
+                          class="form-control "  placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="startt" value={mfield.startt} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="number" style={{borderColor:mstarttborder}} name="startt" value={mfield.startt} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="00" aria-label="Server"></input>
                         <span class="input-group-text">-</span>
-                        <input type="numebr" name="end" value={mfield.end} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="numebr" style={{borderColor:msendborder}} name="end" value={mfield.end} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="endd" value={mfield.endd} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="number" style={{borderColor:msenddborder}} name="endd" value={mfield.endd} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="30" aria-label="Server"></input>
                       </div>
 
@@ -2011,7 +2093,7 @@ function Doctorcalender() {
 
 
             </div>
-
+                 
             <div class="p-3 border d-flex  col-sm-auto col-12 flex-column border
             mt-4 overflow-auto
 
