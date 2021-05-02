@@ -37,8 +37,8 @@ class DoctorProfileViewTest(TestCase):
             data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        doc_id = response_login.data['doctor_id']
+        access_token = response_login.data['data']['tokens']['access']
+        doc_id = response_login.data['data']['doctor_id']
         
         response = client.get(reverse('doctor-profile',kwargs={'pk' : doc_id}))
 
@@ -46,8 +46,8 @@ class DoctorProfileViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
         #test profile details
-        self.assertEqual(self.doc.specialty,response.data['specialty'])
-        self.assertEqual(self.doc.sub_specialty,response.data['sub_specialty'])
+        self.assertEqual(self.doc.specialty,response.data['data']['specialty'])
+        self.assertEqual(self.doc.sub_specialty,response.data['data']['sub_specialty'])
 
 class UpdateDoctorProfileViewTest(TestCase):
     
@@ -82,8 +82,8 @@ class UpdateDoctorProfileViewTest(TestCase):
             data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        doc_id = response_login.data['doctor_id']
+        access_token = response_login.data['data']['tokens']['access']
+        doc_id = response_login.data['data']['doctor_id']
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
         new_specialty = "skin"
         new_sub_specialty = "New"
@@ -127,13 +127,14 @@ class SetDoctorAddressViewTest(TestCase):
             data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        doc_id = response_login.data['doctor_id']
+        access_token = response_login.data['data']['tokens']['access']
+        doc_id = response_login.data['data']['doctor_id']
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
         response = new_client.post(reverse('set-doctor-address',kwargs={'pk' : doc_id}),
             data=json.dumps({'count':1,'addresses':[
         {
-            "state":"Mazandaran",
+            #Mazandaran
+            "state":"27",
             "city":"Sari",
             "detail":"Farhang St."
         }]}),
@@ -179,8 +180,8 @@ class UpdateDoctorAddressViewTest(TestCase):
             data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        doc_id = response_login.data['doctor_id']
+        access_token = response_login.data['data']['tokens']['access']
+        doc_id = response_login.data['data']['doctor_id']
         my_doc = DoctorUser.objects.get(pk=doc_id)
         first_address = Address.objects.filter(doc=my_doc)[0].id
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
@@ -197,8 +198,8 @@ class UpdateDoctorAddressViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         #check updated info
-        self.assertEqual(response.data['city'],new_city)
-        self.assertEqual(response.data['detail'],new_detail)
+        self.assertEqual(response.data['data']['city'],new_city)
+        self.assertEqual(response.data['data']['detail'],new_detail)
 
 class UserProfileViewTest(TestCase):
 
@@ -218,19 +219,18 @@ class UserProfileViewTest(TestCase):
         response_login = client.post(reverse('login'),
             data=json.dumps({'email':self.user.email , 'password':self.password}),
             content_type='application/json')
-
-        access_token = response_login.data['tokens']['access']
-        user_id = response_login.data['user_id']
+        access_token = response_login.data['data']['tokens']['access']
+        user_id = response_login.data['data']['user_id']
         response = client.get(reverse('user-profile',kwargs={'pk' : user_id}))
 
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
         #test profile details
-        self.assertEqual(self.user.first_name,response.data['first_name'])
-        self.assertEqual(self.user.last_name,response.data['last_name'])
-        self.assertEqual(self.user.username,response.data['username'])
-        self.assertEqual(self.user.email,response.data['email'])
+        self.assertEqual(self.user.first_name,response.data['data']['first_name'])
+        self.assertEqual(self.user.last_name,response.data['data']['last_name'])
+        self.assertEqual(self.user.username,response.data['data']['username'])
+        self.assertEqual(self.user.email,response.data['data']['email'])
 
 class ChangePasswordViewTest(TestCase):
     
@@ -251,8 +251,8 @@ class ChangePasswordViewTest(TestCase):
             data=json.dumps({'email':self.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        user_id = response_login.data['user_id']
+        access_token = response_login.data['data']['tokens']['access']
+        user_id = response_login.data['data']['user_id']
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
         new_password = '123456789'
         new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
@@ -268,7 +268,7 @@ class ChangePasswordViewTest(TestCase):
         response = new_client.put(reverse('change-password',kwargs={'pk' : user_id}),
             data=json.dumps({'old_password':'1233333','new_password':new_password}),
             content_type='application/json',headers =auth_headers)
-        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         #test login with new passowrd
         response_login = client.post(reverse('login'),
@@ -304,8 +304,8 @@ class UpdateUserProfileViewTest(TestCase):
             data=json.dumps({'email':self.user.email , 'password':self.password}),
             content_type='application/json')
 
-        access_token = response_login.data['tokens']['access']
-        user_id = response_login.data['user_id']
+        access_token = response_login.data['data']['tokens']['access']
+        user_id = response_login.data['data']['user_id']
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
         new_username = "new_username"
         new_firstname = 'Alice'
@@ -353,7 +353,7 @@ class RequestPasswordResetEmailTest(TestCase):
         response_fail= client.post(reverse('request-reset-email'),
             data=json.dumps({'email':self.invalid_user_mail}),
             content_type='application/json')
-        self.assertEqual(response_fail.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_fail.status_code, status.HTTP_200_OK)
 
 
 class PasswordTokenCheckAPITest(TestCase):
@@ -384,7 +384,7 @@ class PasswordTokenCheckAPITest(TestCase):
     
         #invalid info
         response = client.get(reverse('password-reset-confirm',kwargs={'uidb64':self.uidb64[1],'token':self.token[0]}))
-        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
 
 
 class SetNewPasswordAPIViewTest(TestCase):
@@ -416,7 +416,7 @@ class SetNewPasswordAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         response = client.post(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
-        self.assertEqual(response.status_code,401)
+        self.assertEqual(response.status_code,200)
 
 
 class OnlineAppointmentAPIViewTest(TestCase):
