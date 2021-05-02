@@ -22,7 +22,7 @@ import { API_BASE_URL } from "../apiConstant/apiConstant";
 import axios from "axios";
 import { duration } from "@material-ui/core";
 import { BiChevronDown } from "react-icons/bi";
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, yupToFormErrors } from 'formik';
 import * as Yup from 'yup';
 
 //یا همه ی موارد ولی ربای حذف یا یه چیز جدا
@@ -48,12 +48,12 @@ function Doctorcalender() {
   const [endselectedday, setendseletedday] = useState("");
   const [col, setcol] = useState(randomColor())
   //az get
-  const [littleadd, setlittleadd] = useState("همه ی آدرس ها ( برای حذف )");
+  const [littleadd, setlittleadd] = useState("همه (برای حذف)");
   const [addressid, setaddressid] = useState(1);
 
   const [openSnack, setOpenSnack] = useState(false);
   const [add, setadd] = useState({ address: "... برای آدرس", addressnumber: "", id: "" });
-  const [haddresses, sethaddresses] = useState([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }]);
+  const [haddresses, sethaddresses] = useState([{ add1: "همه (برای حذف)", id: "" }]);
   const [showdetail, setshowdetail] = useState(false);
   const [durationmode, setdurationmode] = useState([{ name: "همه (برای حذف)", duration: "all" },
     //  { name: "وقت عادی", duration: hduration, color: "#008F81" }
@@ -83,6 +83,17 @@ function Doctorcalender() {
   const [iseditingduration, setiseditingduration] = useState();
   const [iseditingmduration, setiseditingmduration] = useState();
   const [ischangingmduration, setischangingmduration] = useState(false);
+  const [hplusclicked, sethplusclicked] = useState()
+  const [addressesbordercolor, setaddressesbordercolor] = useState("red")
+  const [hdurationsbordercolor, sethdurationsbordercolor] = useState()
+  const [hstartborder,sethstartborder]=useState("lightgray")
+  const [hstarttborder,sethstarttborder]=useState("lightgray")
+  const [hsendborder,sethendborder]=useState("lightgray")
+  const [hsenddborder,sethenddborder]=useState("lightgray")
+  const [addressisempty,setaddressisempty]=useState("gray")
+  const [addressiswrong,setaddressiswrong]=useState("gray")
+  const [durationiswrong,setdurationiswrong]=useState("gray");
+  
   // const [showmchangingdurationmodal,setshowmchangingdurationmodal]=useState("nothing")
 
   //validation ***
@@ -334,25 +345,79 @@ function Doctorcalender() {
   const handleaddhfield = () => {
     if (selectedduration.duration === "all") {
       console.log("selected duration is all")
-      if (add.address === "... برای آدرس") {
-        setemptymduration(undefined)
-        setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
-        setOpenSnack(true);
-      }
-      else {
-        setemptymduration(undefined)
-        setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
-        setOpenSnack(true);
-      }
+      setdurationiswrong("red")
+      // if (add.address === "... برای آدرس") {
+      //   setemptymduration(undefined)
+      //   setemptyhduration("لطفا فیلد مربوط به مدت زمان و آدرس هر وقت حضوری را پر کنید")
+      //   setOpenSnack(true);
+      // }
+      // else {
+      //   setemptymduration(undefined)
+      //   setemptyhduration("لطفا فیلد مربوط به مدت زمان هر وقت حضوری خود را پر کنید")
+      //   setOpenSnack(true);
+      // }
     }
-    else if (add.address === "... برای آدرس") {
-      setemptymduration(undefined)
-      setemptyhduration("لطفا آدرس مورد نظر برای هر وقت حضوری را اتخاب کنید")
-      setOpenSnack(true);
+    else{
+      setdurationiswrong("gray")
     }
+    if (add.address === "... برای آدرس") {
+     setaddressisempty("red")
+    }
+    else{
+      setaddressisempty("gray")
+    }
+     if(add.address==="همه (برای حذف)"){
+      setaddressiswrong("red")
+    }
+    else{
+      setaddressiswrong("gray")
+    }
+    if(hfields[0].start === ""||parseInt(hfields[0].start)>24){
+      console.log(" start red shod")
+      sethstartborder("red")
+      console.log(hstartborder)
+    }
+    else{
+      console.log("start ghermez nashod")
 
+      sethstartborder("lightgray")
+    }
+    if(hfields[0].startt === ""||parseInt(hfields[0].startt)>59){
+      sethstarttborder("red")
+    }
+    else{
+      sethstartborder("lightgray")
+    }
+    if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
+      sethendborder("red")
+    }
+    else{
+      sethendborder("lightgray")
+    }
+    if(hfields[0].endd === ""||parseInt(hfields[0].endd)>59){
+      sethenddborder("red")
+    }
+    else{
+      sethenddborder("lightgray")
+    }
+    console.log(selectedduration.duration +" selected duration" )
+    console.log(add.address+" add address")
+    console.log(hfields[0].start+" start")
+    console.log(""===(hfields[0].start))
+    console.log(hfields[0].startt+" startt")
+    console.log(hfields[0].end+" end")
+    console.log(hfields[0].endd+" endd")
+    console.log(hstartborder)
+    console.log(hstarttborder)
+    console.log(hsenddborder)
+    console.log(hsenddborder)
+    console.log(addressisempty)
+    console.log(addressiswrong)
+    console.log(durationiswrong)
+   
 
-    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "" && selectedduration.duration !== "all" && add.address !== "... برای آدرس") {
+    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>24 ||
+     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>24||add.address==="همه (برای حذف)"||add.address === "... برای آدرس"||selectedduration.duration === "all")) {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -498,8 +563,45 @@ function Doctorcalender() {
     }
   }
   const handleremovehfield = (index) => {
+    setaddressiswrong("gray")
+    setdurationiswrong("gray")
+    if (add.address === "... برای آدرس") {
+      setaddressisempty("red")
+     }
+     else{
+       setaddressisempty("gray")
+     }
+    if(hfields[0].start === ""||parseInt(hfields[0].start)>24){
+      console.log(" start red shod")
+      sethstartborder("red")
+      console.log(hstartborder)
+    }
+    else{
+      console.log("start ghermez nashod")
 
-    if (hfields[0].start !== "" && hfields[0].startt !== "" && hfields[0].end !== "" && hfields[0].endd !== "") {
+      sethstartborder("lightgray")
+    }
+    if(hfields[0].startt === ""||parseInt(hfields[0].startt)>59){
+      sethstarttborder("red")
+    }
+    else{
+      sethstartborder("lightgray")
+    }
+    if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
+      sethendborder("red")
+    }
+    else{
+      sethendborder("lightgray")
+    }
+    if(hfields[0].endd === ""||parseInt(hfields[0].endd)>59){
+      sethenddborder("red")
+    }
+    else{
+      sethenddborder("lightgray")
+    }
+
+    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>24 ||
+     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>24||add.address === "... برای آدرس"))  {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -614,7 +716,7 @@ function Doctorcalender() {
       //     // if(hozoris[index].duration!==""){
       //     if (parseInt(hozoris[index].duration) === parseInt(duration)) {
       //       console.log(add.address + " add.address")
-      //       if (add.address != "همه ی آدرس ها ( برای حذف )") {
+      //       if (add.address != "همه (برای حذف)") {
       //         if (hozoris[index].address === add.address) {
       //           console.log(" OMAD INJS ")
       //           values.splice(index, 1);
@@ -673,13 +775,13 @@ function Doctorcalender() {
           console.log(" in if")
           console.log(add.address + " add address")
           console.log(values[index].addressnumber + " hozori address")
-          console.log(add.address !== "همه ی آدرس ها ( برای حذف )")
+          console.log(add.address !== "همه (برای حذف)")
           console.log(values[index].duration === selectedduration.duration)
           console.log(values[index].duration)
           console.log(selectedduration.duration)
           console.log("bool")
           if (selectedduration.duration === "all") {
-            if (add.address !== "همه ی آدرس ها ( برای حذف )") {
+            if (add.address !== "همه (برای حذف)") {
               console.log(" toye if hameye address ha nist")
               console.log(index + " index")
               console.log(values[index])
@@ -705,7 +807,7 @@ function Doctorcalender() {
           }
           //ino shak daram toye validation bayad handle ke yeho hduration ro khali ya pak nakone
           else if (values[index].duration === selectedduration.duration || selectedduration.duration === "") {
-            if (add.address !== "همه ی آدرس ها ( برای حذف )") {
+            if (add.address !== "همه (برای حذف)") {
               console.log(" toye if hameye address ha nist")
               console.log(index + " index")
               console.log(values[index])
@@ -1046,7 +1148,7 @@ function Doctorcalender() {
       // { name: "وقت عادی", duration: hduration, color: "#008F81" }])
       console.log(newselectedday)
       console.log(startselectedday)
-      // sethaddresses([{ add1: "همه ی آدرس ها ( برای حذف )", id: "" }])
+      // sethaddresses([{ add1: "همه (برای حذف)", id: "" }])
       console.log("MOTEFAVET")
       sethozoris([])
       setmagazis([])
@@ -1115,11 +1217,11 @@ function Doctorcalender() {
               {/* mt - 2 وسط وسط نیست */}
               {/* <div class="row  align-items-start col-auto ms-5"> */}
               <div class="d-flex flex-row ms-5 " style={{}}>
-                {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
+                {haddresses.length > 1 ? <div class="dropdown"   dir="rtl" >
                   <a class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {add.address}
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-end me-auto"  aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
@@ -1168,7 +1270,10 @@ function Doctorcalender() {
                       )
                     })}
                   </ul>
-                </div> : null}
+                 
+                </div>
+                 
+                : null}
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
                 {durationmode.length >= 1 ? <div class="dropdown shadow-s me-sm-5 me-2" dir="rtl" >
@@ -1253,49 +1358,49 @@ function Doctorcalender() {
                       //   email: Yup.string().email('Invalid email address').required('Required'),
                       // })}
                       // onSubmit={(values, { setSubmitting }) => {
-                         // var col=randomColor()
+                      // var col=randomColor()
 
-                        // ttttt
+                      // ttttt
 
 
-                     
+
                       class=" d-flex flex-row mt-2 mx-1 " data-ref="one" >
-                      <BsPlusCircleFill color="gray" onClick={()=>{
-                        console.log(dmdur+"dmdur")
-                        console.log(dmhdur+" dmhdur")
-                        
-                        if(dmhdur===""|| dmhdur>60|| dmdur===""||durationmode.findIndex((element)=>element.name===dmdur)===-1){
+                      <BsPlusCircleFill color="gray" onClick={() => {
+                        console.log(dmdur + "dmdur")
+                        console.log(dmhdur + " dmhdur")
+
+                        if (dmhdur === "" || dmhdur > 60 || dmdur === "" || durationmode.findIndex((element) => element.name === dmdur) === -1) {
                           setsnackbarerror("مدت زمان و نام بازه ی زمانی نباید خالی باشند و نام بازه ی زمانی نباید تکراری باشد و حداکثر مقدار مدت زمان 60 دقیقه است")
                           setOpenSnack(true);
                         }
-                        else{
+                        else {
                           var formdata = new FormData()
-                        formdata.append("time_type", dmdur)
-                        formdata.append("duration", dmhdur)
-                        formdata.append("duration_number", col)
+                          formdata.append("time_type", dmdur)
+                          formdata.append("duration", dmhdur)
+                          formdata.append("duration_number", col)
 
-                        axios.post(API_BASE_URL + "/doctor/" + 1 + "/duration/", formdata)
-                          .then(function (response) {
-                            console.log(response)
-                            setselectedduration({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
-                            var values = [...durationmode];
-                            values.push({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
-                            // setdmhdur("مدت زمان")
-                            // setdmdur("نوع بازه ی زمانی")
-                            setcol(randomColor());
-                            console.log(values + " values")
-                            setdurationmode(values)
-                            console.log(durationmode)
-                            //*** ye snackbar vahed baraye hameja besazim */
-                            // alert("بازه ی زمانی شما با موفقیت اضافه شد")
-                          })
-                          .catch(function (error) {
-                            console.log(error);
-                            // alert(error)
-                          });
-                        console.log(dmhdur + " dmhdur")
+                          axios.post(API_BASE_URL + "/doctor/" + 1 + "/duration/", formdata)
+                            .then(function (response) {
+                              console.log(response)
+                              setselectedduration({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
+                              var values = [...durationmode];
+                              values.push({ name: dmdur, duration: dmhdur, color: col, durationid: response.data.id })
+                              // setdmhdur("مدت زمان")
+                              // setdmdur("نوع بازه ی زمانی")
+                              setcol(randomColor());
+                              console.log(values + " values")
+                              setdurationmode(values)
+                              console.log(durationmode)
+                              //*** ye snackbar vahed baraye hameja besazim */
+                              // alert("بازه ی زمانی شما با موفقیت اضافه شد")
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                              // alert(error)
+                            });
+                          console.log(dmhdur + " dmhdur")
 
-                        console.log(durationmode + " durationmode")
+                          console.log(durationmode + " durationmode")
                         }
 
                         //  setselectedduration({name:dmdur,duration:dmhdur,color:col})
@@ -1303,14 +1408,16 @@ function Doctorcalender() {
                       } class="min-vw-20 min-vh-20 mt-1 align-self-start " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <div class="mx-1 mt-1 shadow-1" onClick={() => setcol(randomColor())} style={{ backgroundColor: col, borderRadius: 100, height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></div>
                       {/* width:"clamp(100px,15vw,100px) in ba 100px khali fargh dasht */}
-                      <input type="number" style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)",
-                       borderRadius: 50, borderWidth: 1, borderColor: "lightgray" }} class="form-control form-control-sm"
+                      <input type="number" style={{
+                        fontSize: "clamp(11px,2vw,15px)", width: "clamp(86px,15vw,106px)",
+                        borderRadius: 50, borderWidth: 1, borderColor: "lightgray"
+                      }} class="form-control form-control-sm"
                         lang="fa" dir="rtl" value={dmhdur} placeholder={"مدت زمان"} onChange={(event) => setdmhdur(event.target.value)}></input>
                       {/* {Formik.touchecd.dmdur && Formik.error.dmdur? */}
-                   
-                      <input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }} 
-                      lang="fa" dir="rtl" class="form-control form-control-sm" placeholder={"نوع بازه ی زمانی"} value={dmdur}
-                       onChange={(event) => setdmdur(event.target.value)}>
+
+                      <input style={{ fontSize: "clamp(11px,2vw,15px)", width: "clamp(100px,20vw,150px)", borderRadius: 50 }}
+                        lang="fa" dir="rtl" class="form-control form-control-sm" placeholder={"نوع بازه ی زمانی"} value={dmdur}
+                        onChange={(event) => setdmdur(event.target.value)}>
                       </input>
                     </div>
                   </ul>
@@ -1648,26 +1755,64 @@ function Doctorcalender() {
               {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
                 <div class="carousel-inner"> */}
               <div>
+              {addressisempty==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>انتخاب آدرس الزامی است</div>:null}
+              {addressiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی آدرس ها فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
+              {durationiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی بازه های زمانی فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
                 {hfields.map((hfield, index) => (
-                  <div key={index} >
-                    {/* mt-lg-0 mt-md-3 mt-sm-0 mt-3      col-lg-11 mx-auto*/}
+                  <div
+
+                    // initialValues={{ start: hfield.start, startt: hfield.startt, end: hfield.end, endd: hfield.endd }}
+                    // validationSchema={
+                    //   // hplusclicked===true?     
+                    //   Yup.object({
+                    //     start: Yup.number().integer()
+                    //       .max(24, 'red')
+                    //       .required('Required'),
+                    //     startt: Yup.number().integer()
+                    //       .max(59, 'red')
+                    //       .required('Required'),
+                    //     end: Yup.number().integer()
+                    //       .max(24, 'red')
+                    //       .required('Required'),
+                    //     endd: Yup.number().integer()
+                    //       .max(59, 'red')
+                    //       .required('Required'),
+                    //   })}
+                  key={index} >
+                     {/* {formik => {
+                       console.log(formik.touched)
+                       console.log("touched")
+                       console.log(formik.error)
+                       return( */}
+                   
                     <div class="carousel-item-active  d-block d-flex flex-row mt-3 align-items-center ">
-                      <BsPlusCircleFill color="gray" onClick={() => handleaddhfield(true)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
-                      <AiFillMinusCircle color="gray" onClick={() => handleremovehfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
+                      <BsPlusCircleFill color="gray" type="submit" onClick={() => {
+                        sethplusclicked(true);
+                        handleaddhfield(true)
+                      }} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
+                      <AiFillMinusCircle type="submit" color="gray" onClick={() => {
+                        sethplusclicked(false)
+                        handleremovehfield(index)
+                      }} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
-                        <input type="number" name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
+                        {/* {formik.touched.start && formik.error.start?
+                          <input type="start" name="start" style={{backgroundColor:"red"}} value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
+                          class="form-control " placeholder="8" aria-label="Username"></input> */}
+                        <input type="number" style={{borderColor:hstartborder}} name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control " placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="startt" value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="startt" style={{borderColor:hstarttborder}} value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="00" aria-label="Server"></input>
                         <span class="input-group-text">-</span>
-                        <input type="numebr" name="end" value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="end" style={{borderColor:hsendborder}} value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="endd" value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="endd" style={{borderColor:hsenddborder}} value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="30" aria-label="Server"></input>
                       </div>
                     </div>
+                {/* )} */}
+                
                   </div>
                 ))}
 
