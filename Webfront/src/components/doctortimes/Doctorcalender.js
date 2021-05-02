@@ -293,7 +293,7 @@ function Doctorcalender() {
       var duration = Cookies.get("onlineduration");
       for (var i = 0; i < magazis.length; i++) {
         // var start = startselectedday + " " + magazis[i].time
-        values.push({ duration: duration, doc_id: 1, start_time: magazis[i].time, end_time: magazis[i].time22 });
+        values.push({ duration: duration, doc_id: Cookies.get("doctorId"), start_time: magazis[i].time, end_time: magazis[i].time22 });
       }
       console.log(" all the magazis values :)")
       var informations = { start_day: startselectedday, end_day: endselectedday, appointments: values }
@@ -317,8 +317,8 @@ function Doctorcalender() {
   const sendhozori = () => {
     if (startselectedday === "") {
       // setemptymduration(undefined)
-      // setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
-      // setOpenSnack(true);
+      setsnackbarerror(" لطفا ابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      setOpenSnack(true);
     }
     else if (hozoris.length !== 0) {
 
@@ -333,7 +333,7 @@ function Doctorcalender() {
         console.log((hozoris))
         console.log(hozoris[i].durationnumber + " HOZORIS I DURATION NUMBER");
         values.push({
-          duration: hozoris[i].duration, start_time: hozoris[i].time, end_time: hozoris[i].time22, doc_id: 1,
+          duration: hozoris[i].duration, start_time: hozoris[i].time, end_time: hozoris[i].time22, doc_id: Cookies.get("doctorId"),
           address_id: hozoris[i].id, time_type: hozoris[i].durationname, address_number: hozoris[i].addressnumber,
           duration_number: hozoris[i].durationnumber
         });

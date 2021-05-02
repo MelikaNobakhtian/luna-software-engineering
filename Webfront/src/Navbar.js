@@ -88,8 +88,8 @@ function Navbar(props) {
   };
 
   return (
-
-    <div className="" style={{ backgroundColor: "#02C39A" }}>
+    // 02C39A
+    <div className="" style={{ backgroundColor: "#EBFCFF" }}>
       <nav
         data-testid="navbar"
         className="navbar navbar-expand-lg navbar-light"
