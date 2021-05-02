@@ -426,8 +426,8 @@ function Doctorcalender() {
     console.log(durationiswrong)
    
 
-    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>24 ||
-     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>24||add.address==="همه (برای حذف)"||add.address === "... برای آدرس"||selectedduration.duration === "all")) {
+    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>59 ||
+     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>59||add.address==="همه (برای حذف)"||add.address === "... برای آدرس"||selectedduration.duration === "all")) {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -610,8 +610,8 @@ function Doctorcalender() {
       sethenddborder("lightgray")
     }
 
-    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>24 ||
-     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>24||add.address === "... برای آدرس"))  {
+    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>59 ||
+     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>59||add.address === "... برای آدرس"))  {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -895,8 +895,8 @@ function Doctorcalender() {
       setmenddborder("lightgray")
     }
 
-    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>24 ||
-     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>24||Cookies.get("onlineduration") === undefined))  {
+    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>59 ||
+     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>59||Cookies.get("onlineduration") === undefined))  {
 
   
       var time = parseInt(mfields[0].start);
@@ -1066,8 +1066,9 @@ function Doctorcalender() {
       setmenddborder("lightgray")
     }
 
-    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>24 ||
-     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>24||Cookies.get("onlineduration") === undefined))  {
+    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>59 ||
+     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>59
+     ||Cookies.get("onlineduration") === undefined))  {
 
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
