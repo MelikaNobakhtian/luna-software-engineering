@@ -86,19 +86,19 @@ function Doctorcalender() {
   const [hplusclicked, sethplusclicked] = useState()
   const [addressesbordercolor, setaddressesbordercolor] = useState("red")
   const [hdurationsbordercolor, sethdurationsbordercolor] = useState()
-  const [hstartborder,sethstartborder]=useState("lightgray")
-  const [hstarttborder,sethstarttborder]=useState("lightgray")
-  const [hsendborder,sethendborder]=useState("lightgray")
-  const [hsenddborder,sethenddborder]=useState("lightgray")
-  const [mstartborder,setmstartborder]=useState("lightgray")
-  const [mstarttborder,setmstarttborder]=useState("lightgray")
-  const [msendborder,setmendborder]=useState("lightgray")
-  const [msenddborder,setmenddborder]=useState("lightgray")
-  const [mdurationisempty,setmdurationisempty]=useState("lightgray")
-  const [addressisempty,setaddressisempty]=useState("gray")
-  const [addressiswrong,setaddressiswrong]=useState("gray")
-  const [durationiswrong,setdurationiswrong]=useState("gray");
-  
+  const [hstartborder, sethstartborder] = useState("lightgray")
+  const [hstarttborder, sethstarttborder] = useState("lightgray")
+  const [hsendborder, sethendborder] = useState("lightgray")
+  const [hsenddborder, sethenddborder] = useState("lightgray")
+  const [mstartborder, setmstartborder] = useState("lightgray")
+  const [mstarttborder, setmstarttborder] = useState("lightgray")
+  const [msendborder, setmendborder] = useState("lightgray")
+  const [msenddborder, setmenddborder] = useState("lightgray")
+  const [mdurationisempty, setmdurationisempty] = useState("lightgray")
+  const [addressisempty, setaddressisempty] = useState("gray")
+  const [addressiswrong, setaddressiswrong] = useState("gray")
+  const [durationiswrong, setdurationiswrong] = useState("gray");
+
   // const [showmchangingdurationmodal,setshowmchangingdurationmodal]=useState("nothing")
 
   //validation ***
@@ -213,7 +213,7 @@ function Doctorcalender() {
         console.log("get koli")
         var Alltheaddresses = response.data.data.addresses;
         var values = [...haddresses];
-        console.log( response.data.data.addresses.length+" lenght")
+        console.log(response.data.data.addresses.length + " lenght")
         for (var i = 0; i < Alltheaddresses.length; i++) {
           values.push({ add1: Alltheaddresses[i].state + "_" + Alltheaddresses[i].city + "_" + Alltheaddresses[i].detail, id: Alltheaddresses[i].id })
         }
@@ -371,56 +371,56 @@ function Doctorcalender() {
       //   setOpenSnack(true);
       // }
     }
-    else{
+    else {
       setdurationiswrong("gray")
     }
     if (add.address === "... برای آدرس") {
-     setaddressisempty("red")
+      setaddressisempty("red")
     }
-    else{
+    else {
       setaddressisempty("gray")
     }
-     if(add.address==="همه (برای حذف)"){
+    if (add.address === "همه (برای حذف)") {
       setaddressiswrong("red")
     }
-    else{
+    else {
       setaddressiswrong("gray")
     }
-    if(hfields[0].start === ""||parseInt(hfields[0].start)>24){
+    if (hfields[0].start === "" || parseInt(hfields[0].start) > 24) {
       console.log(" start red shod")
       sethstartborder("red")
       console.log(hstartborder)
     }
-    else{
+    else {
       console.log("start ghermez nashod")
 
       sethstartborder("lightgray")
     }
-    if(hfields[0].startt === ""||parseInt(hfields[0].startt)>59){
+    if (hfields[0].startt === "" || parseInt(hfields[0].startt) > 59) {
       sethstarttborder("red")
     }
-    else{
+    else {
       sethstarttborder("lightgray")
     }
-    if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
+    if (hfields[0].end === "" || parseInt(hfields[0].end) > 24) {
       sethendborder("red")
     }
-    else{
+    else {
       sethendborder("lightgray")
     }
-    if(hfields[0].endd === ""||parseInt(hfields[0].endd)>59){
+    if (hfields[0].endd === "" || parseInt(hfields[0].endd) > 59) {
       sethenddborder("red")
     }
-    else{
+    else {
       sethenddborder("lightgray")
     }
-    console.log(selectedduration.duration +" selected duration" )
-    console.log(add.address+" add address")
-    console.log(hfields[0].start+" start")
-    console.log(""===(hfields[0].start))
-    console.log(hfields[0].startt+" startt")
-    console.log(hfields[0].end+" end")
-    console.log(hfields[0].endd+" endd")
+    console.log(selectedduration.duration + " selected duration")
+    console.log(add.address + " add address")
+    console.log(hfields[0].start + " start")
+    console.log("" === (hfields[0].start))
+    console.log(hfields[0].startt + " startt")
+    console.log(hfields[0].end + " end")
+    console.log(hfields[0].endd + " endd")
     console.log(hstartborder)
     console.log(hstarttborder)
     console.log(hsenddborder)
@@ -428,10 +428,10 @@ function Doctorcalender() {
     console.log(addressisempty)
     console.log(addressiswrong)
     console.log(durationiswrong)
-   
 
-    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>59 ||
-     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>59||add.address==="همه (برای حذف)"||add.address === "... برای آدرس"||selectedduration.duration === "all")) {
+
+    if (!(hfields[0].start === "" || parseInt(hfields[0].start) > 24 || hfields[0].startt === "" || parseInt(hfields[0].startt) > 59 ||
+      hfields[0].end === "" || parseInt(hfields[0].end) > 24 || hfields[0].endd === "" || parseInt(hfields[0].endd) > 59 || add.address === "همه (برای حذف)" || add.address === "... برای آدرس" || selectedduration.duration === "all")) {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -440,7 +440,7 @@ function Doctorcalender() {
       const enddt = parseInt(hfields[0].endd)
       //intori toye vaght adi moshkel
       console.log(selectedduration);
-      if (selectedduration.name !== "وقت عادی" && selectedduration.name !== "نوع بازه ی زمانی") {
+      if (selectedduration.name !== "نوع بازه ی زمانی") {
         var duration = parseInt(selectedduration.duration);
       }
       else {
@@ -581,41 +581,41 @@ function Doctorcalender() {
     setdurationiswrong("gray")
     if (add.address === "... برای آدرس") {
       setaddressisempty("red")
-     }
-     else{
-       setaddressisempty("gray")
-     }
-    if(hfields[0].start === ""||parseInt(hfields[0].start)>24){
+    }
+    else {
+      setaddressisempty("gray")
+    }
+    if (hfields[0].start === "" || parseInt(hfields[0].start) > 24) {
       console.log(" start red shod")
       sethstartborder("red")
       console.log(hstartborder)
     }
-    else{
+    else {
       console.log("start ghermez nashod")
 
       sethstartborder("lightgray")
     }
-    if(hfields[0].startt === ""||parseInt(hfields[0].startt)>59){
+    if (hfields[0].startt === "" || parseInt(hfields[0].startt) > 59) {
       sethstarttborder("red")
     }
-    else{
+    else {
       sethstarttborder("lightgray")
     }
-    if(hfields[0].end === ""||parseInt(hfields[0].end)>24){
+    if (hfields[0].end === "" || parseInt(hfields[0].end) > 24) {
       sethendborder("red")
     }
-    else{
+    else {
       sethendborder("lightgray")
     }
-    if(hfields[0].endd === ""||parseInt(hfields[0].endd)>59){
+    if (hfields[0].endd === "" || parseInt(hfields[0].endd) > 59) {
       sethenddborder("red")
     }
-    else{
+    else {
       sethenddborder("lightgray")
     }
 
-    if (!(hfields[0].start === ""||parseInt(hfields[0].start)>24 || hfields[0].startt === ""||parseInt(hfields[0].startt)>59 ||
-     hfields[0].end === ""||parseInt(hfields[0].end)>24 ||hfields[0].endd === ""||parseInt(hfields[0].endd)>59||add.address === "... برای آدرس"))  {
+    if (!(hfields[0].start === "" || parseInt(hfields[0].start) > 24 || hfields[0].startt === "" || parseInt(hfields[0].startt) > 59 ||
+      hfields[0].end === "" || parseInt(hfields[0].end) > 24 || hfields[0].endd === "" || parseInt(hfields[0].endd) > 59 || add.address === "... برای آدرس")) {
 
       var time = parseInt(hfields[0].start);
       console.log(time + " start")
@@ -866,43 +866,43 @@ function Doctorcalender() {
   const handleaddmfield = () => {
     if (Cookies.get("onlineduration") === undefined) {
       setmdurationisempty("red")
-     }
-     else{
-       setmdurationisempty("lightgray")
-     }
-    if(mfields[0].start === ""||parseInt(mfields[0].start)>24){
+    }
+    else {
+      setmdurationisempty("lightgray")
+    }
+    if (mfields[0].start === "" || parseInt(mfields[0].start) > 24) {
       console.log(" start red shod")
       setmstartborder("red")
       console.log(hstartborder)
     }
-    else{
+    else {
       console.log("start ghermez nashod")
 
       setmstartborder("lightgray")
     }
-    if(mfields[0].startt === ""||parseInt(mfields[0].startt)>59){
+    if (mfields[0].startt === "" || parseInt(mfields[0].startt) > 59) {
       setmstarttborder("red")
     }
-    else{
+    else {
       setmstarttborder("lightgray")
     }
-    if(mfields[0].end === ""||parseInt(mfields[0].end)>24){
+    if (mfields[0].end === "" || parseInt(mfields[0].end) > 24) {
       setmendborder("red")
     }
-    else{
+    else {
       setmendborder("lightgray")
     }
-    if(mfields[0].endd === ""||parseInt(mfields[0].endd)>59){
+    if (mfields[0].endd === "" || parseInt(mfields[0].endd) > 59) {
       setmenddborder("red")
     }
-    else{
+    else {
       setmenddborder("lightgray")
     }
 
-    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>59 ||
-     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>59||Cookies.get("onlineduration") === undefined))  {
+    if (!(mfields[0].start === "" || parseInt(mfields[0].start) > 24 || mfields[0].startt === "" || parseInt(mfields[0].startt) > 59 ||
+      mfields[0].end === "" || parseInt(mfields[0].end) > 24 || mfields[0].endd === "" || parseInt(mfields[0].endd) > 59 || Cookies.get("onlineduration") === undefined)) {
 
-  
+
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
       var timee = parseInt(mfields[0].startt);
@@ -1037,42 +1037,42 @@ function Doctorcalender() {
   const handleremovemfield = (index) => {
     if (Cookies.get("onlineduration") === undefined) {
       setmdurationisempty("red")
-     }
-     else{
-       setmdurationisempty("lightgray")
-     }
-    if(mfields[0].start === ""||parseInt(mfields[0].start)>24){
+    }
+    else {
+      setmdurationisempty("lightgray")
+    }
+    if (mfields[0].start === "" || parseInt(mfields[0].start) > 24) {
       console.log(" start red shod")
       setmstartborder("red")
       console.log(hstartborder)
     }
-    else{
+    else {
       console.log("start ghermez nashod")
 
       setmstartborder("lightgray")
     }
-    if(mfields[0].startt === ""||parseInt(mfields[0].startt)>59){
+    if (mfields[0].startt === "" || parseInt(mfields[0].startt) > 59) {
       setmstarttborder("red")
     }
-    else{
+    else {
       setmstarttborder("lightgray")
     }
-    if(mfields[0].end === ""||parseInt(mfields[0].end)>24){
+    if (mfields[0].end === "" || parseInt(mfields[0].end) > 24) {
       setmendborder("red")
     }
-    else{
+    else {
       setmendborder("lightgray")
     }
-    if(mfields[0].endd === ""||parseInt(mfields[0].endd)>59){
+    if (mfields[0].endd === "" || parseInt(mfields[0].endd) > 59) {
       setmenddborder("red")
     }
-    else{
+    else {
       setmenddborder("lightgray")
     }
 
-    if (!(mfields[0].start === ""||parseInt(mfields[0].start)>24 || mfields[0].startt === ""||parseInt(mfields[0].startt)>59 ||
-     mfields[0].end === ""||parseInt(mfields[0].end)>24 ||mfields[0].endd === ""||parseInt(mfields[0].endd)>59
-     ||Cookies.get("onlineduration") === undefined))  {
+    if (!(mfields[0].start === "" || parseInt(mfields[0].start) > 24 || mfields[0].startt === "" || parseInt(mfields[0].startt) > 59 ||
+      mfields[0].end === "" || parseInt(mfields[0].end) > 24 || mfields[0].endd === "" || parseInt(mfields[0].endd) > 59
+      || Cookies.get("onlineduration") === undefined)) {
 
       var time = parseInt(mfields[0].start);
       console.log(time + " start")
@@ -1308,11 +1308,11 @@ function Doctorcalender() {
               {/* mt - 2 وسط وسط نیست */}
               {/* <div class="row  align-items-start col-auto ms-5"> */}
               <div class="d-flex flex-row ms-5 " style={{}}>
-                {haddresses.length > 1 ? <div class="dropdown"   dir="rtl" >
-                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{backgroundColor:"#05668D"}}  role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                {haddresses.length > 1 ? <div class="dropdown" dir="rtl" >
+                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{ backgroundColor: "#05668D" }} role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {add.address}
                   </div>
-                  <ul class="dropdown-menu dropdown-menu-end me-auto"  aria-labelledby="dropdownMenuLink">
+                  <ul class="dropdown-menu dropdown-menu-end me-auto" aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
@@ -1361,14 +1361,14 @@ function Doctorcalender() {
                       )
                     })}
                   </ul>
-                 
+
                 </div>
-                 
-                : null}
+
+                  : null}
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
                 {durationmode.length >= 1 ? <div class="dropdown shadow-s me-sm-5 me-2" dir="rtl" >
-                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{backgroundColor:"#05668D"}} role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{ backgroundColor: "#05668D" }} role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </div>
                   <ul class="dropdown-menu mega-dropdown dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
@@ -1381,16 +1381,20 @@ function Doctorcalender() {
                       return (
 
                         <li class="d-flex flex-row" dir="rtl" lang="fa" style={{}}>
+                          {/* [value.name !== "وقت عادی" ? */}
 
-                          {value.duration !== "all" ? [value.name !== "وقت عادی" ?
+                           {/* (<div class="dropdown-item  d-flex flex-row-reverse  " style={{ fontSize: "clamp(12px,2vw,15px)" }} dir="ltr" onClick={() => setselectedduration(value)}
+                            data-ref="one" >{value.name}  {hduration}(دقیقه)
+
+                            </div>)]   */}
+                          {value.duration !== "all" ?
+
                             (<div class="dropdown-item  d-flex flex-row-reverse  " style={{ fontSize: "clamp(12px,2vw,15px)" }} dir="ltr"
                               onClick={() => setselectedduration(value)} data-ref="one" >{value.name}  {value.duration}(دقیقه)
 
-                            </div>) :
-                            (<div class="dropdown-item  d-flex flex-row-reverse  " style={{ fontSize: "clamp(12px,2vw,15px)" }} dir="ltr" onClick={() => setselectedduration(value)}
-                              data-ref="one" >{value.name}  {hduration}(دقیقه)
+                            </div>)
 
-                            </div>)] :
+                            :
                             <div class="dropdown-item  d-flex flex-row-reverse " style={{}} dir="ltr" onClick={() => setselectedduration(value)}
                               data-ref="one" >
                               <div style={{ fontSize: "clamp(12px,2vw,15px)" }} >
@@ -1460,7 +1464,7 @@ function Doctorcalender() {
                         console.log(dmdur + "dmdur")
                         console.log(dmhdur + " dmhdur")
 
-                        if (dmhdur === "" || dmhdur > 60 || dmdur === "" || durationmode.findIndex((element) => element.name === dmdur) === -1) {
+                        if (dmhdur === "" || dmhdur > 60 || dmdur === "" || durationmode.findIndex((element) => element.name === dmdur) !== -1) {
                           setsnackbarerror("مدت زمان و نام بازه ی زمانی نباید خالی باشند و نام بازه ی زمانی نباید تکراری باشد و حداکثر مقدار مدت زمان 60 دقیقه است")
                           setOpenSnack(true);
                         }
@@ -1846,10 +1850,10 @@ function Doctorcalender() {
               {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
                 <div class="carousel-inner"> */}
               <div>
-              {addressisempty==="red"&&haddresses.length>1?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>انتخاب آدرس الزامی است</div>:null}
-              {addressiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی آدرس ها فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
-              {addressisempty==="red"&&haddresses.length===1?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}> برای تعیین وقت حضوری ابتدا در پروفایل خود آدرس مطب و مراکز درمانی ای که در آن ها حضور دارید را اضافه کنید</div>:null}
-              {durationiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی بازه های زمانی فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
+                {addressisempty === "red" && haddresses.length > 1 ? <div class="my-auto" color="red" style={{ color: "red", fontSize: 14 }}>انتخاب آدرس الزامی است</div> : null}
+                {addressiswrong === "red" ? <div class="my-auto" color="red" style={{ color: "red", fontSize: 14 }}>همه ی آدرس ها فقط در زمان حذف میتوانند انتخاب شوند</div> : null}
+                {addressisempty === "red" && haddresses.length === 1 ? <div class="my-auto" color="red" style={{ color: "red", fontSize: 14 }}> برای تعیین وقت حضوری ابتدا در پروفایل خود آدرس مطب و مراکز درمانی ای که در آن ها حضور دارید را اضافه کنید</div> : null}
+                {durationiswrong === "red" ? <div class="my-auto" color="red" style={{ color: "red", fontSize: 14 }}>همه ی بازه های زمانی فقط در زمان حذف میتوانند انتخاب شوند</div> : null}
                 {hfields.map((hfield, index) => (
                   <div
 
@@ -1870,13 +1874,13 @@ function Doctorcalender() {
                     //       .max(59, 'red')
                     //       .required('Required'),
                     //   })}
-                  key={index} >
-                     {/* {formik => {
+                    key={index} >
+                    {/* {formik => {
                        console.log(formik.touched)
                        console.log("touched")
                        console.log(formik.error)
                        return( */}
-                   
+
                     <div class="carousel-item-active  d-block d-flex flex-row mt-3 align-items-center ">
                       <BsPlusCircleFill color="gray" type="submit" onClick={() => {
                         sethplusclicked(true);
@@ -1890,21 +1894,21 @@ function Doctorcalender() {
                         {/* {formik.touched.start && formik.error.start?
                           <input type="start" name="start" style={{backgroundColor:"red"}} value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control " placeholder="8" aria-label="Username"></input> */}
-                        <input type="number" style={{borderColor:hstartborder}} name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" style={{ borderColor: hstartborder }} name="start" value={hfield.start} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control " placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="startt" style={{borderColor:hstarttborder}} value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="startt" style={{ borderColor: hstarttborder }} value={hfield.startt} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="00" aria-label="Server"></input>
                         <span class="input-group-text">-</span>
-                        <input type="number" name="end" style={{borderColor:hsendborder}} value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="end" style={{ borderColor: hsendborder }} value={hfield.end} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" name="endd" style={{borderColor:hsenddborder}} value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
+                        <input type="number" name="endd" style={{ borderColor: hsenddborder }} value={hfield.endd} onChange={(event) => handlehstartchange(index, event)}
                           class="form-control" placeholder="30" aria-label="Server"></input>
                       </div>
                     </div>
-                {/* )} */}
-                
+                    {/* )} */}
+
                   </div>
                 ))}
 
@@ -1934,21 +1938,21 @@ function Doctorcalender() {
                 {hozoris !== [] ? hozoris.map((val, index) => {
 
                   {/* const [buttoncolor,setbuttoncolor]=useState("#53BC48"); */ }
-                  {/* <div class="bt btn-sm col-2  d-flex flex-row col-auto "  data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname} > */}
+                  {/* <div class="bt btn-sm col-2  d-flex flex-row col-auto "  data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname} > */ }
                   return (
-                   
-                    <Button data-bs-toggle="modal"   data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2"
-                    onClick={async (val) => {
-                      await setselectedhdeletemodal((prevState) => ({ ...prevState, value: val, index: index, time: val.time, time22: val.time22 }))
-                      // sessionchange(index, "hozori");
-                      // setbuttoncolor("red")
-                    }}
-                    color={val.durationnumber} style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>
-                    <div data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname}>
-                    {val.time}  ({val.addressnumber})
+
+                    <Button data-bs-toggle="modal" data-bs-target="#deletebuttonmodalh" key={index} type="button" class="bt btn-sm col-2"
+                      onClick={async (val) => {
+                        await setselectedhdeletemodal((prevState) => ({ ...prevState, value: val, index: index, time: val.time, time22: val.time22 }))
+                        // sessionchange(index, "hozori");
+                        // setbuttoncolor("red")
+                      }}
+                      color={val.durationnumber} style={{ margin: 3, backgroundColor: val.durationnumber, borderColor: val.durationnumber }}>
+                      <div data-bs-placement="bottom" data-bs-toggle="tooltip" title={val.durationname}>
+                        {val.time}  ({val.addressnumber})
                     </div>
                     </Button>
-                  
+
                   )
                 }) : null}
                 {/* {hmhconflictmessage != undefined ? <div>{hmhconflictmessage}</div> : null} */}
@@ -1984,7 +1988,7 @@ function Doctorcalender() {
                 {/* <div>درصورتی که مدت زمان هر وقت مجازی خود را تغییر دهید تمامی ویزیت های شما بعد از آخرین ویزیتی که توسط شخصی گرفته شده پاک میشوند</div> */}
                 <div class="row  align-items-start">
                   <div class="col-auto">
-                    <label for="hozori" style={{borderColor:mdurationisempty}} class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
+                    <label for="hozori" style={{ borderColor: mdurationisempty }} class="col-auto ms-n3 sessionstimee ">مدت زمان هر وقت مجازی شما؟</label>
                   </div>
                   {/* class="col-2 me-n3 " */}
                   {/* algin item mishe bardashte baraye balayi ham */}
@@ -2080,7 +2084,7 @@ function Doctorcalender() {
                   </div>
                 </div>
               </div>
-              {mdurationisempty==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>ابتدا مدت زمان هر وقت مجازی خود را وارد کنید</div>:null}
+              {mdurationisempty === "red" ? <div class="my-auto" color="red" style={{ color: "red", fontSize: 14 }}>ابتدا مدت زمان هر وقت مجازی خود را وارد کنید</div> : null}
               {/* تا sm */}
               <div class="d-flex flex-row">
                 {mfields.map((mfield, index) => (
@@ -2090,16 +2094,16 @@ function Doctorcalender() {
                       <BsPlusCircleFill color="gray" onClick={() => handleaddmfield()} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></BsPlusCircleFill>
                       <AiFillMinusCircle color="gray" onClick={() => handleremovemfield(index)} class="min-vw-20 min-vh-20 ms-2 " style={{ height: "clamp(20px,10vh,25px)", width: "clamp(20px,10vw,25px)" }}></AiFillMinusCircle>
                       <div class="input-group   input-group-sm " dir="ltr">
-                        <input type="number" style={{borderColor:mstartborder}} name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
-                          class="form-control "  placeholder="8" aria-label="Username"></input>
+                        <input type="number" style={{ borderColor: mstartborder }} name="start" value={mfield.start} onChange={(event) => handlemstartchange(index, event)}
+                          class="form-control " placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" style={{borderColor:mstarttborder}} name="startt" value={mfield.startt} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="number" style={{ borderColor: mstarttborder }} name="startt" value={mfield.startt} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="00" aria-label="Server"></input>
                         <span class="input-group-text">-</span>
-                        <input type="numebr" style={{borderColor:msendborder}} name="end" value={mfield.end} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="numebr" style={{ borderColor: msendborder }} name="end" value={mfield.end} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="8" aria-label="Username"></input>
                         <span class="input-group-text">:</span>
-                        <input type="number" style={{borderColor:msenddborder}} name="endd" value={mfield.endd} onChange={(event) => handlemstartchange(index, event)}
+                        <input type="number" style={{ borderColor: msenddborder }} name="endd" value={mfield.endd} onChange={(event) => handlemstartchange(index, event)}
                           class="form-control" placeholder="30" aria-label="Server"></input>
                       </div>
 
@@ -2112,7 +2116,7 @@ function Doctorcalender() {
 
 
             </div>
-                 
+
             <div class="p-3 border d-flex  col-sm-auto col-12 flex-column border
             mt-4 overflow-auto
 
@@ -2262,38 +2266,38 @@ function Doctorcalender() {
         }}>
 
           {/* <div class="border rounded-3 shadow-3 col-auto w-auto h-auto "> */}
-          <div class="custom-calendar  col-md-auto col-sm-5 col-9" style={{borderRadius:20,position:"relative"}}>
-          <Calendar
+          <div class="custom-calendar  col-md-auto col-sm-5 col-9" style={{ borderRadius: 20, position: "relative" }}>
+            <Calendar
 
-            // backgroundColor="green"
-            // theme="dark"
-            // background-image="blue"
+              // backgroundColor="green"
+              // theme="dark"
+              // background-image="blue"
 
-            style={{ borderColor: "green" }}
-            // style={{marginLeft:100}}
-            // class="shadow-lg "
-            shouldHighlightWeekends="true"
-            // calss="mb-3"
-            borderColor="green"
-            colorPrimary="#02A27F"
-            isPersian={true}
-            minimumDate={utils("fa").getToday()}
-            calendarTodayClassName="custom-today-day"
-            colorPrimaryLight="rgba(2, 195, 154, 0.4)"
-            calendarClassName="responsive-calendar custom-calendar"
-            value={selectedDayRange}
-            onChange={
-              (value) => calenderchange(value)
+              style={{ borderColor: "green" }}
+              // style={{marginLeft:100}}
+              // class="shadow-lg "
+              shouldHighlightWeekends="true"
+              // calss="mb-3"
+              borderColor="green"
+              colorPrimary="#02A27F"
+              isPersian={true}
+              minimumDate={utils("fa").getToday()}
+              calendarTodayClassName="custom-today-day"
+              colorPrimaryLight="rgba(2, 195, 154, 0.4)"
+              calendarClassName="responsive-calendar custom-calendar"
+              value={selectedDayRange}
+              onChange={
+                (value) => calenderchange(value)
 
-            }
-            // colorPrimary="#02C39A"
-            // isPersian={true}
-            // minimumDate={utils("fa").getToday()}
-            // calendarTodayClassName="custom-today-day"
-            // colorPrimaryLight="rgba(240, 243, 189, 0.4)"
+              }
+              // colorPrimary="#02C39A"
+              // isPersian={true}
+              // minimumDate={utils("fa").getToday()}
+              // calendarTodayClassName="custom-today-day"
+              // colorPrimaryLight="rgba(240, 243, 189, 0.4)"
 
-            locale="fa" // add this
-          />
+              locale="fa" // add this
+            />
           </div>
           {/* </div> */}
 
