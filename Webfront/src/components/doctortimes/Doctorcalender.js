@@ -277,8 +277,8 @@ function Doctorcalender() {
 
     if (startselectedday === "") {
       // setemptymduration(undefined)
-      // setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
-      // setOpenSnack(true);
+      setsnackbarerror("لطفاابتدا تاریخ مورد نظر خود را مشخص نمایید")
+      setOpenSnack(true);
     }
     else {
 
@@ -300,6 +300,9 @@ function Doctorcalender() {
       })
         .then(function (response) {
           console.log(response)
+          console.log("HEREEE")
+          setsnackbarerror("مدت زمان های ویزیت آنلاین شما با موفقیت تغییر کردند")
+          setOpenSnack(true);
         })
         .catch(function (error) {
           console.log(error);
@@ -340,6 +343,8 @@ function Doctorcalender() {
       })
         .then(function (response) {
           console.log(response)
+          setsnackbarerror("مدت زمان های ویزیت حضوری شما با موفقیت تغییر کردند")
+          setOpenSnack(true);
         })
         .catch(function (error) {
           console.log(error);
