@@ -1304,15 +1304,15 @@ function Doctorcalender() {
               {/* <div class="row  align-items-start col-auto ms-5"> */}
               <div class="d-flex flex-row ms-5 " style={{}}>
                 {haddresses.length > 1 ? <div class="dropdown"   dir="rtl" >
-                  <a class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{backgroundColor:"#05668D"}}  role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {add.address}
-                  </a>
+                  </div>
                   <ul class="dropdown-menu dropdown-menu-end me-auto"  aria-labelledby="dropdownMenuLink">
                     {/* <li><a class="dropdown-item " onClick={() => setadd("... برای آدرس ")} data-ref="one" >... برای آدرس</a></li> */}
                     {haddresses.map((value, index) => {
                       var indexx = index + 1;
-                      if (value.add1.toString().length > 10) {
-                        var thisadd = value.add1.toString().substring(0, 10) + " ..."
+                      if (value.add1.toString().length > 30) {
+                        var thisadd = value.add1.toString().substring(0, 30) + " ..."
                         console.log(thisadd)
 
                       }
@@ -1328,7 +1328,7 @@ function Doctorcalender() {
                       <BiChevronDown size={20} class="m-1" color="#028090"></BiChevronDown>
                       </div> */}
 
-                        {value.add1.toString().length > 10 && index > 0 ? <div dir="ltr" style={{ fontSize: "clamp(12px,2vw,15px)" }} class="dropdown-item d-flex flex-row-reverse mx-auto"
+                        {value.add1.toString().length > 30 && index > 0 ? <div dir="ltr" style={{ fontSize: "clamp(12px,2vw,15px)" }} class="dropdown-item d-flex flex-row-reverse mx-auto"
                           data-bs-toggle="tooltip" data-bs-placement="left"
                           onClick={() => {
                             setlittleadd(thisadd)
@@ -1363,7 +1363,7 @@ function Doctorcalender() {
 
                 {/* ui az aval shoro nemishe va vasate input nist + va harjaye dropdown mizani baste mishe*/}
                 {durationmode.length >= 1 ? <div class="dropdown shadow-s me-sm-5 me-2" dir="rtl" >
-                  <div class="btn btn-sm btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <div class="btn btn-sm btn-secondary dropdown-toggle" style={{backgroundColor:"#05668D"}} role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     {selectedduration.name}
                   </div>
                   <ul class="dropdown-menu mega-dropdown dropdown-menu-end shadow-3 me-auto col-auto" dir="rtl" aria-labelledby="dropdownMenuLink">
@@ -2256,7 +2256,7 @@ function Doctorcalender() {
         }}>
 
           {/* <div class="border rounded-3 shadow-3 col-auto w-auto h-auto "> */}
-          {/* <div class="custom-calendar w-auto h-auto" style={{borderRadius:20}}> */}
+          <div class="custom-calendar  col-md-auto col-sm-5 col-9" style={{borderRadius:20,position:"relative"}}>
           <Calendar
 
             // backgroundColor="green"
@@ -2265,9 +2265,9 @@ function Doctorcalender() {
 
             style={{ borderColor: "green" }}
             // style={{marginLeft:100}}
-
+            // class="shadow-lg "
             shouldHighlightWeekends="true"
-            calss="mb-3"
+            // calss="mb-3"
             borderColor="green"
             colorPrimary="#02A27F"
             isPersian={true}
@@ -2288,7 +2288,7 @@ function Doctorcalender() {
 
             locale="fa" // add this
           />
-          {/* </div> */}
+          </div>
           {/* </div> */}
 
         </div>
