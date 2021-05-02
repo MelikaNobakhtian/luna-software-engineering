@@ -207,13 +207,13 @@ function Doctorcalender() {
     axios.get(API_BASE_URL + "/doctor/" + Cookies.get("doctorId") + "/")
       .then(function (response) {
         // console.log(response)
-        console.log(response.data.addresses);
+        console.log(response.data.data.addresses);
         console.log("addresses")
         console.log(response)
         console.log("get koli")
-        var Alltheaddresses = response.data.addresses;
+        var Alltheaddresses = response.data.data.addresses;
         var values = [...haddresses];
-        console.log( response.data.addresses.length+" lenght")
+        console.log( response.data.data.addresses.length+" lenght")
         for (var i = 0; i < Alltheaddresses.length; i++) {
           values.push({ add1: Alltheaddresses[i].state + "_" + Alltheaddresses[i].city + "_" + Alltheaddresses[i].detail, id: Alltheaddresses[i].id })
         }
@@ -1846,9 +1846,9 @@ function Doctorcalender() {
               {/* <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style={{ backgroundColor: "lightblue" }}>
                 <div class="carousel-inner"> */}
               <div>
-              {addressisempty==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>انتخاب آدرس الزامی است</div>:null}
+              {addressisempty==="red"&&haddresses.length>1?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>انتخاب آدرس الزامی است</div>:null}
               {addressiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی آدرس ها فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
-           
+              {addressisempty==="red"&&haddresses.length===1?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}> برای تعیین وقت حضوری ابتدا در پروفایل خود آدرس مطب و مراکز درمانی ای که در آن ها حضور دارید را اضافه کنید</div>:null}
               {durationiswrong==="red"?<div class="my-auto" color="red" style={{color:"red",fontSize:14}}>همه ی بازه های زمانی فقط در زمان حذف میتوانند انتخاب شوند</div>:null}
                 {hfields.map((hfield, index) => (
                   <div
