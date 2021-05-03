@@ -490,7 +490,7 @@ class SearchDoctorView(generics.GenericAPIView):
         search_models = [User,DoctorUser,Address]
         search_results = []
         for model in search_models:
-            fields = []#x for x in model._meta.fields if isinstance(x, django.db.models.CharField)]        
+            fields = []    
             if model is User:
                 fields.append(model._meta.get_field('first_name'))
                 fields.append(model._meta.get_field('last_name'))
@@ -510,23 +510,36 @@ class SearchDoctorView(generics.GenericAPIView):
 
             for query in search_queries:
                 q_object = q_object & query
-
-            results = model.objects.filter(q_object)
+            
+            if q_object is not None:
+                results = model.objects.filter(q_object)
+            
             if model is User:
                 for r in results:
                     if r.is_doctor == True:
                         search_results.append(DoctorUser.objects.get(user=r))
+            
             if model is DoctorUser:
-                for r in search_results:
-                    if r not in results:
-                        search_results.remove(r)
+                if len(search_results) !=0:
+                    for r in search_results:
+                        if r not in results:
+                            search_results.remove(r)
+                else:
+                    for r in results:
+                        search_results.append(r)
+            
             if model is Address:
                 docs=[]
                 for a in results:
                     docs.append(a.doc)
-                for r in search_results:
-                    if r not in docs:
-                        search_results.remove(r)
+                
+                if len(search_results) !=0:
+                    for r in search_results:
+                        if not docs.__contains__(r):
+                            search_results.remove(r)
+                else:
+                    for d in docs:
+                        search_results.append(d)
 
         doctors = DoctorProfileSerializer(search_results,many=True).data
 
