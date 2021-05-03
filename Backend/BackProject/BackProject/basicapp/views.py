@@ -20,6 +20,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework.parsers import JSONParser
 from datetime import timedelta,datetime
 import jdatetime
+from django.db.models import Q
 
 states = {}
 states["0"]="آذربایجان شرقی"
@@ -53,11 +54,7 @@ states["28"]="مرکزی"
 states["29"]="هرمزگان"
 states["30"]="همدان"
 states["31"]="یزد"
-
-class Check(APIView):
-    def get(self,request):
-        return Response(states)
-        
+    
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -89,8 +86,10 @@ class RegisterDoctorView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
+        user.is_doctor = True
+        user.save()
         degree = request.data.get('degree')
-        new_doc = DoctorUser(user=user,degree=degree,first_name=user.first_name,last_name=user.last_name)
+        new_doc = DoctorUser(user=user,degree=degree)
         new_doc.save()
         token = RefreshToken.for_user(user).access_token
         current_site = 'localhost:3000'
@@ -176,12 +175,7 @@ class UpdateDoctorAddressView(generics.UpdateAPIView):
         serializer = self.serializer_class(address,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            doc.state = Address.objects.get(pk=add_pk).state
-            adds = Address.objects.filter(doc=doc)
-            doc.city = ""
-            for a in adds:
-                doc.city = doc.city + a.city
-            doc.save()
+            
             return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
         return Response({'failure':True},status=status.HTTP_200_OK)
@@ -198,10 +192,7 @@ class SetDoctorAddressView(APIView):
             add = request.data.get('addresses')[counter]
             new_add = Address(state=states[add['state']],doc=doc,city=add['city'],detail=add['detail'])
             doc.state = states[add['state']]
-            if doc.city != "unknown" :
-                doc.city = doc.city + add['city']
-            else:
-                doc.city = add['city']
+            
             new_add.save()
             counter+=1
             
@@ -331,7 +322,6 @@ class FilterHomepageView(APIView):
                     serializer = DoctorProfileSerializer(doc_list,many=True)
                     return Response({"doctors" : serializer.data})
 
-
 class DynamicSearchFilter(filters.SearchFilter):
     def get_search_fields(self, view, request):
         return request.GET.getlist('search-fields', [])
@@ -376,7 +366,6 @@ class OnlineAppointmentView(generics.GenericAPIView):
         serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class InPersonAppointmentView(generics.GenericAPIView):
     serializer_class = InPersonAppointmentSerializer
 
@@ -411,7 +400,6 @@ class InPersonAppointmentView(generics.GenericAPIView):
         serializer = AppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
             
-
 class UpdateOnlineAppointmentView(generics.GenericAPIView):
     
     def get(self,request,pk):
@@ -435,7 +423,6 @@ class UpdateOnlineAppointmentView(generics.GenericAPIView):
         doc = DoctorUser.objects.get(pk=pk)
         Appointment.objects.filter(doctor=doc,is_online=True).delete()
         return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
-
 
 class UpdateInPersonAppointmentView(generics.GenericAPIView):
     
@@ -491,7 +478,63 @@ class UpdateDurationAPIView(generics.GenericAPIView):
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
 
+class SearchDoctorView(generics.GenericAPIView):
+    def get(self,request):
+        search_fields = {}
+        search_fields['state'] = self.request.query_params.get('state', None)
+        search_fields['city'] = self.request.query_params.get('city', None)
+        search_fields['first_name'] = self.request.query_params.get('first_name', None)
+        search_fields['last_name'] = self.request.query_params.get('last_name', None)
+        search_fields['specialty'] = self.request.query_params.get('specialty', None)
 
+        search_models = [User,DoctorUser,Address]
+        search_results = []
+        for model in search_models:
+            fields = []#x for x in model._meta.fields if isinstance(x, django.db.models.CharField)]        
+            if model is User:
+                fields.append(model._meta.get_field('first_name'))
+                fields.append(model._meta.get_field('last_name'))
+            if model is DoctorUser:
+                fields.append(model._meta.get_field('specialty'))
+            if model is Address:
+                fields.append(model._meta.get_field('city'))
+                fields.append(model._meta.get_field('state'))
+            search_queries=[]
+            for x in fields:
+                if search_fields[x.name] is not None:
+                    search_queries.append(Q(**{x.name + "__contains" : search_fields[x.name]}))
 
+            q_object = Q()
+            if len(search_queries) != 0:
+                q_object = q_object | search_queries[0]
 
+            for query in search_queries:
+                q_object = q_object & query
+
+            results = model.objects.filter(q_object)
+            if model is User:
+                for r in results:
+                    if r.is_doctor == True:
+                        search_results.append(DoctorUser.objects.get(user=r))
+            if model is DoctorUser:
+                for r in search_results:
+                    if r not in results:
+                        search_results.remove(r)
+            if model is Address:
+                docs=[]
+                for a in results:
+                    docs.append(a.doc)
+                for r in search_results:
+                    if r not in docs:
+                        search_results.remove(r)
+
+        doctors = DoctorProfileSerializer(search_results,many=True).data
+
+        if doctors == []:
+            return Response({"message":"No doctors found","doctors":doctors})
+
+        return Response({"message":"successfully found these doctors","doctors":doctors})
+
+                
+        
 
