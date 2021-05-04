@@ -42,6 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100,default='unknown')
     email = models.EmailField(max_length=255, unique=True)
     profile_photo = models.ImageField(upload_to='profile_photos',default='default.png')
+    is_doctor = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -72,10 +73,6 @@ class DoctorUser(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    first_name = models.CharField(max_length=50,default='unknown')
-    last_name = models.CharField(max_length=100,default='unknown')
-    state = models.CharField(max_length=255,default='unknown')
-    city = models.CharField(max_length=255,default='unknown')
 
 
 class Address(models.Model):
