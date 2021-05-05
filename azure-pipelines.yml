@@ -47,7 +47,11 @@ steps:
 
 - script: |
     source env/bin/activate
-    sudo -u postgres psql postgres | \password postgres | fateme9622 | CREATE DATABASE lunadb3; | \q
+    sudo -u postgres psql postgres
+    \password postgres
+    fateme9622
+    CREATE DATABASE lunadb3;
+    \q
     pushd '$(projectRoot)'
     python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
   displayName: 'Run tests'
