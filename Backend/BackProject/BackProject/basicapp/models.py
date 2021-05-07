@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 from django_jalali.db import models as jmodels
+from .utils import Util
 
 class UserManager(BaseUserManager):
 
@@ -99,6 +100,16 @@ class InPersonAppointment(models.Model):
     address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
     address_number = models.IntegerField(null=True)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
+
+    def delete(self):
+        if not self.patient is None:
+            email = self.patient.email
+            date = str(self.date)
+            email_body = 'Hi' + self.patient.username + '! \n' + 'Your appointment in ' + date + 'at '+str(self.start_time) + 'is deleted by Doctor. ' + self.doctor.user.last_name
+            data = {'email_body': 'Hello!', 'to_email': email,
+                'email_subject': 'Your appointment is deleted!'}
+            Util.send_email(data)
+        super(InPersonAppointment, self).delete()
 
 class OnlineAppointment(models.Model):
     
