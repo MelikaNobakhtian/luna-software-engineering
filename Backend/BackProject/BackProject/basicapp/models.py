@@ -81,25 +81,35 @@ class Address(models.Model):
     city = models.CharField(max_length=50)
     detail = models.TextField()
 
-class Appointment(models.Model):
-    
-    patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
-    doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
-    duration = models.IntegerField()
-    date = jmodels.jDateField(null=True)
-    start_time = models.TimeField(null=True)
-    end_time = models.TimeField(null=True)
-    is_online = models.BooleanField(default=True)
-    time_type = models.CharField(max_length=150,null=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
-    address_number = models.IntegerField(null=True)
-    duration_number = models.CharField(max_length=200,null=True)
-
 class Duration(models.Model):
-
+    
     doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
     duration = models.IntegerField()
     time_type = models.CharField(max_length=100)
     duration_number = models.CharField(max_length=200)
+    is_edited = models.BooleanField(default=False)
+
+class InPersonAppointment(models.Model):
+    
+    patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
+    doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
+    date = jmodels.jDateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE , null=True)
+    address_number = models.IntegerField(null=True)
+    duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
+
+class OnlineAppointment(models.Model):
+    
+    patient = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
+    doctor = models.ForeignKey(DoctorUser, on_delete=models.CASCADE )
+    date = jmodels.jDateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
+    duration = models.IntegerField()
+    duration_number = models.CharField(max_length=200)
+
+
 
     
