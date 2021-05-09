@@ -478,7 +478,7 @@ class UpdateDurationAPIView(generics.GenericAPIView):
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
 
-class SearchDoctorView(generics.GenericAPIView):
+class SearchDoctorView(APIView):
     def get(self,request):
         search_fields = {}
         search_fields['state'] = self.request.query_params.get('state', None)

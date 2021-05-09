@@ -143,8 +143,6 @@ class SetDoctorAddressViewTest(TestCase):
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
-        
-
 class UpdateDoctorAddressViewTest(TestCase):
     
     def setUp(self):
@@ -276,7 +274,6 @@ class ChangePasswordViewTest(TestCase):
             content_type='application/json')
         self.assertEqual(response_login.status_code,status.HTTP_200_OK)
 
-
 class UpdateUserProfileViewTest(TestCase):
     
     def setUp(self):
@@ -355,7 +352,6 @@ class RequestPasswordResetEmailTest(TestCase):
             content_type='application/json')
         self.assertEqual(response_fail.status_code, status.HTTP_200_OK)
 
-
 class PasswordTokenCheckAPITest(TestCase):
 
     def setUp(self):
@@ -385,7 +381,6 @@ class PasswordTokenCheckAPITest(TestCase):
         #invalid info
         response = client.get(reverse('password-reset-confirm',kwargs={'uidb64':self.uidb64[1],'token':self.token[0]}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-
 
 class SetNewPasswordAPIViewTest(TestCase):
 
@@ -417,7 +412,6 @@ class SetNewPasswordAPIViewTest(TestCase):
         response = client.post(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
         self.assertEqual(response.status_code,200)
-
 
 class OnlineAppointmentAPIViewTest(TestCase):
 
@@ -461,7 +455,6 @@ class OnlineAppointmentAPIViewTest(TestCase):
         response = client.get("/appointment/"+str(doc_id)+"/online/?date=1400-02-14")
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['duration'],20)
-
 
 class InPersonAppointmentAPIViewTest(TestCase):
     
@@ -511,7 +504,6 @@ class InPersonAppointmentAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['time_type'],"general")
     
-
 class UpdateOnlineAppointmentAPIViewTest(TestCase):
 
     def setUp(self):
@@ -588,7 +580,6 @@ class UpdateOnlineAppointmentAPIViewTest(TestCase):
         response = client.delete(reverse('onapt-up',kwargs={'pk':doc_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
-
 
 class UpdateInPersonAppointmentAPIViewTest(TestCase):
 
@@ -674,3 +665,62 @@ class UpdateInPersonAppointmentAPIViewTest(TestCase):
                     content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
+
+class SearchViewTest(TestCase):
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.doc_user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.doc_user.set_password(password)
+        self.doc_user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+        self.doc = DoctorUser(user=self.doc_user,degree=file_mock)
+        self.doc.save()
+        add = Address(doc=self.doc,state='27',city='Sari',detail='Farhang St.')
+        add.save()
+
+        username2 = 'username'
+        email2 = 'testdoctor2@gmail.com'
+        first_name2 = 'Nahid'
+        last_name2 = 'Talebi'
+        password2 = '123456'
+        self.doc_user2 = User(username=username2,email=email2,first_name=first_name2,last_name=last_name2,is_verified=True)
+        self.doc_user2.set_password(password2)
+        self.doc_user2.save()
+        file_mock2 = mock.MagicMock(spec=File)
+        file_mock2.name = 'test2.pdf'
+        self.doc2 = DoctorUser(user=self.doc_user2,degree=file_mock2)
+        self.doc2.save()
+        add2 = Address(doc=self.doc2,state='27',city='Sari',detail='Farhang St.')
+        add2.save() 
+
+    def test_search_by_state(self):
+
+        response_search = client.get("/doctors?state=Maza",content_type='application/json')
+
+        print(response_search)
+        #test status code
+        self.assertEqual(response_search.status_code,status.HTTP_200_OK)
+
+        #test data
+        #self.assertEqual(2,len(response_search.data['doctors']))
+        self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][1]['user']['first_name'])
+        self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][0]['user']['first_name'])
+
+        ##
+
+    def test_search_by_state_and_name(self):
+
+        response_search2 = client.get('/doctors?first_name=Nahi&state=Maz',content_type='application/json')
+
+        print(response_search2)
+        #test status code
+        self.assertEqual(response_search2.status_code,status.HTTP_200_OK)
+    
+        #test data
+        self.assertEqual(1,len(response_search2.data['doctors']))
+        self.assertEqual(self.doc_user2.first_name,response_search2.data['doctors'][0]['user']['first_name'])
