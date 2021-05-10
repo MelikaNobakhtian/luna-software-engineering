@@ -588,6 +588,12 @@ class SearchDoctorView(generics.GenericAPIView):
 
 class FilterBySpecialty(APIView):
     def get(self,request,pk):
-
+        
+        if DoctorUser.objects.filter(specialty=specialties[str(pk)]).exists():
+            doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)])
+            docs = DoctorProfileSerializer(doctors,many=True)
+            return Response({"data":docs.data,"message":"success"})
+            
+        return Response({"message":"No doctors found"})
         
 
