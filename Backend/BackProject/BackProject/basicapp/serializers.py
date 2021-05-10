@@ -209,7 +209,7 @@ class PostOnlineAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OnlineAppointment
-        fields = ['duration','start_time','doc_id','end_time','date_str','duration_number']
+        fields = ['duration','start_time','doc_id','end_time','date_str']
 
     def parse_date(self,date_str):
         date_arr = date_str.split('-')
@@ -222,15 +222,14 @@ class PostOnlineAppointmentSerializer(serializers.ModelSerializer):
 
         doc_id = attrs.get('doc_id', '')
         duration= attrs.get('duration', '')
-        duration_number = attrs.get('duration_number', '')
         start_time = attrs.get('start_time', '')
         end_time = attrs.get('end_time','')
         date = self.parse_date(attrs.get('date_str',''))
         doc = DoctorUser.objects.get(pk=doc_id)
-        apt = OnlineAppointment(duration=duration,doctor=doc,start_time=start_time,end_time=end_time,date=date,duration_number=duration_number)
+        apt = OnlineAppointment(duration=duration,doctor=doc,start_time=start_time,end_time=end_time,date=date)
         apt.save()
 
-        return attrs
+        return apt
 
 class PostInPersonAppointmentSerializer(serializers.ModelSerializer):
     
@@ -242,7 +241,7 @@ class PostInPersonAppointmentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = InPersonAppointment
-        fields = ['duration','start_time','doc_id','address_id','address','address_number','date_str','end_time','duration_id']
+        fields = ['start_time','doc_id','address_id','address','address_number','date_str','end_time','duration_id']
 
     def parse_date(self,date_str):
         date_arr = date_str.split('-')
@@ -263,11 +262,11 @@ class PostInPersonAppointmentSerializer(serializers.ModelSerializer):
         duration = Duration.objects.get(pk=duration_id)
         doc = DoctorUser.objects.get(pk=doc_id)
         address = Address.objects.get(pk=address_id)
-        apt = Appointment(date=date,duration=duration,doctor=doc,start_time=start_time,end_time=end_time
-                          ,address_number=address_number)
+        apt = InPersonAppointment(date=date,duration=duration,doctor=doc,start_time=start_time,end_time=end_time
+                          ,address_number=address_number,address=address)
         apt.save()
 
-        return attrs
+        return apt
 
 
 class DurationSerializer(serializers.ModelSerializer):

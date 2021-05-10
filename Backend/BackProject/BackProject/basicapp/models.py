@@ -102,6 +102,7 @@ class InPersonAppointment(models.Model):
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
 
     def delete(self):
+        print("im here")
         if not self.patient is None:
             email = self.patient.email
             date = str(self.date)

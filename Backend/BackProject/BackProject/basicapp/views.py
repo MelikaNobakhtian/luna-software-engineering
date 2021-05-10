@@ -349,6 +349,7 @@ class OnlineAppointmentView(generics.GenericAPIView):
         return jdatetime.date(year,month,day)
 
     def post(self, request,pk):
+        apts = []
         start_day = self.parse_date(request.data['start_day'])
         end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
@@ -357,11 +358,16 @@ class OnlineAppointmentView(generics.GenericAPIView):
                 apt['date_str'] = str(start_day)
                 serializer = PostOnlineAppointmentSerializer(data=apt)
                 serializer.is_valid(raise_exception=True)
+                apts.append(serializer.validated_data)
             start_day = start_day + timedelta(days=1)
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = OnlineAppointment.objects.filter(doctor=doc)
         serializer = OnlineAppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self,request,pk):
+        idx = request.data['index']
+        for index in idx:
+            OnlineAppointment.objects.get(pk=index).delete()
+        return Response({'message':'deleted!'},status=status.HTTP_200_OK)
 
 class InPersonAppointmentView(generics.GenericAPIView):
 
@@ -380,6 +386,7 @@ class InPersonAppointmentView(generics.GenericAPIView):
         return jdatetime.date(year,month,day)
 
     def post(self, request, pk):
+        apts = []
         start_day = self.parse_date(request.data['start_day'])
         end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
@@ -388,62 +395,18 @@ class InPersonAppointmentView(generics.GenericAPIView):
                 apt['date_str'] = str(start_day)
                 serializer = PostInPersonAppointmentSerializer(data=apt)
                 serializer.is_valid(raise_exception=True)
+                apts.append(serializer.validated_data)
             start_day = start_day + timedelta(days=1)
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = InPersonAppointment.objects.filter(doctor=doc)
         serializer = InPersonAppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self,request,pk):
+        idx = request.data['index']
+        for index in idx:
+            InPersonAppointment.objects.get(pk=index).delete()
+        return Response({'message':'deleted!'},status=status.HTTP_200_OK)
             
-# class UpdateOnlineAppointmentView(generics.GenericAPIView):
-    
-#     def get(self,request,pk):
-#         doc = DoctorUser.objects.get(pk=pk)
-#         apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=True)
-#         apts = sorted(apts ,  key=lambda m: m.date)
-#         if len(apts) == 0:
-#             return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-#         last_reserved = apts[len(apts) - 1 ].date
-#         data = { 'datetime' : str(last_reserved) }
-#         return Response(data, status=status.HTTP_200_OK)
 
-#     def put(self,request,pk):
-#         doc = DoctorUser.objects.get(pk=pk)
-#         Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=True).delete()
-#         apts = Appointment.objects.filter(doctor=doc,is_online=True)
-#         serializer = AppointmentSerializer(apts,many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-#     def delete(self,request,pk):
-#         doc = DoctorUser.objects.get(pk=pk)
-#         Appointment.objects.filter(doctor=doc,is_online=True).delete()
-#         return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
-
-# class UpdateInPersonAppointmentView(generics.GenericAPIView):
-    
-#     def get(self,request,pk):
-#         time_type = request.GET.get("type")
-#         doc = DoctorUser.objects.get(pk=pk)
-#         apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=False,time_type=time_type)
-#         apts = sorted(apts ,  key=lambda m: m.date)
-#         if len(apts) == 0:
-#             return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-#         last_reserved = apts[len(apts) - 1 ].date
-#         data = { 'datetime' : str(last_reserved) }
-#         return Response(data, status=status.HTTP_200_OK)
-
-#     def put(self,request,pk):
-#         time_type = request.data['type']
-#         doc = DoctorUser.objects.get(pk=pk)
-#         Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=False,time_type=time_type).delete()
-#         apts = Appointment.objects.filter(doctor=doc,is_online=False)
-#         serializer = AppointmentSerializer(apts,many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-#     def delete(self,request,pk):
-#         doc = DoctorUser.objects.get(pk=pk)
-#         time_type = request.GET.get("type")
-#         Appointment.objects.filter(doctor=doc,is_online=False,time_type=time_type).delete()
-#         return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
 
 class DurationAPIView(generics.GenericAPIView):
 
@@ -462,17 +425,24 @@ class DurationAPIView(generics.GenericAPIView):
 class UpdateDurationAPIView(generics.GenericAPIView):
 
     def put(self,request,pk,doc_id):
-        duration = Duration.objects.get(pk=pk)
-        InPersonAppointment.objects.filter(duration=duration,patient__isnull=True).delete()
-        duration.is_edited = True
-        duration.save()
-        new_duration = Duration(doctor=DoctorUser.objects.get(pk=doc_id),time_type=duration.time_type,duration_number=duration.duration_number,duration=duration.duration)
+        if ( 'time_type' in request.data or 'duration' in request.data):
+            duration = Duration.objects.get(pk=pk)
+            InPersonAppointment.objects.filter(duration=duration,patient__isnull=True).delete()
+            duration.is_edited = True
+            duration.save()
+            new_duration = Duration(doctor=DoctorUser.objects.get(pk=doc_id),time_type=duration.time_type,duration_number=duration.duration_number,duration=duration.duration)
+        else:
+            new_duration = Duration.objects.get(pk=pk)
         serializer = UpdateDurationSerializer(new_duration , data=request.data , partial=True)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def delete(self,request,pk,doc_id):
+        duration = Duration.objects.get(pk=pk)
+        apts = InPersonAppointment.objects.filter(duration=duration)
+        for apt in apts:
+            apt.delete()
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
 
