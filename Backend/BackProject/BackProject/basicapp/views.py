@@ -552,5 +552,5 @@ class DoctorPageInfoView(APIView):
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         doctor = DoctorProfileSerializer(doc)
-        return Response({"data":doctor.data,"message":"success"})
+        return Response({"data":doctor.data,"message":"success"},status=status.HTTP_200_OK)
 
