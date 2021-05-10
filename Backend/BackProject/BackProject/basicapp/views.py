@@ -593,7 +593,9 @@ class FilterBySpecialty(APIView):
             doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)])
             docs = DoctorProfileSerializer(doctors,many=True)
             return Response({"data":docs.data,"message":"success"})
-            
+
         return Response({"message":"No doctors found"})
         
-
+class Specialty(APIView):
+    def get(self,request):
+        return Response(specialties)
