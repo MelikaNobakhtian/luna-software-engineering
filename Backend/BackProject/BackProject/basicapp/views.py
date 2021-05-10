@@ -596,6 +596,6 @@ class FilterBySpecialty(APIView):
 
         return Response({"message":"No doctors found"})
         
-class Specialty(APIView):
+class SpecialtyView(APIView):
     def get(self,request):
         return Response(specialties)
