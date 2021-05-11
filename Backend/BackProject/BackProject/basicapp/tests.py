@@ -680,7 +680,7 @@ class SearchViewTest(TestCase):
         file_mock.name = 'test.pdf'
         self.doc = DoctorUser(user=self.doc_user,degree=file_mock)
         self.doc.save()
-        add = Address(doc=self.doc,state='27',city='Sari',detail='Farhang St.')
+        add = Address(doc=self.doc,state='مازندران',city='Sari',detail='Farhang St.')
         add.save()
 
         username2 = 'username'
@@ -695,32 +695,19 @@ class SearchViewTest(TestCase):
         file_mock2.name = 'test2.pdf'
         self.doc2 = DoctorUser(user=self.doc_user2,degree=file_mock2)
         self.doc2.save()
-        add2 = Address(doc=self.doc2,state='27',city='Sari',detail='Farhang St.')
+        add2 = Address(doc=self.doc2,state='مازندران',city='Sari',detail='Farhang St.')
         add2.save() 
 
     def test_search_by_state(self):
 
-        response_search = client.get("/doctors?state=Maza",content_type='application/json')
+        response_search = client.get("/doctors?state=ماز",content_type='application/json')
 
         print(response_search)
         #test status code
         self.assertEqual(response_search.status_code,status.HTTP_200_OK)
 
         #test data
-        #self.assertEqual(2,len(response_search.data['doctors']))
-        self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][1]['user']['first_name'])
-        self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][0]['user']['first_name'])
+        self.assertEqual(2,len(response_search.data['doctors']))
+        self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][0]['user']['first_name'])
+        self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][1]['user']['first_name'])
 
-        ##
-
-    def test_search_by_state_and_name(self):
-
-        response_search2 = client.get('/doctors?first_name=Nahi&state=Maz',content_type='application/json')
-
-        print(response_search2)
-        #test status code
-        self.assertEqual(response_search2.status_code,status.HTTP_200_OK)
-    
-        #test data
-        self.assertEqual(1,len(response_search2.data['doctors']))
-        self.assertEqual(self.doc_user2.first_name,response_search2.data['doctors'][0]['user']['first_name'])
