@@ -54,7 +54,45 @@ states["27"]="مرکزی"
 states["28"]="هرمزگان"
 states["29"]="همدان"
 states["30"]="یزد"
-    
+
+specialties = {}
+specialties["0"] = {"specialty":"پزشک عمومی","icon":""}
+specialties["1"] = {"specialty":"چشم پزشکی","icon":""}
+specialties["2"] = {"specialty":"دهان و دندان","icon":""}
+specialties["3"] = {"specialty":"زنان و زایمان","icon":""}
+specialties["4"] = {"specialty":"روانشناسی","icon":""}
+specialties["5"] = {"specialty":"معده و گوارش","icon":""}
+specialties["6"] = {"specialty":"پوست و مو و زیبایی","icon":""}
+specialties["7"] = {"specialty":"کلیه و مجاری ادراری","icon":""}
+specialties["8"] = {"specialty":"خون","icon":""}
+specialties["9"] = {"specialty":"ارتوپدی","icon":""}
+specialties["10"] = {"specialty":"قلب و عروق","icon":""}
+specialties["11"] = {"specialty":"اطفال","icon":""}
+specialties["12"] = {"specialty":"غدد و دیابت","icon":""}
+specialties["13"] = {"specialty":"عفونی","icon":""}
+specialties["14"] = {"specialty":"طب تسکینی و درد","icon":""}
+specialties["15"] = {"specialty":"گوش حلق و بینی","icon":""}
+specialties["16"] = {"specialty":"مغز و اعصاب","icon":""}
+specialties["17"] = {"specialty":"داخلی","icon":""}
+specialties["18"] = {"specialty":"روان پزشکی","icon":""}
+specialties["19"] = {"specialty":"داروسازی","icon":""}
+specialties["20"] = {"specialty":"جراحی","icon":""}
+specialties["21"] = {"specialty":"تغذیه","icon":""}
+specialties["22"] = {"specialty":"فیزیوتراپی","icon":""}
+specialties["23"] = {"specialty":"رادیولوژی","icon":""}
+specialties["24"] = {"specialty":"سونوگرافی","icon":""}
+specialties["25"] = {"specialty":"آزمایشگاه","icon":""}
+specialties["26"] = {"specialty":"ریه","icon":""}
+specialties["27"] = {"specialty":"ژنتیک","icon":""}
+specialties["28"] = {"specialty":"توانبخشی","icon":""}
+specialties["29"] = {"specialty":"طب سنتی","icon":""}
+specialties["30"] = {"specialty":"استخوان و مفاصل","icon":""}
+specialties["31"] = {"specialty":"بیهوشی","icon":""}
+specialties["32"] = {"specialty":"بینایی سنجی","icon":""}
+specialties["33"] = {"specialty":"شنوایی سنجی","icon":""}
+specialties["34"] = {"specialty":"آسیب شناسی","icon":""}
+specialties["35"] = {"specialty":"سایر","icon":""}
+
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
