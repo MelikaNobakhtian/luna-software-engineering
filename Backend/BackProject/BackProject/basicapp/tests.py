@@ -458,6 +458,51 @@ class DurationAPIViewTest(TestCase):
         self.assertEqual(response.data[0]['time_type'],'general')
         self.assertEqual(response.data[1]['time_type'],'visit')
 
+class UpdateDurationAPIViewTest(TestCase):
+    
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+
+        duration = Duration(time_type='general',duration=30,duration_number='brown',doctor=self.doc)
+        duration.save()
+
+    def test_update_duration(self):
+        doc_id = DoctorUser.objects.get(user=self.user).id
+        duration_id = Duration.objects.get(doctor=DoctorUser.objects.get(user=self.user)).id
+
+        #put duration
+        response = client.put(reverse('update-duration',kwargs={'doc_id':doc_id , 'pk':duration_id}),
+        data=json.dumps({'duration':20 , 'time_type': 'visit' , 'duration_number':'black'}),content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['time_type'],'visit')
+        self.assertEqual(response.data['duration'],20)
+        self.assertEqual(response.data['duration_number'],'black')
+        self.assertEqual(Duration.objects.get(time_type='general').is_edited,True)
+
+        #delete duration
+        new_duration_id = Duration.objects.get(time_type='visit').id
+        response = client.delete(reverse('update-duration',kwargs={'doc_id':doc_id , 'pk':new_duration_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'successful!')
+        
+
+
+
+
+
+
         
 
 
