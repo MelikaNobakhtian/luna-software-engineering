@@ -43,12 +43,12 @@ urlpatterns = [
          name='password-reset-complete'),
     path('home/',FilterHomepageView.as_view(),name="filter recently joined doctors"),
     path('doctors',SearchDoctorView.as_view(),name="search doctor"),
-    path('appointment/<int:pk>/online/', OnlineAppointmentView.as_view(), name='online-apt'),
-    path('appointment/<int:pk>/in-person/', InPersonAppointmentView.as_view(), name='inperson-apt'),
-    path('update-appointment/<int:pk>/online/', UpdateOnlineAppointmentView.as_view(), name='onapt-up'),
-    path('update-appointment/<int:pk>/in-person/', UpdateInPersonAppointmentView.as_view(), name='inapt-up'),
-    path('doctor/<int:pk>/duration/', DurationAPIView.as_view(), name='duration'),
-    path('doctor/<int:doc_id>/update-duration/<int:pk>/', UpdateDurationAPIView.as_view(), name='duration-up'),
+    path('doctor/<int:pk>/duration/',DurationAPIView.as_view(),name="duration"),
+    path('doctor/<int:doc_id>/update-duration/<int:pk>/',UpdateDurationAPIView.as_view(),name="duration"),
+    path('doctor/<int:pk>/online-appointment/',OnlineAppointmentView.as_view(),name="online-apt"),
+    path('doctor/<int:pk>/inperson-appointment/',InPersonAppointmentView.as_view(),name="inperson-apt"),
+    path('doctor/<int:pk>/online-duration/',OnlineDurationView.as_view(),name="online-duration"),
+    
     
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
