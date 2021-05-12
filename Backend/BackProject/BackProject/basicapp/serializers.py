@@ -295,12 +295,29 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class InPersonSerializer(serializers.ModelSerializer):
+class InPersonSerializer(serializers.ModelSerializer):
 
-#     doctor = DoctorProfileSerializer(read_only=True)
-#     patient = UserProfileSerializer(read_only=True)
-#     address = AddressSerializer(read_only=True)
+    doctor = DoctorProfileSerializer(read_only=True)
+    patient = UserProfileSerializer(read_only=True)
+    address = AddressSerializer(read_only=True)
     
-#     class Meta:
-#         model = InPer
-#         fields = '__all__'
+    class Meta:
+        model = InPersonAppointment
+        fields = '__all__'
+
+    def to_representation(self,value):
+        if self.patient is not None:
+            return self
+
+class OnlineSerializer(serializers.ModelSerializer):
+
+    doctor = DoctorProfileSerializer(read_only=True)
+    patient = UserProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = OnlineAppointment
+        fields = '__all__'
+
+    def to_representation(self,value):
+        if self.patient is not None:
+            return self

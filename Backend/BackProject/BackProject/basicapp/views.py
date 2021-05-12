@@ -9,7 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, response
 import os
 from rest_framework.permissions import IsAuthenticated
 #from rest_framework.authtoken.models import Token
@@ -570,11 +570,26 @@ class DoctorPageInfoView(APIView):
         doctor = DoctorProfileSerializer(doc)
         return Response({"data":doctor.data,"message":"success"},status=status.HTTP_200_OK)
 
-class DoctorPageCalendarView(APIView):
+class DoctorPageCalendarOnlineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        date = request.GET.get("date")
+        online = OnlineAppointment.objects.filter(doctor=doc,date=date)
+        apt_online =OnlineSerializer(online,many=True).data
+        
+        if apt_online == []:
+            return Response({"message":"No online appointments available"},status=status.HTTP_200_OK)
+        return Response({"data":apt_online,"message":"success"},status=status.HTTP_200_OK)
+
+class DoctorPageCalendarInPersonView(APIView):
 
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         date = request.GET.get("date")
         inperson = InPersonAppointment.objects.filter(doctor=doc,date=date)
-        apt_inperson = InPersonSerializer(inperson,many=True)
-
+        apt_inperson = InPersonSerializer(inperson,many=True).data
+        
+        if apt_inperson == [] :
+            return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
+        return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
