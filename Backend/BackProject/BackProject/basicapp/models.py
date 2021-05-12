@@ -102,7 +102,6 @@ class InPersonAppointment(models.Model):
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
 
     def delete(self):
-        print("im here")
         if not self.patient is None:
             email = self.patient.email
             date = str(self.date)
@@ -119,8 +118,17 @@ class OnlineAppointment(models.Model):
     date = jmodels.jDateField(null=True)
     start_time = models.TimeField(null=True)
     end_time = models.TimeField(null=True)
-    duration = models.IntegerField()
-    duration_number = models.CharField(max_length=200)
+    duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
+
+    def delete(self):
+        if not self.patient is None:
+            email = self.patient.email
+            date = str(self.date)
+            email_body = 'Hi' + self.patient.username + '! \n' + 'Your appointment in ' + date + 'at '+str(self.start_time) + 'is deleted by Doctor. ' + self.doctor.user.last_name
+            data = {'email_body': 'Hello!', 'to_email': email,
+                'email_subject': 'Your appointment is deleted!'}
+            Util.send_email(data)
+        super(OnlineAppointment, self).delete()
 
 
 

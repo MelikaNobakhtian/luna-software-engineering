@@ -47,6 +47,7 @@ urlpatterns = [
     path('doctor/<int:doc_id>/update-duration/<int:pk>/',UpdateDurationAPIView.as_view(),name="duration"),
     path('doctor/<int:pk>/online-appointment/',OnlineAppointmentView.as_view(),name="online-apt"),
     path('doctor/<int:pk>/inperson-appointment/',InPersonAppointmentView.as_view(),name="inperson-apt"),
+    path('doctor/<int:pk>/online-duration/',OnlineDurationView.as_view(),name="online-duration"),
     
     
     

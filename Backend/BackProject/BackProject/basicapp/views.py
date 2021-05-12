@@ -408,10 +408,10 @@ class InPersonAppointmentView(generics.GenericAPIView):
             
 
 
-class DurationAPIView(generics.GenericAPIView):
+class DurationAPIView(APIView):
 
     def get(self,request,pk):
-        durations = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk))
+        durations = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_edited=False).exclude(time_type='online')
         serializer = DurationSerializer(durations,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -420,6 +420,27 @@ class DurationAPIView(generics.GenericAPIView):
         duration = Duration(doctor=doc,time_type=request.data['time_type'],duration=request.data['duration'],duration_number=request.data['duration_number'])
         duration.save()
         serializer = DurationSerializer(duration)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+class OnlineDurationView(APIView):
+
+    def get(self,request,pk):
+        duration = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_edited=False,time_type='online')
+        if len(duration) != 0:
+            duration = duration[0]
+            serializer = DurationSerializer(duration)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response({'message':'No duration for online!'},status=status.HTTP_200_OK)
+
+    def put(self,request,pk):
+        doctor = DoctorUser.objects.get()
+        duration = Duration.objects.get(doctor=doctor,is_edited=False,time_type='online')
+        OnlineAppointment.objects.filter(doctor=doctor,duration=duration,patient__isnull=True).delete()
+        duration.is_edited = True
+        duration.save()
+        new_duration = Duration(doctor=doctor,time_type=duration.time_type,duration_number=duration.duration_number,duration=request.data['duration'])
+        new_duration.save()
+        serializer = DurationSerializer(new_duration)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 class UpdateDurationAPIView(generics.GenericAPIView):

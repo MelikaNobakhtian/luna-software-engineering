@@ -206,10 +206,11 @@ class PostOnlineAppointmentSerializer(serializers.ModelSerializer):
     
     doc_id = serializers.IntegerField()
     date_str = serializers.CharField()
+    duration_id = serializers.IntegerField()
 
     class Meta:
         model = OnlineAppointment
-        fields = ['duration','start_time','doc_id','end_time','date_str']
+        fields = ['start_time','doc_id','end_time','date_str','duration_id']
 
     def parse_date(self,date_str):
         date_arr = date_str.split('-')
@@ -219,11 +220,11 @@ class PostOnlineAppointmentSerializer(serializers.ModelSerializer):
         return jdatetime.date(year,month,day)
 
     def validate(self,attrs):
-
+        duration_id = attrs.get('duration_id', '')
         doc_id = attrs.get('doc_id', '')
-        duration= attrs.get('duration', '')
         start_time = attrs.get('start_time', '')
         end_time = attrs.get('end_time','')
+        duration = Duration.objects.get(pk=duration_id)
         date = self.parse_date(attrs.get('date_str',''))
         doc = DoctorUser.objects.get(pk=doc_id)
         apt = OnlineAppointment(duration=duration,doctor=doc,start_time=start_time,end_time=end_time,date=date)
@@ -288,7 +289,7 @@ class OnlineAppointmentSerializer(serializers.ModelSerializer):
     
     doctor = DoctorProfileSerializer(read_only=True)
     patient = UserProfileSerializer(read_only=True)
-    
+    duration = DurationSerializer(read_only=True)
     class Meta:
         model = OnlineAppointment
         fields = '__all__'
