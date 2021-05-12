@@ -360,16 +360,6 @@ class FilterHomepageView(APIView):
                     serializer = DoctorProfileSerializer(doc_list,many=True)
                     return Response({"doctors" : serializer.data})
 
-class DynamicSearchFilter(filters.SearchFilter):
-    def get_search_fields(self, view, request):
-        return request.GET.getlist('search-fields', [])
-
-class DynamicDoctorAPIView(generics.ListCreateAPIView):
-    filter_backends = (DynamicSearchFilter,)
-    queryset = DoctorUser.objects.all()
-    serializer_class = DoctorSerializer
-    search_fields = ['first_name','last_name','specialty','state','city']
-
 class OnlineAppointmentView(generics.GenericAPIView):
 
     def get(self,request,pk):
@@ -505,7 +495,7 @@ class UpdateDurationAPIView(generics.GenericAPIView):
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
 
-class SearchDoctorView(generics.GenericAPIView):
+class SearchDoctorView(APIView):
     def get(self,request):
         search_fields = {}
         search_fields['state'] = self.request.query_params.get('state', None)
@@ -514,7 +504,17 @@ class SearchDoctorView(generics.GenericAPIView):
         search_fields['last_name'] = self.request.query_params.get('last_name', None)
         search_fields['specialty'] = self.request.query_params.get('specialty', None)
 
-        search_models = [User,DoctorUser,Address]
+        search_models = []
+        if (search_fields['first_name'] is not None) or (search_fields['last_name'] is not None):
+            search_models.append(User)
+        if (search_fields['state'] is not None) or (search_fields['city'] is not None):
+            search_models.append(Address)
+        if (search_fields['specialty'] is not None):
+            search_models.append(DoctorUser)
+        if len(search_models) == 0:
+            docs = DoctorUser.objects.all()
+            doctors = DoctorProfileSerializer(docs,many=True)
+            return Response({"message":"return all doctors","doctors":doctors.data})
         search_results = []
         for model in search_models:
             fields = []    
@@ -558,7 +558,8 @@ class SearchDoctorView(generics.GenericAPIView):
             if model is Address:
                 docs=[]
                 for a in results:
-                    docs.append(a.doc)
+                    if not docs.__contains__(a.doc):
+                        docs.append(a.doc)
                 
                 if len(search_results) !=0:
                     for r in search_results:

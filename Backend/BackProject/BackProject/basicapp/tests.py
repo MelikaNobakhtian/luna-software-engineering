@@ -700,3 +700,48 @@ class DoctorPageViewTest(TestCase):
         self.assertEqual(self.user.first_name,response_get.data['data']['user']['first_name'])
         self.assertEqual(self.doc.specialty,response_get.data['data']['specialty'])
         self.assertEqual(self.doc.sub_specialty,response_get.data['data']['sub_specialty'])
+
+class SearchViewTest(TestCase):
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.doc_user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.doc_user.set_password(password)
+        self.doc_user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+        self.doc = DoctorUser(user=self.doc_user,degree=file_mock)
+        self.doc.save()
+        add = Address(doc=self.doc,state='مازندران',city='Sari',detail='Farhang St.')
+        add.save()
+
+        username2 = 'username'
+        email2 = 'testdoctor2@gmail.com'
+        first_name2 = 'Nahid'
+        last_name2 = 'Talebi'
+        password2 = '123456'
+        self.doc_user2 = User(username=username2,email=email2,first_name=first_name2,last_name=last_name2,is_verified=True)
+        self.doc_user2.set_password(password2)
+        self.doc_user2.save()
+        file_mock2 = mock.MagicMock(spec=File)
+        file_mock2.name = 'test2.pdf'
+        self.doc2 = DoctorUser(user=self.doc_user2,degree=file_mock2)
+        self.doc2.save()
+        add2 = Address(doc=self.doc2,state='مازندران',city='Sari',detail='Farhang St.')
+        add2.save() 
+
+    def test_search_by_state(self):
+
+        response_search = client.get("/doctors?state=ماز",content_type='application/json')
+
+        print(response_search)
+        #test status code
+        self.assertEqual(response_search.status_code,status.HTTP_200_OK)
+
+        #test data
+        self.assertEqual(2,len(response_search.data['doctors']))
+        self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][0]['user']['first_name'])
+        self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][1]['user']['first_name'])
