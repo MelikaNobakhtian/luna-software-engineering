@@ -26,7 +26,7 @@ states = {}
 states["0"]="آذربایجان شرقی"
 states["1"]="آذربایجان غربی"
 states["2"]="اردبیل"
-states["3"]="اصفهان"
+states["3"]="اصٝهان"
 states["4"]="البرز"
 states["5"]="ایلام"
 states["6"]="بوشهر"
@@ -39,7 +39,7 @@ states["12"]="خوزستان"
 states["13"]="زنجان"
 states["14"]="سمنان"
 states["15"]="سیستان و بلوچستان"
-states["16"]="فارس"
+states["16"]="ٝارس"
 states["17"]="قزوین"
 states["18"]="قم"
 states["19"]="کردستان"
@@ -54,7 +54,45 @@ states["27"]="مرکزی"
 states["28"]="هرمزگان"
 states["29"]="همدان"
 states["30"]="یزد"
-    
+
+specialties = {}
+specialties["0"] = {"specialty":"پزشک عمومی","icon":""}
+specialties["1"] = {"specialty":"چشم پزشکی","icon":""}
+specialties["2"] = {"specialty":"دهان و دندان","icon":""}
+specialties["3"] = {"specialty":"زنان و زایمان","icon":""}
+specialties["4"] = {"specialty":"روانشناسی","icon":""}
+specialties["5"] = {"specialty":"معده و گوارش","icon":""}
+specialties["6"] = {"specialty":"پوست و مو و زیبایی","icon":""}
+specialties["7"] = {"specialty":"کلیه و مجاری ادراری","icon":""}
+specialties["8"] = {"specialty":"خون","icon":""}
+specialties["9"] = {"specialty":"ارتوپدی","icon":""}
+specialties["10"] = {"specialty":"قلب و عروق","icon":""}
+specialties["11"] = {"specialty":"اطٝال","icon":""}
+specialties["12"] = {"specialty":"غدد و دیابت","icon":""}
+specialties["13"] = {"specialty":"عٝونی","icon":""}
+specialties["14"] = {"specialty":"طب تسکینی و درد","icon":""}
+specialties["15"] = {"specialty":"گوش حلق و بینی","icon":""}
+specialties["16"] = {"specialty":"مغز و اعصاب","icon":""}
+specialties["17"] = {"specialty":"داخلی","icon":""}
+specialties["18"] = {"specialty":"روان پزشکی","icon":""}
+specialties["19"] = {"specialty":"داروسازی","icon":""}
+specialties["20"] = {"specialty":"جراحی","icon":""}
+specialties["21"] = {"specialty":"تغذیه","icon":""}
+specialties["22"] = {"specialty":"ٝیزیوتراپی","icon":""}
+specialties["23"] = {"specialty":"رادیولوژی","icon":""}
+specialties["24"] = {"specialty":"سونوگراٝی","icon":""}
+specialties["25"] = {"specialty":"آزمایشگاه","icon":""}
+specialties["26"] = {"specialty":"ریه","icon":""}
+specialties["27"] = {"specialty":"ژنتیک","icon":""}
+specialties["28"] = {"specialty":"توانبخشی","icon":""}
+specialties["29"] = {"specialty":"طب سنتی","icon":""}
+specialties["30"] = {"specialty":"استخوان و مٝاصل","icon":""}
+specialties["31"] = {"specialty":"بیهوشی","icon":""}
+specialties["32"] = {"specialty":"بینایی سنجی","icon":""}
+specialties["33"] = {"specialty":"شنوایی سنجی","icon":""}
+specialties["34"] = {"specialty":"آسیب شناسی","icon":""}
+specialties["35"] = {"specialty":"سایر","icon":""}
+
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -543,3 +581,16 @@ class DoctorPageInfoView(APIView):
         doctor = DoctorProfileSerializer(doc)
         return Response({"data":doctor.data,"message":"success"},status=status.HTTP_200_OK)
 
+class FilterBySpecialty(APIView):
+    def get(self,request,pk):
+        
+        if DoctorUser.objects.filter(specialty=specialties[str(pk)]).exists():
+            doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)])
+            docs = DoctorProfileSerializer(doctors,many=True)
+            return Response({"data":docs.data,"message":"success"})
+
+        return Response({"message":"No doctors found"})
+        
+class SpecialtyView(APIView):
+    def get(self,request):
+        return Response(specialties)
