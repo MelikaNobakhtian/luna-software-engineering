@@ -11,7 +11,6 @@ from django.core.files import File
 from unittest import mock
 import io
 
-
 client = Client()
 
 class DoctorProfileViewTest(TestCase):
@@ -143,8 +142,6 @@ class SetDoctorAddressViewTest(TestCase):
         #test status code
         self.assertEqual(response.status_code,status.HTTP_200_OK)
     
-        
-
 class UpdateDoctorAddressViewTest(TestCase):
     
     def setUp(self):
@@ -276,7 +273,6 @@ class ChangePasswordViewTest(TestCase):
             content_type='application/json')
         self.assertEqual(response_login.status_code,status.HTTP_200_OK)
 
-
 class UpdateUserProfileViewTest(TestCase):
     
     def setUp(self):
@@ -355,7 +351,6 @@ class RequestPasswordResetEmailTest(TestCase):
             content_type='application/json')
         self.assertEqual(response_fail.status_code, status.HTTP_200_OK)
 
-
 class PasswordTokenCheckAPITest(TestCase):
 
     def setUp(self):
@@ -385,7 +380,6 @@ class PasswordTokenCheckAPITest(TestCase):
         #invalid info
         response = client.get(reverse('password-reset-confirm',kwargs={'uidb64':self.uidb64[1],'token':self.token[0]}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-
 
 class SetNewPasswordAPIViewTest(TestCase):
 
@@ -417,7 +411,6 @@ class SetNewPasswordAPIViewTest(TestCase):
         response = client.post(reverse('password-reset-complete'),data=json.dumps({'password':'456789','token':self.token[0],'uidb64':self.uidb64[0]}),
             content_type='application/json')
         self.assertEqual(response.status_code,200)
-
 
 class OnlineAppointmentAPIViewTest(TestCase):
 
@@ -461,7 +454,6 @@ class OnlineAppointmentAPIViewTest(TestCase):
         response = client.get("/appointment/"+str(doc_id)+"/online/?date=1400-02-14")
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['duration'],20)
-
 
 class InPersonAppointmentAPIViewTest(TestCase):
     
@@ -511,7 +503,6 @@ class InPersonAppointmentAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['time_type'],"general")
     
-
 class UpdateOnlineAppointmentAPIViewTest(TestCase):
 
     def setUp(self):
@@ -588,7 +579,6 @@ class UpdateOnlineAppointmentAPIViewTest(TestCase):
         response = client.delete(reverse('onapt-up',kwargs={'pk':doc_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
-
 
 class UpdateInPersonAppointmentAPIViewTest(TestCase):
 
@@ -674,3 +664,39 @@ class UpdateInPersonAppointmentAPIViewTest(TestCase):
                     content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
+
+class DoctorPageViewTest(TestCase):
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock,specialty="dermatology")
+        self.doc.save()
+    
+    def test_get_doctor_info(self):
+
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.doc.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+        doc_id = response_login.data['data']['doctor_id']
+        
+        response_get = client.get('/doctor-info/'+str(doc_id)+'/',content_type='application/json')
+
+        #test message and status
+        self.assertEqual(response_get.status_code,status.HTTP_200_OK)
+        self.assertEqual(response_get.data['message'],"success")
+    
+        #test details
+        self.assertEqual(self.user.first_name,response_get.data['data']['user']['first_name'])
+        self.assertEqual(self.doc.specialty,response_get.data['data']['specialty'])
+        self.assertEqual(self.doc.sub_specialty,response_get.data['data']['sub_specialty'])

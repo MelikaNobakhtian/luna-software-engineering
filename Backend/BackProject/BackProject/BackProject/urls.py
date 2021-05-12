@@ -48,7 +48,7 @@ urlpatterns = [
     path('doctor/<int:pk>/online-appointment/',OnlineAppointmentView.as_view(),name="online-apt"),
     path('doctor/<int:pk>/inperson-appointment/',InPersonAppointmentView.as_view(),name="inperson-apt"),
     path('doctor/<int:pk>/online-duration/',OnlineDurationView.as_view(),name="online-duration"),
-    
+    path('doctor-info/<int:pk>/',DoctorPageInfoView.as_view(), name="doctor-page-info"),
     
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
