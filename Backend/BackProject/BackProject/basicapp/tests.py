@@ -496,6 +496,65 @@ class UpdateDurationAPIViewTest(TestCase):
         response = client.delete(reverse('update-duration',kwargs={'doc_id':doc_id , 'pk':new_duration_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'successful!')
+
+class InPersonAppointment(TestCase):
+
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+
+        duration = Duration(time_type='genera;',duration=30,duration_number='violet',doctor=self.doc)
+        duration.save()
+
+    def test_online_appointemt(self):
+        doc = DoctorUser.objects.get(user=self.user)
+        doc_id = doc.id
+        duration = Duration.objects.get(doctor=doc)
+        duration_id = duration.id
+        body = {
+        "start_day": "1400-02-29",
+        "end_day":"1400-02-30",
+        "appointments": [
+             {
+                 "duration_id":duration_id,
+                    "address_number":7,
+                    "doc_id":doc_id,
+                    "address_id":2,
+                    "start_time":"17:00",
+                    "end_time":"17:20"
+             }
+             ,
+
+             {
+                    "address_number":7,
+                    "duration_id":duration_id,
+                    "doc_id":doc_id,
+                    "address_id":2,
+                    "start_time":"17:20",
+                    "end_time":"17:40"
+             }]}
+        response = client.post(reverse('online-apt',kwargs={'pk':doc_id}),
+        data=json.dumps(body),content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        apt1 = InPersonAppointment(duration=duration,doctor=doc,date="1400-02-30")
+        apt1.save()
+        apt = OnlineAppointment.objects.get(pk=1)
+        apts = OnlineAppointment.objects.filter(duration=Duration.objects.get(pk=duration_id),doctor=DoctorUser.objects.get(pk=doc_id))
+        #self.assertEqual(len(response.data),len(OnlineAppointment.objects.filter(duration=Duration.objects.get(pk=duration_id),doctor=DoctorUser.objects.get(pk=doc_id))))
+
+
+
         
 
 

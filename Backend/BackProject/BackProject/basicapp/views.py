@@ -433,7 +433,7 @@ class OnlineDurationView(APIView):
         return Response({'message':'No duration for online!'},status=status.HTTP_200_OK)
 
     def put(self,request,pk):
-        doctor = DoctorUser.objects.get()
+        doctor = DoctorUser.objects.get(pk=pk)
         duration = Duration.objects.get(doctor=doctor,is_edited=False,time_type='online')
         OnlineAppointment.objects.filter(doctor=doctor,duration=duration,patient__isnull=True).delete()
         duration.is_edited = True
@@ -466,6 +466,25 @@ class UpdateDurationAPIView(generics.GenericAPIView):
             apt.delete()
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
+
+class ReservedAppointmentsAPIView(generics.GenericAPIView):
+
+    def get(self,request,pk,doc_id):
+        duration = Duration.objects.get(pk=pk)
+        doc = DoctorUser.objects.get(pk=doc_id)
+        if duration.time_type != 'online':
+            apts = InPersonAppointment.objects.filter(doctor=doc,duration=duration,patient__isnull=False)
+            if len(apts) == 0:
+                return Response({'message':'No apt from this duration reserved!'},status=status.HTTP_200_OK)
+            serializer = OnlineAppointmentSerializer(apts,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            apts = OnlineAppointment.objects.filter(doctor=doc,duration=duration,patient__isnull=False)
+            if len(apts) == 0:
+                return Response({'message':'No apt from this duration reserved!'},status=status.HTTP_200_OK)
+            serializer = OnlineAppointmentSerializer(apts,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        
 
 class SearchDoctorView(generics.GenericAPIView):
     def get(self,request):
