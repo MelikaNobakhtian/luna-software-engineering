@@ -599,3 +599,7 @@ class FilterBySpecialty(APIView):
 class SpecialtyView(APIView):
     def get(self,request):
         return Response(specialties)
+
+class StatesView(APIView):
+    def get(self,request):
+        return Response(states)
