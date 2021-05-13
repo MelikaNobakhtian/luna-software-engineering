@@ -56,42 +56,42 @@ states["29"]="همدان"
 states["30"]="یزد"
 
 specialties = {}
-specialties["0"] = {"specialty":"پزشک عمومی","icon":"<LocalHospitalIcon></LocalHospitalIcon>"}
-specialties["1"] = {"specialty":"چشم پزشکی","icon":"<VisibilityIcon></VisibilityIcon>"}
-specialties["2"] = {"specialty":"دهان و دندان","icon":"<FaTeeth size="25"></FaTeeth>"}
-specialties["3"] = {"specialty":"زنان و زایمان","icon":"<MdPregnantWoman size="35"></MdPregnantWoman>"}
-specialties["4"] = {"specialty":"روانشناسی","icon":"<RiPsychotherapyLine size="35"></RiPsychotherapyLine>"}
-specialties["5"] = {"specialty":"معده و گوارش","icon":"<GiStomach size="35"></GiStomach>"}
-specialties["6"] = {"specialty":"پوست و مو و زیبایی","icon":"<MdFace size="35"></MdFace>"}
-specialties["7"] = {"specialty":"کلیه و مجاری ادراری","icon":"<GiKidneys size="35"></GiKidneys>"}
-specialties["8"] = {"specialty":"خون","icon":"<IoWater size="35"></IoWater>"}
-specialties["9"] = {"specialty":"ارتوپدی","icon":"<LocalHospitalIcon></LocalHospitalIcon>"}
-specialties["10"] = {"specialty":"قلب و عروق","icon":"<GiHeartOrgan size="40"></GiHeartOrgan>"}
-specialties["11"] = {"specialty":"اطفال","icon":"<ChildCareIcon></ChildCareIcon>"}
-specialties["12"] = {"specialty":"غدد و دیابت","icon":"<LocalHospitalIcon></LocalHospitalIcon>"}
-specialties["13"] = {"specialty":"عفونی","icon":"<AiFillMedicineBox size="35"></AiFillMedicineBox>"}
-specialties["14"] = {"specialty":"طب تسکینی و درد","icon":"<IoBandageOutline size="35"></IoBandageOutline>"}
-specialties["15"] = {"specialty":"گوش حلق و بینی","icon":"<MdHearing size="35"></MdHearing>"}
-specialties["16"] = {"specialty":"مغز و اعصاب","icon":"<GiBrain size="35"></GiBrain>"}
-specialties["17"] = {"specialty":"داخلی","icon":"<IoBodyOutline size="35"></IoBodyOutline>"}
-specialties["18"] = {"specialty":"روان پزشکی","icon":"<RiPsychotherapyLine size="35"></RiPsychotherapyLine>"}
-specialties["19"] = {"specialty":"داروسازی","icon":"<GiMedicines size="35"></GiMedicines>"}
-specialties["20"] = {"specialty":"جراحی","icon":"<RiSurgicalMaskFill size="35"></RiSurgicalMaskFill>"}
-specialties["21"] = {"specialty":"تغذیه","icon":"<GiFruitBowl size="35"></GiFruitBowl>"}
-specialties["22"] = {"specialty":"فیزیوتراپی","icon":"<GiArmSling size="35"></GiArmSling>"}
-specialties["23"] = {"specialty":"رادیولوژی","icon":"<GiRadioactive size="30"></GiRadioactive>"}
-specialties["24"] = {"specialty":"سونوگرافی","icon":"<GiRadioactive size="30"></GiRadioactive>"}
-specialties["25"] = {"specialty":"آزمایشگاه","icon":"<ImLab size="25"></ImLab>"}
-specialties["26"] = {"specialty":"ریه","icon":"<RiLungsFill size="35"></RiLungsFill>"}
-specialties["27"] = {"specialty":"ژنتیک","icon":"<SiMicrogenetics size="25"></SiMicrogenetics>"}
-specialties["28"] = {"specialty":"توانبخشی","icon":"<MdAccessible size="35"></MdAccessible>"}
-specialties["29"] = {"specialty":"طب سنتی","icon":"<GiTeapotLeaves size="35"></GiTeapotLeaves>"}
-specialties["30"] = {"specialty":"استخوان و مفاصل","icon":"<GiJoint size="35"></GiJoint>"}
-specialties["31"] = {"specialty":"بیهوشی","icon":"<RiSurgicalMaskFill size="35"></RiSurgicalMaskFill>"}
-specialties["32"] = {"specialty":"بینایی سنجی","icon":"<VisibilityIcon></VisibilityIcon>"}
-specialties["33"] = {"specialty":"شنوایی سنجی","icon":"<MdHearing size="35"></MdHearing>"}
-specialties["34"] = {"specialty":"آسیب شناسی","icon":"<FaUserInjured size="35"></FaUserInjured>"}
-specialties["35"] = {"specialty":"سایر","icon":"<AiFillMedicineBox size="35"></AiFillMedicineBox>"}
+specialties["0"] = {"specialty":"پزشک عمومی","icon":'<LocalHospitalIcon></LocalHospitalIcon>'}
+specialties["1"] = {"specialty":"چشم پزشکی","icon":'<VisibilityIcon></VisibilityIcon>'}
+specialties["2"] = {"specialty":"دهان و دندان","icon":'<FaTeeth size="25"></FaTeeth>'}
+specialties["3"] = {"specialty":"زنان و زایمان","icon":'<MdPregnantWoman size="35"></MdPregnantWoman>'}
+specialties["4"] = {"specialty":"روانشناسی","icon":'<RiPsychotherapyLine size="35"></RiPsychotherapyLine>'}
+specialties["5"] = {"specialty":"معده و گوارش","icon":'<GiStomach size="35"></GiStomach>'}
+specialties["6"] = {"specialty":"پوست و مو و زیبایی","icon":'<MdFace size="35"></MdFace>'}
+specialties["7"] = {"specialty":"کلیه و مجاری ادراری","icon":'<GiKidneys size="35"></GiKidneys>'}
+specialties["8"] = {"specialty":"خون","icon":'<IoWater size="35"></IoWater>'}
+specialties["9"] = {"specialty":"ارتوپدی","icon":'<LocalHospitalIcon></LocalHospitalIcon>'}
+specialties["10"] = {"specialty":"قلب و عروق","icon":'<GiHeartOrgan size="40"></GiHeartOrgan>'}
+specialties["11"] = {"specialty":"اطفال","icon":'<ChildCareIcon></ChildCareIcon>'}
+specialties["12"] = {"specialty":"غدد و دیابت","icon":'<LocalHospitalIcon></LocalHospitalIcon>'}
+specialties["13"] = {"specialty":"عفونی","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
+specialties["14"] = {"specialty":"طب تسکینی و درد","icon":'<IoBandageOutline size="35"></IoBandageOutline>'}
+specialties["15"] = {"specialty":"گوش حلق و بینی","icon":'<MdHearing size="35"></MdHearing>'}
+specialties["16"] = {"specialty":"مغز و اعصاب","icon":'<GiBrain size="35"></GiBrain>'}
+specialties["17"] = {"specialty":"داخلی","icon":'<IoBodyOutline size="35"></IoBodyOutline>'}
+specialties["18"] = {"specialty":"روان پزشکی","icon":'<RiPsychotherapyLine size="35"></RiPsychotherapyLine>'}
+specialties["19"] = {"specialty":"داروسازی","icon":'<GiMedicines size="35"></GiMedicines>'}
+specialties["20"] = {"specialty":"جراحی","icon":'<RiSurgicalMaskFill size="35"></RiSurgicalMaskFill>'}
+specialties["21"] = {"specialty":"تغذیه","icon":'<GiFruitBowl size="35"></GiFruitBowl>'}
+specialties["22"] = {"specialty":"فیزیوتراپی","icon":'<GiArmSling size="35"></GiArmSling>'}
+specialties["23"] = {"specialty":"رادیولوژی","icon":'<GiRadioactive size="30"></GiRadioactive>'}
+specialties["24"] = {"specialty":"سونوگرافی","icon":'<GiRadioactive size="30"></GiRadioactive>'}
+specialties["25"] = {"specialty":"آزمایشگاه","icon":'<ImLab size="25"></ImLab>'}
+specialties["26"] = {"specialty":"ریه","icon":'<RiLungsFill size="35"></RiLungsFill>'}
+specialties["27"] = {"specialty":"ژنتیک","icon":'<SiMicrogenetics size="25"></SiMicrogenetics>'}
+specialties["28"] = {"specialty":"توانبخشی","icon":'<MdAccessible size="35"></MdAccessible>'}
+specialties["29"] = {"specialty":"طب سنتی","icon":'<GiTeapotLeaves size="35"></GiTeapotLeaves>'}
+specialties["30"] = {"specialty":"استخوان و مفاصل","icon":'<GiJoint size="35"></GiJoint>'}
+specialties["31"] = {"specialty":"بیهوشی","icon":'<RiSurgicalMaskFill size="35"></RiSurgicalMaskFill>'}
+specialties["32"] = {"specialty":"بینایی سنجی","icon":'<VisibilityIcon></VisibilityIcon>'}
+specialties["33"] = {"specialty":"شنوایی سنجی","icon":'<MdHearing size="35"></MdHearing>'}
+specialties["34"] = {"specialty":"آسیب شناسی","icon":'<FaUserInjured size="35"></FaUserInjured>'}
+specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
 
 class RegisterView(generics.GenericAPIView):
 
@@ -371,14 +371,13 @@ class DynamicDoctorAPIView(generics.ListCreateAPIView):
     search_fields = ['first_name','last_name','specialty','state','city']
 
 class OnlineAppointmentView(generics.GenericAPIView):
-    serializer_class = OnlineAppointmentSerializer
 
     def get(self,request,pk):
         date = request.GET.get("date")
         doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=True,date=date)
-        data = AppointmentSerializer(apts,many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
+        apts = OnlineAppointment.objects.filter(doctor=doc,date=date)
+        serializer = OnlineAppointmentSerializer(apts,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def parse_date(self,date_str):
         date_arr = date_str.split('-')
@@ -388,31 +387,34 @@ class OnlineAppointmentView(generics.GenericAPIView):
         return jdatetime.date(year,month,day)
 
     def post(self, request,pk):
+        apts = []
         start_day = self.parse_date(request.data['start_day'])
         end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
         while start_day <= end_day:
-            if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).exists() ):
-                Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=True,date=start_day).delete()
             for apt in appointments:
                 apt['date_str'] = str(start_day)
-                serializer = self.serializer_class(data=apt)
+                serializer = PostOnlineAppointmentSerializer(data=apt)
                 serializer.is_valid(raise_exception=True)
+                apts.append(serializer.validated_data)
             start_day = start_day + timedelta(days=1)
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=True)
-        serializer = AppointmentSerializer(apts,many=True)
+        serializer = OnlineAppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self,request,pk):
+        idx = request.data['index']
+        for index in idx:
+            OnlineAppointment.objects.get(pk=index).delete()
+        return Response({'message':'deleted!'},status=status.HTTP_200_OK)
+
 class InPersonAppointmentView(generics.GenericAPIView):
-    serializer_class = InPersonAppointmentSerializer
 
     def get(self, request, pk):
         date = request.GET.get("date")
         doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=False,date=date)
-        data = AppointmentSerializer(apts,many=True)
-        return Response(data.data, status=status.HTTP_200_OK)
+        apts = InPersonAppointment.objects.filter(doctor=doc,date=date)
+        serializer = InPersonAppointmentSerializer(apts,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def parse_date(self,date_str):
         date_arr = date_str.split('-')
@@ -422,77 +424,32 @@ class InPersonAppointmentView(generics.GenericAPIView):
         return jdatetime.date(year,month,day)
 
     def post(self, request, pk):
+        apts = []
         start_day = self.parse_date(request.data['start_day'])
         end_day = self.parse_date(request.data['end_day'])
         appointments = request.data['appointments']
         while start_day <= end_day:
-            if ( Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).exists() ):
-                Appointment.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_online=False,date=start_day).delete()
             for apt in appointments:
                 apt['date_str'] = str(start_day)
-                serializer = self.serializer_class(data=apt)
+                serializer = PostInPersonAppointmentSerializer(data=apt)
                 serializer.is_valid(raise_exception=True)
+                apts.append(serializer.validated_data)
             start_day = start_day + timedelta(days=1)
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,is_online=False)
-        serializer = AppointmentSerializer(apts,many=True)
+        serializer = InPersonAppointmentSerializer(apts,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self,request,pk):
+        idx = request.data['index']
+        for index in idx:
+            InPersonAppointment.objects.get(pk=index).delete()
+        return Response({'message':'deleted!'},status=status.HTTP_200_OK)
             
-class UpdateOnlineAppointmentView(generics.GenericAPIView):
-    
-    def get(self,request,pk):
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=True)
-        apts = sorted(apts ,  key=lambda m: m.date)
-        if len(apts) == 0:
-            return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-        last_reserved = apts[len(apts) - 1 ].date
-        data = { 'datetime' : str(last_reserved) }
-        return Response(data, status=status.HTTP_200_OK)
 
-    def put(self,request,pk):
-        doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=True).delete()
-        apts = Appointment.objects.filter(doctor=doc,is_online=True)
-        serializer = AppointmentSerializer(apts,many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self,request,pk):
-        doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,is_online=True).delete()
-        return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
-
-class UpdateInPersonAppointmentView(generics.GenericAPIView):
-    
-    def get(self,request,pk):
-        time_type = request.GET.get("type")
-        doc = DoctorUser.objects.get(pk=pk)
-        apts = Appointment.objects.filter(doctor=doc,patient__isnull=False,is_online=False,time_type=time_type)
-        apts = sorted(apts ,  key=lambda m: m.date)
-        if len(apts) == 0:
-            return Response({"message":"No time reserved!"},status=status.HTTP_200_OK)
-        last_reserved = apts[len(apts) - 1 ].date
-        data = { 'datetime' : str(last_reserved) }
-        return Response(data, status=status.HTTP_200_OK)
-
-    def put(self,request,pk):
-        time_type = request.data['type']
-        doc = DoctorUser.objects.get(pk=pk)
-        Appointment.objects.filter(doctor=doc,patient__isnull=True,date__gt=request.data['date'],is_online=False,time_type=time_type).delete()
-        apts = Appointment.objects.filter(doctor=doc,is_online=False)
-        serializer = AppointmentSerializer(apts,many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self,request,pk):
-        doc = DoctorUser.objects.get(pk=pk)
-        time_type = request.GET.get("type")
-        Appointment.objects.filter(doctor=doc,is_online=False,time_type=time_type).delete()
-        return Response({"message":"all deleted!"},status=status.HTTP_200_OK)
-
-class DurationAPIView(generics.GenericAPIView):
+class DurationAPIView(APIView):
 
     def get(self,request,pk):
-        durations = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk))
+        durations = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_edited=False).exclude(time_type='online')
         serializer = DurationSerializer(durations,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
@@ -503,19 +460,69 @@ class DurationAPIView(generics.GenericAPIView):
         serializer = DurationSerializer(duration)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class OnlineDurationView(APIView):
+
+    def get(self,request,pk):
+        duration = Duration.objects.filter(doctor=DoctorUser.objects.get(pk=pk),is_edited=False,time_type='online')
+        if len(duration) != 0:
+            duration = duration[0]
+            serializer = DurationSerializer(duration)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response({'message':'No duration for online!'},status=status.HTTP_200_OK)
+
+    def put(self,request,pk):
+        doctor = DoctorUser.objects.get(pk=pk)
+        duration = Duration.objects.get(doctor=doctor,is_edited=False,time_type='online')
+        OnlineAppointment.objects.filter(doctor=doctor,duration=duration,patient__isnull=True).delete()
+        duration.is_edited = True
+        duration.save()
+        new_duration = Duration(doctor=doctor,time_type=duration.time_type,duration_number=duration.duration_number,duration=request.data['duration'])
+        new_duration.save()
+        serializer = DurationSerializer(new_duration)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
 class UpdateDurationAPIView(generics.GenericAPIView):
 
     def put(self,request,pk,doc_id):
-        duration = Duration.objects.get(pk=pk)
-        serializer = UpdateDurationSerializer(duration , data=request.data , partial=True)
+        if ( 'time_type' in request.data or 'duration' in request.data):
+            duration = Duration.objects.get(pk=pk)
+            InPersonAppointment.objects.filter(duration=duration,patient__isnull=True).delete()
+            duration.is_edited = True
+            duration.save()
+            new_duration = Duration(doctor=DoctorUser.objects.get(pk=doc_id),time_type=duration.time_type,duration_number=duration.duration_number,duration=duration.duration)
+        else:
+            new_duration = Duration.objects.get(pk=pk)
+        serializer = UpdateDurationSerializer(new_duration , data=request.data , partial=True)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
 
     def delete(self,request,pk,doc_id):
+        duration = Duration.objects.get(pk=pk)
+        apts = InPersonAppointment.objects.filter(duration=duration)
+        for apt in apts:
+            apt.delete()
         Duration.objects.get(pk=pk).delete()
         return Response({'message':'successful!'},status=status.HTTP_200_OK)
 
+class ReservedAppointmentsAPIView(generics.GenericAPIView):
+
+    def get(self,request,pk,doc_id):
+        duration = Duration.objects.get(pk=pk)
+        doc = DoctorUser.objects.get(pk=doc_id)
+        if duration.time_type != 'online':
+            apts = InPersonAppointment.objects.filter(doctor=doc,duration=duration,patient__isnull=False)
+            if len(apts) == 0:
+                return Response({'message':'No apt from this duration reserved!'},status=status.HTTP_200_OK)
+            serializer = OnlineAppointmentSerializer(apts,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            apts = OnlineAppointment.objects.filter(doctor=doc,duration=duration,patient__isnull=False)
+            if len(apts) == 0:
+                return Response({'message':'No apt from this duration reserved!'},status=status.HTTP_200_OK)
+            serializer = OnlineAppointmentSerializer(apts,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        
 class SearchDoctorView(generics.GenericAPIView):
     def get(self,request):
         search_fields = {}
@@ -600,6 +607,6 @@ class SpecialtyView(APIView):
     def get(self,request):
         return Response(specialties)
 
-class StatesView(APIView):
+class StateView(APIView):
     def get(self,request):
         return Response(states)
