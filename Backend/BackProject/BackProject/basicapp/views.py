@@ -574,21 +574,46 @@ class DoctorPageCalendarOnlineView(APIView):
 
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        date = request.GET.get("date")
-        online = OnlineAppointment.objects.filter(doctor=doc,date=date,patient__isnull=True)
-        apt_online = OnlineAppointmentSerializer(online,many=True).data        
+        date = self.request.query_params.get('date', None)
+        dur = self.request.query_params.get('duration', None)
+
+        online = OnlineAppointment.objects.all()
+
+        if date is not None:
+            online = online.filter(date=date)
+        if dur is not None:
+            duration = Duration.objects.get(pk=dur)
+            online = online.filter(duration=duration)
+
+        apt_online = OnlineAppointmentSerializer(online,many=True).data   
+
         if apt_online == []:
             return Response({"message":"No online appointments available"},status=status.HTTP_200_OK)
+
         return Response({"data":apt_online,"message":"success"},status=status.HTTP_200_OK)
 
 class DoctorPageCalendarInPersonView(APIView):
 
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        date = request.GET.get("date")
-        duration = Duration.objects.get(pk=request.GET.get("duration"))
-        inperson = InPersonAppointment.objects.filter(doctor=doc,date=date,duration=duration,patient__isnull=True)
+        date = self.request.query_params.get('date', None)
+        dur = self.request.query_params.get('duration', None)
+        addr = self.request.query_params.get('address', None)
+        
+        inperson = InPersonAppointment.objects.all()
+
+        if date is not None:
+            inperson = inperson.filter(date=date)
+        if dur is not None:
+            duration = Duration.objects.get(pk=dur)
+            inperson = inperson.filter(duration=duration)
+        if addr is not None:
+            address = Address.objects.get(pk=addr)
+            inperson = inperson.filter(address=address)
+
         apt_inperson = InPersonAppointmentSerializer(inperson,many=True).data
+
         if apt_inperson == [] :
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
+            
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
