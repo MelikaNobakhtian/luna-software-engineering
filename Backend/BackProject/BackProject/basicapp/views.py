@@ -575,9 +575,8 @@ class DoctorPageCalendarOnlineView(APIView):
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         date = request.GET.get("date")
-        online = OnlineAppointment.objects.filter(doctor=doc,date=date)
-        apt_online =OnlineSerializer(online,many=True).data
-        
+        online = OnlineAppointment.objects.filter(doctor=doc,date=date,patient__isnull=True)
+        apt_online = OnlineAppointmentSerializer(online,many=True).data        
         if apt_online == []:
             return Response({"message":"No online appointments available"},status=status.HTTP_200_OK)
         return Response({"data":apt_online,"message":"success"},status=status.HTTP_200_OK)
@@ -587,9 +586,9 @@ class DoctorPageCalendarInPersonView(APIView):
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         date = request.GET.get("date")
-        inperson = InPersonAppointment.objects.filter(doctor=doc,date=date)
-        apt_inperson = InPersonSerializer(inperson,many=True).data
-        
+        duration = Duration.objects.get(pk=request.GET.get("duration"))
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=date,duration=duration,patient__isnull=True)
+        apt_inperson = InPersonAppointmentSerializer(inperson,many=True).data
         if apt_inperson == [] :
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
