@@ -596,8 +596,8 @@ class SearchDoctorView(generics.GenericAPIView):
 class FilterBySpecialty(APIView):
     def get(self,request,pk):
         
-        if DoctorUser.objects.filter(specialty=specialties[str(pk)]).exists():
-            doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)])
+        if DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty']).exists():
+            doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty'])
             docs = DoctorProfileSerializer(doctors,many=True)
             return Response({"data":docs.data,"message":"success"})
 

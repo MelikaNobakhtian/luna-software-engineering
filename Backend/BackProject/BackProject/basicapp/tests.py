@@ -462,7 +462,6 @@ class OnlineAppointmentAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['duration'],20)
 
-
 class InPersonAppointmentAPIViewTest(TestCase):
     
     def setUp(self):
@@ -511,7 +510,6 @@ class InPersonAppointmentAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data[0]['time_type'],"general")
     
-
 class UpdateOnlineAppointmentAPIViewTest(TestCase):
 
     def setUp(self):
@@ -588,7 +586,6 @@ class UpdateOnlineAppointmentAPIViewTest(TestCase):
         response = client.delete(reverse('onapt-up',kwargs={'pk':doc_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
-
 
 class UpdateInPersonAppointmentAPIViewTest(TestCase):
 
@@ -674,3 +671,50 @@ class UpdateInPersonAppointmentAPIViewTest(TestCase):
                     content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],"all deleted!")
+
+class FilterBySpecialtyViewTest(TestCase):
+    def setUp(self):
+        self.Setup_doctor1()
+        self.Setup_doctor2()
+
+    def Setup_doctor1(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.doc_user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.doc_user.set_password(password)
+        self.doc_user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+        self.doc = DoctorUser(user=self.doc_user,degree=file_mock,specialty="چشم پزشکی")
+        self.doc.save()
+        add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        add.save() 
+
+    def Setup_doctor2(self):
+        username2 = 'testdoctor2'
+        email2 = 'testdoctor2@gmail.com'
+        first_name2 = 'Ramin2'
+        last_name2 = 'Mofarrah2'
+        password2 = '123456'
+        self.doc_user2 = User(username=username2,email=email2,first_name=first_name2,last_name=last_name2,is_verified=True)
+        self.doc_user2.set_password(password2)
+        self.doc_user2.save()
+        file_mock2 = mock.MagicMock(spec=File)
+        file_mock2.name = 'test.pdf'
+        self.doc2 = DoctorUser(user=self.doc_user2,degree=file_mock2,specialty="چشم پزشکی")
+        self.doc2.save()
+        add2 = Address(doc=self.doc2,state='Mazandaran',city='Sari',detail='Farhang St.')
+        add2.save() 
+
+    def test_filter_by_specialty(self):
+
+        response = client.get("/home/filterbyspecialty/1/")
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        self.assertEqual(2,len(response.data['data']))
+        self.assertEqual(self.doc_user.first_name,response.data['data'][0]['user']['first_name'])
+        self.assertEqual(self.doc_user2.first_name,response.data['data'][1]['user']['first_name'])
