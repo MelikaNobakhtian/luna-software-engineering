@@ -43,14 +43,15 @@ urlpatterns = [
          name='password-reset-complete'),
     path('home/',FilterHomepageView.as_view(),name="filter recently joined doctors"),
     path('doctors',SearchDoctorView.as_view(),name="search doctor"),
+    path('doctor-info/<int:pk>/',DoctorPageInfoView.as_view(), name="doctor-page-info"),
     path('doctor/<int:pk>/duration/',DurationAPIView.as_view(),name="duration"),
-    path('doctor/<int:doc_id>/update-duration/<int:pk>/',UpdateDurationAPIView.as_view(),name="duration"),
+    path('doctor/<int:doc_id>/update-duration/<int:pk>/',UpdateDurationAPIView.as_view(),name="update-duration"),
     path('doctor/<int:pk>/online-appointment/',OnlineAppointmentView.as_view(),name="online-apt"),
     path('doctor/<int:pk>/inperson-appointment/',InPersonAppointmentView.as_view(),name="inperson-apt"),
     path('doctor/<int:pk>/online-duration/',OnlineDurationView.as_view(),name="online-duration"),
-    path('doctor-info/<int:pk>/',DoctorPageInfoView.as_view(), name="doctor-page-info"),
+    path('doctor/<int:doc_id>/reserved/<int:pk>/',ReservedAppointmentsAPIView.as_view(),name="reserved"),
     path('home/filterbyspecialty/<int:pk>/',FilterBySpecialty.as_view(), name='filter-by-specialty'),
-    path('specialties/',SpecialtyView.as_view(),name='get-specialties')
-    
+    path('specialties/',SpecialtyView.as_view(),name='get-specialties'),
+    path('states/',StateView.as_view(),name='get-states'),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
