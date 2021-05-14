@@ -122,6 +122,7 @@ else:
             "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
         }
     }
+    }
 
 
 # Password validation
