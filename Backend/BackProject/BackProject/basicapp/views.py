@@ -282,7 +282,6 @@ class UpdateUserProfileView(generics.UpdateAPIView):
     def update(self,request,pk,*args,**kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user,data=request.data, partial=True)
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data":serializer.data},status=status.HTTP_200_OK)
@@ -461,7 +460,7 @@ class OnlineDurationView(APIView):
         return Response({'message':'No duration for online!'},status=status.HTTP_200_OK)
 
     def put(self,request,pk):
-        doctor = DoctorUser.objects.get()
+        doctor = DoctorUser.objects.get(pk=pk)
         duration = Duration.objects.get(doctor=doctor,is_edited=False,time_type='online')
         OnlineAppointment.objects.filter(doctor=doctor,duration=duration,patient__isnull=True).delete()
         duration.is_edited = True
@@ -513,7 +512,7 @@ class ReservedAppointmentsAPIView(generics.GenericAPIView):
             serializer = OnlineAppointmentSerializer(apts,many=True)
             return Response(serializer.data,status=status.HTTP_200_OK)
         
-class SearchDoctorView(APIView):
+class SearchDoctorView(generics.GenericAPIView):
     def get(self,request):
         search_fields = {}
         search_fields['state'] = self.request.query_params.get('state', None)
