@@ -244,7 +244,6 @@ class UpdateUserProfileView(generics.UpdateAPIView):
     def update(self,request,pk,*args,**kwargs):
         user = self.get_object()
         serializer = self.serializer_class(user,data=request.data, partial=True)
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data":serializer.data},status=status.HTTP_200_OK)

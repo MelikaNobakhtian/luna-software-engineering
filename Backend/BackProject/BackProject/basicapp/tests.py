@@ -10,6 +10,7 @@ from PIL import Image
 from django.core.files import File
 from unittest import mock
 import io
+import jdatetime
 
 
 client = Client()
@@ -513,15 +514,20 @@ class InPersonAppointment(TestCase):
 
         self.doc = DoctorUser(user=self.user,degree=file_mock)
         self.doc.save()
+        self.add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        self.add.save()
 
-        duration = Duration(time_type='genera;',duration=30,duration_number='violet',doctor=self.doc)
+        duration = Duration(time_type='general',duration=30,duration_number='violet',doctor=self.doc)
         duration.save()
 
-    def test_online_appointemt(self):
+    def test_inperson_appointemt(self):
         doc = DoctorUser.objects.get(user=self.user)
         doc_id = doc.id
         duration = Duration.objects.get(doctor=doc)
         duration_id = duration.id
+        address_id = self.add.id
+
+        #post inperson appointment
         body = {
         "start_day": "1400-02-29",
         "end_day":"1400-02-30",
@@ -530,7 +536,7 @@ class InPersonAppointment(TestCase):
                  "duration_id":duration_id,
                     "address_number":7,
                     "doc_id":doc_id,
-                    "address_id":2,
+                    "address_id":address_id,
                     "start_time":"17:00",
                     "end_time":"17:20"
              }
@@ -540,18 +546,139 @@ class InPersonAppointment(TestCase):
                     "address_number":7,
                     "duration_id":duration_id,
                     "doc_id":doc_id,
-                    "address_id":2,
+                    "address_id":address_id,
+                    "start_time":"17:20",
+                    "end_time":"17:40"
+             }]}
+        response = client.post(reverse('inperson-apt',kwargs={'pk':doc_id}),
+        data=json.dumps(body),content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data),4)
+
+        #get inperson appointment
+        response = client.get('/doctor/'+str(doc_id)+'/inperson-appointment/?date=1400-02-30')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data),2)
+        response = client.get('/doctor/'+str(doc_id)+'/inperson-appointment/?date=1400-02-31')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data),0)
+
+        #delete inperson appointments
+        response = client.delete(reverse('inperson-apt',kwargs={'pk':doc_id}),
+        data=json.dumps({'index':[1,3]}),content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        
+class OnlineAppointment(TestCase):
+    
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+    
+        duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        duration.save()
+
+    def test_inperson_appointemt(self):
+        doc = DoctorUser.objects.get(user=self.user)
+        doc_id = doc.id
+        duration = Duration.objects.get(doctor=doc)
+        duration_id = duration.id
+
+        #post online appointment
+        body = {
+        "start_day": "1400-02-29",
+        "end_day":"1400-02-30",
+        "appointments": [
+             {
+                 "duration_id":duration_id,
+                    "doc_id":doc_id,
+                    "start_time":"17:00",
+                    "end_time":"17:20"
+             }
+             ,
+
+             {
+                    "duration_id":duration_id,
+                    "doc_id":doc_id,
                     "start_time":"17:20",
                     "end_time":"17:40"
              }]}
         response = client.post(reverse('online-apt',kwargs={'pk':doc_id}),
         data=json.dumps(body),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        apt1 = InPersonAppointment(duration=duration,doctor=doc,date="1400-02-30")
-        apt1.save()
-        apt = OnlineAppointment.objects.get(pk=1)
-        apts = OnlineAppointment.objects.filter(duration=Duration.objects.get(pk=duration_id),doctor=DoctorUser.objects.get(pk=doc_id))
-        #self.assertEqual(len(response.data),len(OnlineAppointment.objects.filter(duration=Duration.objects.get(pk=duration_id),doctor=DoctorUser.objects.get(pk=doc_id))))
+        self.assertEqual(len(response.data),4)
+
+        #get online appointment
+        response = client.get('/doctor/'+str(doc_id)+'/online-appointment/?date=1400-02-30')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data),2)
+        response = client.get('/doctor/'+str(doc_id)+'/online-appointment/?date=1400-02-31')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data),0)
+
+        #delete online appointments
+        response = client.delete(reverse('online-apt',kwargs={'pk':doc_id}),
+        data=json.dumps({'index':[1,3]}),content_type='application/json')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+
+class OnlineDurationTest(TestCase):
+
+    def setUp(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.user,degree=file_mock)
+        self.doc.save()
+
+    def test_online_duration(self):
+        doc = DoctorUser.objects.get(user=self.user)
+        doc_id = doc.id
+
+        #get online duration
+        response = client.get(reverse('online-duration',kwargs={'pk':doc_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'No duration for online!')
+
+        duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        duration.save()
+
+        response = client.get(reverse('online-duration',kwargs={'pk':doc_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['duration'],30)
+
+        #put online duration
+        edited_duration = 40
+        response = client.put(reverse('online-duration',kwargs={'pk':doc_id}),
+        data=json.dumps({'duration':edited_duration}),content_type='application/json') 
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        response = client.get(reverse('online-duration',kwargs={'pk':doc_id}))
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['duration'],40)
+
+
+
+
+    
 
 
 
