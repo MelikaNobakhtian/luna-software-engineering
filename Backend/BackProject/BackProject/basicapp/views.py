@@ -9,7 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 import jwt
 from django.conf import settings
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, response
 import os
 from rest_framework.permissions import IsAuthenticated
 #from rest_framework.authtoken.models import Token
@@ -92,6 +92,7 @@ specialties["32"] = {"specialty":"بینایی سنجی","icon":'<VisibilityIcon
 specialties["33"] = {"specialty":"شنوایی سنجی","icon":'<MdHearing size="35"></MdHearing>'}
 specialties["34"] = {"specialty":"آسیب شناسی","icon":'<FaUserInjured size="35"></FaUserInjured>'}
 specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
+
 
 class RegisterView(generics.GenericAPIView):
 
@@ -594,6 +595,7 @@ class SearchDoctorView(generics.GenericAPIView):
         return Response({"message":"successfully found these doctors","doctors":doctors})
 
 class DoctorPageInfoView(APIView):
+
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
         doctor = DoctorProfileSerializer(doc)
@@ -616,3 +618,51 @@ class SpecialtyView(APIView):
 class StateView(APIView):
     def get(self,request):
         return Response(states)
+
+class DoctorPageCalendarOnlineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        date = self.request.query_params.get('date', None)
+        dur = self.request.query_params.get('duration', None)
+
+        online = OnlineAppointment.objects.all()
+
+        if date is not None:
+            online = online.filter(date=date)
+        if dur is not None:
+            duration = Duration.objects.get(pk=dur)
+            online = online.filter(duration=duration)
+
+        apt_online = OnlineAppointmentSerializer(online,many=True).data   
+
+        if apt_online == []:
+            return Response({"message":"No online appointments available"},status=status.HTTP_200_OK)
+
+        return Response({"data":apt_online,"message":"success"},status=status.HTTP_200_OK)
+
+class DoctorPageCalendarInPersonView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        date = self.request.query_params.get('date', None)
+        dur = self.request.query_params.get('duration', None)
+        addr = self.request.query_params.get('address', None)
+        
+        inperson = InPersonAppointment.objects.all()
+
+        if date is not None:
+            inperson = inperson.filter(date=date)
+        if dur is not None:
+            duration = Duration.objects.get(pk=dur)
+            inperson = inperson.filter(duration=duration)
+        if addr is not None:
+            address = Address.objects.get(pk=addr)
+            inperson = inperson.filter(address=address)
+
+        apt_inperson = InPersonAppointmentSerializer(inperson,many=True).data
+
+        if apt_inperson == [] :
+            return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
+            
+        return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)

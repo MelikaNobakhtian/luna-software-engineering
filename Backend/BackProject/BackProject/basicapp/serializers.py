@@ -157,7 +157,6 @@ class UpdateDoctorAddressSerializer(serializers.ModelSerializer):
         fields = ['state','city','detail']
 
 class AddressSerializer(serializers.ModelSerializer):
-    #doc = DoctorProfileSerializer(read_only=True)
     class Meta:
         model = Address
         fields = ['id','state','doc','city','detail']

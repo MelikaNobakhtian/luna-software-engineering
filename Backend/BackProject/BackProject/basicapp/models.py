@@ -130,6 +130,4 @@ class OnlineAppointment(models.Model):
             Util.send_email(data)
         super(OnlineAppointment, self).delete()
 
-
-
     
