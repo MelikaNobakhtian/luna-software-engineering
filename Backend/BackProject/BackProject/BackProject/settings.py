@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 import environ
 from datetime import timedelta
 from corsheaders.defaults import default_headers
@@ -97,22 +98,30 @@ WSGI_APPLICATION = 'BackProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+TESTING = sys.argv[1:2] == ['test']
+if TESTING==False:
+    DATABASES = {
 
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': env("DATABASE_NAME"),
-         'USER': env("DATABASE_USER"),
-         'PASSWORD': env("DATABASE_PASSWORD"),
-         'HOST': env("DATABASE_HOST"),
-         'PORT': env("DATABASE_PORT"),
-     },
-     'TEST': {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env("DATABASE_NAME"),
+            'USER': env("DATABASE_USER"),
+            'PASSWORD': env("DATABASE_PASSWORD"),
+            'HOST': env("DATABASE_HOST"),
+            'PORT': env("DATABASE_PORT"),
+         },
+        'TEST': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        },
-
-}
+             },}
+else:
+    DATABASES = {    
+        'default': {
+        "ENGINE": "django.db.backends.sqlite3",
+        "TEST": {
+            "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
+        }
+    }
 
 
 # Password validation
