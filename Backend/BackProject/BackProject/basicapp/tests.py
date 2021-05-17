@@ -10,6 +10,8 @@ from PIL import Image
 from django.core.files import File
 from unittest import mock
 import io
+import jdatetime
+from datetime import time
 
 client = Client()
 
@@ -484,7 +486,6 @@ class SearchViewTest(TestCase):
 
         response_search = client.get("/doctors?state=???",content_type='application/json')
 
-        print(response_search)
         #test status code
         self.assertEqual(response_search.status_code,status.HTTP_200_OK)
 
@@ -573,7 +574,7 @@ class UpdateDurationAPIViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'successful!')
 
-class InPersonAppointment(TestCase):
+class InPersonAppointmentAPIView(TestCase):
 
     def setUp(self):
         username = 'testdoctor'
@@ -643,7 +644,7 @@ class InPersonAppointment(TestCase):
         data=json.dumps({'index':[1,3]}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         
-class OnlineAppointment(TestCase):
+class OnlineAppointmentAPIView(TestCase):
     
     def setUp(self):
         username = 'testdoctor'
@@ -797,3 +798,134 @@ class FilterBySpecialtyViewTest(TestCase):
         self.assertEqual(2,len(response.data['data']))
         self.assertEqual(self.doc_user.first_name,response.data['data'][0]['user']['first_name'])
         self.assertEqual(self.doc_user2.first_name,response.data['data'][1]['user']['first_name'])
+
+class ReserveOnlineAppointmentViewTest(TestCase):
+    
+    def setUp(self):
+        self.setUp_patient()
+        self.setUp_doctor()
+        self.setUp_onlinetime()
+
+    def setUp_onlinetime(self):
+        self.duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        self.duration.save()
+        self.apt = OnlineAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date(1400,3,7),start_time=time(12,30),end_time=time(13,0))
+        self.apt.save()
+
+
+    def setUp_patient(self):
+        username = 'testuser'
+        email = 'testuser@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()   
+
+    def test_reserve_cancel_online(self):
+        #login user to get access token
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+        self.assertEqual(response_login.status_code,status.HTTP_200_OK)
+        access_token = response_login.data['data']['tokens']['access']
+
+        #reserve online appointment
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = new_client.post(reverse('reserve-online',kwargs={'pk' : self.apt.id , 'doc_id':self.doc.id}),
+            data=json.dumps({}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'reserved!')
+        self.assertEqual(self.user,OnlineAppointment.objects.get(pk=self.apt.id).patient)
+
+        #cancel online appointment
+        response = new_client.put(reverse('reserve-online',kwargs={'pk' : self.apt.id , 'doc_id':self.doc.id}),
+            data=json.dumps({}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'canceled!')
+        self.assertEqual(None,OnlineAppointment.objects.get(pk=self.apt.id).patient)
+
+class ReserveInPersonAppointmentViewTest(TestCase):
+    
+    def setUp(self):
+        self.setUp_patient()
+        self.setUp_doctor()
+        self.setUp_inpersontime()
+
+    def setUp_inpersontime(self):
+        self.duration = Duration(time_type='general',duration=30,doctor=self.doc)
+        self.duration.save()
+        self.apt = InPersonAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date(1400,3,7),start_time=time(12,30),end_time=time(13,0),address=self.add)
+        self.apt.save()
+
+
+    def setUp_patient(self):
+        username = 'testuser'
+        email = 'testuser@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()
+
+        self.add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        self.add.save()
+
+    def test_reserve_cancel_inperson(self):
+        #login user to get access token
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+        self.assertEqual(response_login.status_code,status.HTTP_200_OK)
+        access_token = response_login.data['data']['tokens']['access']
+
+        #reserve inperson appointment
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = new_client.post(reverse('reserve-inperson',kwargs={'pk' : self.apt.id , 'doc_id':self.doc.id}),
+            data=json.dumps({}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'reserved!')
+        self.assertEqual(self.user,InPersonAppointment.objects.get(pk=self.apt.id).patient)
+
+        #cancel inperson appointment
+        response = new_client.put(reverse('reserve-inperson',kwargs={'pk' : self.apt.id , 'doc_id':self.doc.id}),
+            data=json.dumps({}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'canceled!')
+        self.assertEqual(None,InPersonAppointment.objects.get(pk=self.apt.id).patient)
+
+        
