@@ -666,3 +666,14 @@ class DoctorPageCalendarInPersonView(APIView):
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
+
+class UserTimeLineView(APIView):
+    
+    def get(self,request,pk):
+        user = User.objects.get(pk=pk)
+        inperson = InPersonAppointment.filter(patient=user)
+        online = OnlineAppointment.filter(patient=user)
+        apts = {}
+        apts.append(inperson)
+        apts.append(online)
+        apts = apts.objects.order_by('-start_time').order_by('-date')
