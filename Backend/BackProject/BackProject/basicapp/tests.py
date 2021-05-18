@@ -493,7 +493,6 @@ class SearchViewTest(TestCase):
         self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][0]['user']['first_name'])
         self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][1]['user']['first_name'])
 
-
 class DurationAPIViewTest(TestCase):
 
     def setUp(self):
@@ -706,7 +705,6 @@ class OnlineAppointment(TestCase):
         data=json.dumps({'index':[1,3]}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-
 class OnlineDurationTest(TestCase):
 
     def setUp(self):
@@ -749,7 +747,6 @@ class OnlineDurationTest(TestCase):
         response = client.get(reverse('online-duration',kwargs={'pk':doc_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['duration'],40)
-
 
 class FilterBySpecialtyViewTest(TestCase):
     def setUp(self):
