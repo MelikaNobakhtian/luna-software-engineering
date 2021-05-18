@@ -668,13 +668,15 @@ class DoctorTodayTimeLineView(APIView):
 
     def get(self,request,pk):
         doc = DoctorUser.objects.get(pk=pk)
-        inperson = InPersonAppointment.objects.filter(doctor=doc,date=jdatetime.date.today())
-        online = OnlineAppointment.objects.filter(doctor=doc,date=jdatetime.date.today())
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=jdatetime.date.today(),patient__isnull=False)
+        online = OnlineAppointment.objects.filter(doctor=doc,date=jdatetime.date.today(),patient__isnull=False)
         apts = []
         apts.extend(inperson)
         apts.extend(online)
         sorted(apts,key=lambda x: x.start_time)
         doc_apt = TimeLineSerializer(apts,many=True)
+        if doc_apt == []:
+            return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
 
 class DoctorTomorrowTimeLineView(APIView):
@@ -683,30 +685,16 @@ class DoctorTomorrowTimeLineView(APIView):
         doc = DoctorUser.objects.get(pk=pk)
 
         date = jdatetime.date.today()
+        tomorrow = date + timedelta(days=1)
 
-        if (date.month < 7 and date.day < 31) or (date.month > 6 and date.month < 12 and day < 30) or (date.month == 12 and day < 29) :
-            tomorrow = jdatetime.date(date.year,date.month,date.day+1)
-
-        else if (date.month < 7 and date.day == 31) or (date.month > 6 and date.month < 12 and day == 30):
-            tomorrow = jdatetime.date(date.year,date.month+1,1)
-
-        else if (date.month == 12 and day == 29):
-            
-            if (date.year % 33 == 1) or (date.year % 33 == 5) or (date.year % 33 == 9) or (date.year % 33 == 13) or (date.year % 33 == 17) or (date.year % 33 == 22) or (date.year % 33 == 26) or (date.year % 33 == 30):
-                tomorrow = jdatetime.date(date.year,date.month,date.day+1)
-
-            else:
-                tomorrow = jdatetime.date(date.year+1,1,1)
-
-        else if (date.month == 12 and day == 30):
-            tomorrow = jdatetime.date(date.year+1,1,1)
-
-        inperson = InPersonAppointment.objects.filter(doctor=doc,date=tomorrow)
-        online = OnlineAppointment.objects.filter(doctor=doc,date=tomorrow)
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=tomorrow,patient__isnull=False)
+        online = OnlineAppointment.objects.filter(doctor=doc,date=tomorrow,patient__isnull=False)
         apts = []
         apts.extend(inperson)
         apts.extend(online)
         sorted(apts,key=lambda x: x.start_time)
         doc_apt = TimeLineSerializer(apts,many=True)
+        if doc_apt == []:
+            return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
         
