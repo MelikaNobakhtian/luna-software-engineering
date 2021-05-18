@@ -93,7 +93,6 @@ specialties["33"] = {"specialty":"شنوایی سنجی","icon":'<MdHearing size
 specialties["34"] = {"specialty":"آسیب شناسی","icon":'<FaUserInjured size="35"></FaUserInjured>'}
 specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
 
-
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -434,8 +433,6 @@ class InPersonAppointmentView(generics.GenericAPIView):
             InPersonAppointment.objects.get(pk=index).delete()
         return Response({'message':'deleted!'},status=status.HTTP_200_OK)
             
-
-
 class DurationAPIView(APIView):
 
     def get(self,request,pk):
@@ -666,3 +663,50 @@ class DoctorPageCalendarInPersonView(APIView):
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
+
+class DoctorTodayTimeLineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=jdatetime.date.today())
+        online = OnlineAppointment.objects.filter(doctor=doc,date=jdatetime.date.today())
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        sorted(apts,key=lambda x: x.start_time)
+        doc_apt = TimeLineSerializer(apts,many=True)
+        return Response({"data":doc_apt.data,"message":"success"})
+
+class DoctorTomorrowTimeLineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+
+        date = jdatetime.date.today()
+
+        if (date.month < 7 and date.day < 31) or (date.month > 6 and date.month < 12 and day < 30) or (date.month == 12 and day < 29) :
+            tomorrow = jdatetime.date(date.year,date.month,date.day+1)
+
+        else if (date.month < 7 and date.day == 31) or (date.month > 6 and date.month < 12 and day == 30):
+            tomorrow = jdatetime.date(date.year,date.month+1,1)
+
+        else if (date.month == 12 and day == 29):
+            
+            if (date.year % 33 == 1) or (date.year % 33 == 5) or (date.year % 33 == 9) or (date.year % 33 == 13) or (date.year % 33 == 17) or (date.year % 33 == 22) or (date.year % 33 == 26) or (date.year % 33 == 30):
+                tomorrow = jdatetime.date(date.year,date.month,date.day+1)
+
+            else:
+                tomorrow = jdatetime.date(date.year+1,1,1)
+
+        else if (date.month == 12 and day == 30):
+            tomorrow = jdatetime.date(date.year+1,1,1)
+
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=tomorrow)
+        online = OnlineAppointment.objects.filter(doctor=doc,date=tomorrow)
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        sorted(apts,key=lambda x: x.start_time)
+        doc_apt = TimeLineSerializer(apts,many=True)
+        return Response({"data":doc_apt.data,"message":"success"})
+        
