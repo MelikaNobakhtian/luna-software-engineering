@@ -671,9 +671,13 @@ class UserTimeLineView(APIView):
     
     def get(self,request,pk):
         user = User.objects.get(pk=pk)
-        inperson = InPersonAppointment.filter(patient=user)
-        online = OnlineAppointment.filter(patient=user)
-        apts = {}
-        apts.append(inperson)
-        apts.append(online)
-        apts = apts.objects.order_by('-start_time').order_by('-date')
+        inperson = InPersonAppointment.objects.filter(patient=user)
+        online = OnlineAppointment.objects.filter(patient=user)
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        #apts = apts.order_by('-start_time').order_by('-date')
+        sorted(apts,key=lambda x: x.start_time)
+        sorted(apts,key=lambda x: x.date)
+        user_apt = UserTimeLineSerializer(apts,many=True)
+        return Response({"data":user_apt.data,"message":"success"})
