@@ -291,6 +291,12 @@ class TimeLineSerializer(serializers.Serializer):
     date = serializers.DateField()
     start_time = serializers.TimeField()
     end_time = serializers.TimeField()
+    address_number = serializers.SerializerMethodField()
 
     class Meta:
-        fields = ['doctor','patient','duration','date','start_time','end_time']
+        fields = ['doctor','patient','duration','date','start_time','end_time','address_number']
+    
+    def get_address_number(self,obj):
+        if obj.duration.time_type != "online":
+            return obj.address_number
+        return -1
