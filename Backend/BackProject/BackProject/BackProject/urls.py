@@ -56,7 +56,7 @@ urlpatterns = [
     path('states/',StateView.as_view(),name='get-states'),
     path('doctor/<int:pk>/online/',DoctorPageCalendarOnlineView.as_view(), name='get online available apts'),
     path('doctor/<int:pk>/inperson/',DoctorPageCalendarInPersonView.as_view(), name='get inperson available apts'),
-    path('doctor/<int:pk>/timeline-today',DoctorTodayTimeLineView.as_view(), name='get doctor today\'s reserved appointments'),
-    path('doctor/<int:pk>/timeline-tomorrow',DoctorTomorrowTimeLineView.as_view(), name='get doctor tomorrow\'s reserved appointments'),
+    path('doctor/<int:pk>/timeline-today/',DoctorTodayTimeLineView.as_view(), name='get doctor today\'s reserved appointments'),
+    path('doctor/<int:pk>/timeline-tomorrow/',DoctorTomorrowTimeLineView.as_view(), name='get doctor tomorrow\'s reserved appointments'),
 
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
