@@ -284,7 +284,7 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
         model = InPersonAppointment
         fields = '__all__'
 
-class UserTimeLineSerializer(serializers.Serializer):
+class TimeLineSerializer(serializers.Serializer):
     doctor = DoctorProfileSerializer(read_only=True)
     patient = UserProfileSerializer(read_only=True)
     duration = DurationSerializer(read_only=True)
