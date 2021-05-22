@@ -302,3 +302,42 @@ class MessageSerializer(serializers.ModelSerializer):
     def get_out(self,obj):
         is_out = obj.sender.id == self.context['user_pk']
         return is_out
+
+class DialogSerializer(serializers.ModelSerializer):
+    created = serializers.SerializerMethodField()
+    modified = serializers.SerializerMethodField()
+    other_user = serializers.SerializerMethodField()
+    unread_count = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MessageModel
+        fields = ['id','created','modified','other_user','unread_count','last_message']
+
+    def get_created(self,obj):
+        return int(obj.created.timestamp())
+
+    def get_modified(self,obj):
+        return int(obj.modified.timestamp())
+
+    def get_other_user(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            return UserProfileSerializer(obj.user2)
+        else if obj.user2.id == self.context['user_pk']:
+            return UserProfileSerializer(obj.user1)
+    
+    def get_unread_count(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user2, recipient=obj.user1)
+        else if obj.user2.id == self.context['user_pk']:
+            return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user1, recipient=obj.user2)
+
+    def get_last_message(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            msg = MessageModel.get_last_message_for_dialog(sender=obj.user2,recipient=obj.user1)
+            return MessageSerializer(msg,context={'user_pk':obj.user1.id})
+
+        else if obj.user2.id == self.context['user_pk']:
+            msg = MessageModel.get_last_message_for_dialog(sender=obj.user1,recipient=obj.user2)
+            return MessageSerializer(msg,context={'user_pk':obj.user2.id})
+
