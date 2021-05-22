@@ -434,8 +434,6 @@ class InPersonAppointmentView(generics.GenericAPIView):
             InPersonAppointment.objects.get(pk=index).delete()
         return Response({'message':'deleted!'},status=status.HTTP_200_OK)
             
-
-
 class DurationAPIView(APIView):
 
     def get(self,request,pk):
@@ -666,3 +664,4 @@ class DoctorPageCalendarInPersonView(APIView):
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
+

@@ -248,7 +248,6 @@ class PostInPersonAppointmentSerializer(serializers.ModelSerializer):
 
         return apt
 
-
 class DurationSerializer(serializers.ModelSerializer):
     
     doctor = DoctorProfileSerializer(read_only=True)
@@ -262,7 +261,6 @@ class UpdateDurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Duration
         fields = ['time_type','duration','duration_number']
-
 
 class OnlineAppointmentSerializer(serializers.ModelSerializer):
     
@@ -284,7 +282,23 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
         model = InPersonAppointment
         fields = '__all__'
 
+class MessageSerializer(serializers.ModelSerializer):
+    sent = serializers.SerializerMethodField()
+    edited = serializers.SerializerMethodField()
+    out = serializers.SerializerMethodField()
+    sender = UserProfileSerializer(read_only=True)
+    recipient = UserProfileSerializer(read_only=True)
 
+    class Meta:
+        model = MessageModel
+        fields = ['id','text','sent','edited','read','sender','recipient','out'] = UserProfileSerializer(read_only=True)
 
+    def get_sent(self,obj):
+        return int(obj.created.timestamp())
 
+     def get_edited(self,obj):
+        return int(obj.modified.timestamp())
 
+    def get_out(self,obj):
+        is_out = obj.sender.id == self.context['user_pk']
+        return is_out
