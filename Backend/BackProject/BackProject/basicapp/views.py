@@ -679,5 +679,5 @@ class UserTimeLineView(APIView):
         #apts = apts.order_by('-start_time').order_by('-date')
         sorted(apts,key=lambda x: x.start_time)
         sorted(apts,key=lambda x: x.date)
-        user_apt = UserTimeLineSerializer(apts,many=True)
+        user_apt = TimeLineSerializer(apts,many=True)
         return Response({"data":user_apt.data,"message":"success"})
