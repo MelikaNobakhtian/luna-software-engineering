@@ -3,6 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from rest_framework_simplejwt.tokens import RefreshToken
 from django_jalali.db import models as jmodels
 from .utils import Util
+from django.utils.translation import ugettext as _
+from django.utils.timezone import localtime
+from model_utils.models import TimeStampedModel, SoftDeletableModel, SoftDeletableManager
+from typing import Optional, Any
+from django.db.models import Q
+import uuid
 
 class UserManager(BaseUserManager):
 
@@ -130,4 +136,32 @@ class OnlineAppointment(models.Model):
             Util.send_email(data)
         super(OnlineAppointment, self).delete()
 
-    
+class DialogsModel(TimeStampedModel):
+    id = models.BigAutoField(primary_key=True, verbose_name=_("Id"))
+    user1 = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("User1"),
+                              related_name="+", db_index=True)
+    user2 = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("User2"),
+                              related_name="+", db_index=True)
+
+    class Meta:
+        unique_together = (('user1', 'user2'), ('user2', 'user1'))
+        verbose_name = _("Dialog")
+        verbose_name_plural = _("Dialogs")
+
+    def __str__(self):
+        return _("Dialog between ") + f"{self.user1.id}, {self.user2.id}"
+
+    @staticmethod
+    def dialog_exists(u1: User, u2: User) -> Optional[Any]:
+        return DialogsModel.objects.filter(Q(user1=u1, user2=u2) | Q(user1=u2, user2=u1)).first()
+
+    @staticmethod
+    def create_if_not_exists(u1: User, u2: User):
+        res = DialogsModel.dialog_exists(u1, u2)
+        if not res:
+            DialogsModel.objects.create(user1=u1, user2=u2)
+
+    @staticmethod
+    def get_dialogs_for_user(user: User):
+        return DialogsModel.objects.filter(Q(user1=user) | Q(user2=user)).values_list('user1__pk', 'user2__pk')
+

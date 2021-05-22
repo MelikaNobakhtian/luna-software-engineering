@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'django_jalali',
     'corsheaders',
     'basicapp',
+    'channels',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -94,6 +96,7 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'BackProject.wsgi.application'
 
+ASGI_APPLICATION = 'Backproject.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -147,6 +150,14 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
