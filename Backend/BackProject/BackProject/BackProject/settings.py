@@ -92,11 +92,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+    ,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 }
 
-WSGI_APPLICATION = 'BackProject.wsgi.application'
+#WSGI_APPLICATION = 'BackProject.wsgi.application'
 
-ASGI_APPLICATION = 'routing.application'
+ASGI_APPLICATION = 'BackProject.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
