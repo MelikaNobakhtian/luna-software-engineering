@@ -291,12 +291,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MessageModel
-        fields = ['id','text','sent','edited','read','sender','recipient','out'] = UserProfileSerializer(read_only=True)
+        fields = ['id','text','sent','edited','read','sender','recipient','out']
 
     def get_sent(self,obj):
         return int(obj.created.timestamp())
 
-     def get_edited(self,obj):
+    def get_edited(self,obj):
         return int(obj.modified.timestamp())
 
     def get_out(self,obj):
@@ -323,13 +323,13 @@ class DialogSerializer(serializers.ModelSerializer):
     def get_other_user(self,obj):
         if obj.user1.id == self.context['user_pk']:
             return UserProfileSerializer(obj.user2)
-        else if obj.user2.id == self.context['user_pk']:
+        elif obj.user2.id == self.context['user_pk']:
             return UserProfileSerializer(obj.user1)
     
     def get_unread_count(self,obj):
         if obj.user1.id == self.context['user_pk']:
             return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user2, recipient=obj.user1)
-        else if obj.user2.id == self.context['user_pk']:
+        elif obj.user2.id == self.context['user_pk']:
             return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user1, recipient=obj.user2)
 
     def get_last_message(self,obj):
@@ -337,7 +337,7 @@ class DialogSerializer(serializers.ModelSerializer):
             msg = MessageModel.get_last_message_for_dialog(sender=obj.user2,recipient=obj.user1)
             return MessageSerializer(msg,context={'user_pk':obj.user1.id})
 
-        else if obj.user2.id == self.context['user_pk']:
+        elif obj.user2.id == self.context['user_pk']:
             msg = MessageModel.get_last_message_for_dialog(sender=obj.user1,recipient=obj.user2)
             return MessageSerializer(msg,context={'user_pk':obj.user2.id})
 

@@ -96,7 +96,7 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'BackProject.wsgi.application'
 
-ASGI_APPLICATION = 'Backproject.routing.application'
+ASGI_APPLICATION = 'routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
