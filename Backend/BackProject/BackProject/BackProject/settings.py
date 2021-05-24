@@ -124,6 +124,11 @@ else:
         "ENGINE": "django.db.backends.sqlite3",
         "TEST": {
             "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
+        },
+        'OPTIONS': {
+            'timeout': 120,  # in seconds
+            # see also
+            # https://docs.python.org/3.7/library/sqlite3.html#sqlite3.connect
         }
     }
     }
@@ -152,11 +157,14 @@ SIMPLE_JWT = {
 }
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
+    # 'default': {
+    #     'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    #     'CONFIG': {
+    #         "hosts": [('127.0.0.1', 6379)],
+    #     },
+    # },
+     'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
     },
 }
 

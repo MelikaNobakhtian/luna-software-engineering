@@ -1,8 +1,7 @@
 import json
 from rest_framework import status
 from django.test import TestCase, Client
-from rest_framework.test import APIClient 
-from django.urls import reverse
+from rest_framework.test import APIClient
 from .models import *
 from .serializers import *
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -10,6 +9,16 @@ from PIL import Image
 from django.core.files import File
 from unittest import mock
 import io
+from django.db import IntegrityError
+from .factories import DialogsModelFactory, MessageModelFactory, UserFactory, faker
+from django.urls import reverse, resolve
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
+from channels.testing import HttpCommunicator, WebsocketCommunicator
+from channels.db import database_sync_to_async
+from .consumers import ChatConsumer, get_groups_to_add, get_user_by_pk, \
+    get_message_by_id, get_unread_count, mark_message_as_read, save_text_message
+
 
 client = Client()
 
@@ -493,7 +502,6 @@ class SearchViewTest(TestCase):
         self.assertEqual(self.doc_user.first_name,response_search.data['doctors'][0]['user']['first_name'])
         self.assertEqual(self.doc_user2.first_name,response_search.data['doctors'][1]['user']['first_name'])
 
-
 class DurationAPIViewTest(TestCase):
 
     def setUp(self):
@@ -706,7 +714,6 @@ class OnlineAppointment(TestCase):
         data=json.dumps({'index':[1,3]}),content_type='application/json')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-
 class OnlineDurationTest(TestCase):
 
     def setUp(self):
@@ -749,7 +756,6 @@ class OnlineDurationTest(TestCase):
         response = client.get(reverse('online-duration',kwargs={'pk':doc_id}))
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['duration'],40)
-
 
 class FilterBySpecialtyViewTest(TestCase):
     def setUp(self):
@@ -797,3 +803,54 @@ class FilterBySpecialtyViewTest(TestCase):
         self.assertEqual(2,len(response.data['data']))
         self.assertEqual(self.doc_user.first_name,response.data['data'][0]['user']['first_name'])
         self.assertEqual(self.doc_user2.first_name,response.data['data'][1]['user']['first_name'])
+
+class ConsumerTests(TestCase):
+    def setUp(self) -> None:
+        self.u1, self.u2 = UserFactory.create(), UserFactory.create()
+        self.dialog: DialogsModel = DialogsModelFactory.create(user1=self.u1, user2=self.u2)
+        self.msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2)
+        self.unread_msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2, read=False)
+
+        self.sender, self.recipient = UserFactory.create(), UserFactory.create()
+        num_unread = faker.random.randint(1, 20)
+        _ = MessageModelFactory.create_batch(num_unread, read=False, sender=self.sender, recipient=self.recipient)
+        self.num_unread = num_unread
+
+    async def test_groups_to_add(self):
+        groups = await get_groups_to_add(self.u1)
+        self.assertEqual({1, 2}, groups)
+        groups2 = await get_groups_to_add(self.u2)
+        self.assertEqual({2, 1}, groups2)
+
+    async def test_get_user_by_pk(self):
+        user = await get_user_by_pk("1000")
+        self.assertIsNone(user)
+        user = await get_user_by_pk(self.u1.id)
+        self.assertEqual(user, self.u1)
+
+    async def test_get_message_by_id(self):
+        m = await get_message_by_id(999999)
+        self.assertIsNone(m)
+        m = await get_message_by_id(self.msg.id)
+        t = (str(self.u2.pk), str(self.u1.pk))
+        self.assertEqual(m, t)
+
+    async def test_mark_message_as_read(self):
+        self.assertFalse(self.unread_msg.read)
+        await mark_message_as_read(self.unread_msg.id)
+        await database_sync_to_async(self.unread_msg.refresh_from_db)()
+        self.assertTrue(self.unread_msg.read)
+
+    async def test_get_unread_count(self):
+        count = await get_unread_count(self.sender, self.recipient)
+        self.assertEqual(count, self.num_unread)
+
+    async def test_save_x_message(self):
+        msg = await save_text_message(text="text", from_=self.u1, to=self.u2)
+        self.assertIsNotNone(msg)
+
+    async def test_connect_basic(self):
+        communicator = WebsocketCommunicator(ChatConsumer.as_asgi(), "/chat_ws")
+        communicator.scope["user"] = self.u1
+        connected, subprotocol = await communicator.connect()
+        assert connected
