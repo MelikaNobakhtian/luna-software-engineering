@@ -689,7 +689,7 @@ class MessagesModelList(APIView,PaginationHandlerMixin):
             qs = MessageModel.objects.filter(Q(recipient=user) |
                                              Q(sender=user)).prefetch_related('sender', 'recipient')
         qs = qs.order_by('-created')
-        #qs_paginate = self.paginate_queryset(qs)
+        qs_paginate = self.paginate_queryset(qs)
         #print(qs_paginate)
         serializer = MessageSerializer(qs,context={"user_pk":user.id},many=True)
         count = Paginator(qs,100).num_pages
@@ -698,6 +698,7 @@ class MessagesModelList(APIView,PaginationHandlerMixin):
 class DialogsModelList(APIView,PaginationHandlerMixin):
 
     pagination_class = BasicPagination
+    model = DialogsModel
 
     def get(self,request):
         user = request.user

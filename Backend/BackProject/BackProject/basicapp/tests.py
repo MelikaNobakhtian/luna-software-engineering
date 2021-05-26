@@ -10,7 +10,6 @@ from django.core.files import File
 from unittest import mock
 import io
 from django.db import IntegrityError
-from .factories import DialogsModelFactory, MessageModelFactory, UserFactory, faker
 from django.urls import reverse, resolve
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -806,51 +805,87 @@ class FilterBySpecialtyViewTest(TestCase):
 
 class ConsumerTests(TestCase):
     def setUp(self) -> None:
-        self.u1, self.u2 = UserFactory.create(), UserFactory.create()
-        self.dialog: DialogsModel = DialogsModelFactory.create(user1=self.u1, user2=self.u2)
-        self.msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2)
-        self.unread_msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2, read=False)
+        # self.u1, self.u2 = UserFactory.create(), UserFactory.create()
+        # self.dialog: DialogsModel = DialogsModelFactory.create(user1=self.u1, user2=self.u2)
+        # self.msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2)
+        # self.unread_msg: MessageModel = MessageModelFactory.create(sender=self.u1, recipient=self.u2, read=False)
 
-        self.sender, self.recipient = UserFactory.create(), UserFactory.create()
-        num_unread = faker.random.randint(1, 20)
-        _ = MessageModelFactory.create_batch(num_unread, read=False, sender=self.sender, recipient=self.recipient)
-        self.num_unread = num_unread
+        # self.sender, self.recipient = UserFactory.create(), UserFactory.create()
+        # num_unread = faker.random.randint(1, 20)
+        # _ = MessageModelFactory.create_batch(num_unread, read=False, sender=self.sender, recipient=self.recipient)
+        # self.num_unread = num_unread
+
+        self.Setup_user1()
+        self.Setup_user2()
+        self.Setup_dialog()
+        self.Setup_message()
+
+    def Setup_user1(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.user1 = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user1.set_password(password)
+        self.user1.save()
+
+    def Setup_user2(self):
+        username2 = 'testdoctor2'
+        email2 = 'testdoctor2@gmail.com'
+        first_name2 = 'Ramin2'
+        last_name2 = 'Mofarrah2'
+        password2 = '123456'
+        self.user2 = User(username=username2,email=email2,first_name=first_name2,last_name=last_name2,is_verified=True)
+        self.user2.set_password(password2)
+        self.user2.save()
+
+    def Setup_dialog(self):
+        self.dialog = DialogsModel(user1=self.user1,user2=self.user2)
+        self.dialog.save()
+
+    def Setup_message(self):
+        self.message = MessageModel(sender=self.user1,recipient=self.user2,text="Hello",read=True)
+        self.message.save()
+        self.unread_message = MessageModel(sender=self.user1,recipient=self.user2,text="Where are you??",read=False)
+        self.unread_message.save()
+
 
     async def test_groups_to_add(self):
-        groups = await get_groups_to_add(self.u1)
+        groups = await get_groups_to_add(self.user1)
         self.assertEqual({1, 2}, groups)
-        groups2 = await get_groups_to_add(self.u2)
+        groups2 = await get_groups_to_add(self.user2)
         self.assertEqual({2, 1}, groups2)
 
     async def test_get_user_by_pk(self):
         user = await get_user_by_pk("1000")
         self.assertIsNone(user)
-        user = await get_user_by_pk(self.u1.id)
-        self.assertEqual(user, self.u1)
+        user = await get_user_by_pk(self.user1.id)
+        self.assertEqual(user, self.user1)
 
     async def test_get_message_by_id(self):
         m = await get_message_by_id(999999)
         self.assertIsNone(m)
-        m = await get_message_by_id(self.msg.id)
-        t = (str(self.u2.pk), str(self.u1.pk))
+        m = await get_message_by_id(self.message.id)
+        t = (str(self.user2.pk), str(self.user1.pk))
         self.assertEqual(m, t)
 
     async def test_mark_message_as_read(self):
-        self.assertFalse(self.unread_msg.read)
-        await mark_message_as_read(self.unread_msg.id)
-        await database_sync_to_async(self.unread_msg.refresh_from_db)()
-        self.assertTrue(self.unread_msg.read)
+        self.assertFalse(self.unread_message.read)
+        await mark_message_as_read(self.unread_message.id)
+        await database_sync_to_async(self.unread_message.refresh_from_db)()
+        self.assertTrue(self.unread_message.read)
 
     async def test_get_unread_count(self):
-        count = await get_unread_count(self.sender, self.recipient)
-        self.assertEqual(count, self.num_unread)
+        count = await get_unread_count(self.user1, self.user2)
+        self.assertEqual(count, 1)
 
     async def test_save_x_message(self):
-        msg = await save_text_message(text="text", from_=self.u1, to=self.u2)
+        msg = await save_text_message(text="text", from_=self.user1, to=self.user2)
         self.assertIsNotNone(msg)
 
     async def test_connect_basic(self):
         communicator = WebsocketCommunicator(ChatConsumer.as_asgi(), "/chat_ws")
-        communicator.scope["user"] = self.u1
+        communicator.scope["user"] = self.user1
         connected, subprotocol = await communicator.connect()
         assert connected

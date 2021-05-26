@@ -93,6 +93,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
     ,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #'PAGE_SIZE': 10,
 }
 
 #WSGI_APPLICATION = 'BackProject.wsgi.application'
@@ -197,3 +198,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'haminob48@gmail.com'
 EMAIL_HOST_PASSWORD = 'vsndsjvocwjaoahv'
+
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
