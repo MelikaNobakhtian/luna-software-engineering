@@ -666,3 +666,61 @@ class DoctorPageCalendarInPersonView(APIView):
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
+
+class ReserveOnlineAppointmentAPIView(APIView):
+
+    def post(self,request,doc_id,pk):
+        user = request.user
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = OnlineAppointment.objects.get(pk=pk)
+        apt.patient = user
+        apt.save()
+        email_body = 'Hello ' + user.username + '!, \n You reserved an online appointemnt.Your appointment will be in ' + \
+             str(apt.date) + ' at ' + str(apt.start_time) +' with doctor ' + doc.user.last_name + '.Remember this date!'
+        data = {'email_body': email_body, 'to_email': user.email,
+                    'email_subject': 'Reserve Online appointment'}
+        Util.send_email(data)
+        return Response({'message':'reserved!'},status=status.HTTP_200_OK)
+
+    def put(self,request,doc_id,pk):
+        user = request.user
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = OnlineAppointment.objects.get(pk=pk)
+        apt.patient = None
+        apt.save()
+        email_body = 'Hello ' + user.username + '!, \n You canceled an online appointemnt.Your appointment was in ' + \
+             str(apt.date) + ' at ' + str(apt.start_time) +' with doctor ' + doc.user.last_name + '.'
+        data = {'email_body': email_body, 'to_email': user.email,
+                    'email_subject': 'Cancel Online appointment'}
+        Util.send_email(data)
+        return Response({'message':'canceled!'},status=status.HTTP_200_OK)
+
+
+
+class ReserveInPersonAppointmentAPIView(APIView):
+    
+    def post(self,request,doc_id,pk):
+        user = request.user
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = InPersonAppointment.objects.get(pk=pk)
+        apt.patient = user
+        apt.save()
+        email_body = 'Hello ' + user.username + '!, \n You reserved an in person appointemnt.Your appointment will be in ' + \
+             str(apt.date) + ' at ' + str(apt.start_time) +' with doctor ' + doc.user.last_name + '.Remember this date!'
+        data = {'email_body': email_body, 'to_email': user.email,
+                    'email_subject': 'Reserve in person appointment'}
+        Util.send_email(data)
+        return Response({'message':'reserved!'},status=status.HTTP_200_OK)
+
+    def put(self,request,doc_id,pk):
+        user = request.user
+        doc = DoctorUser.objects.get(pk=doc_id)
+        apt = InPersonAppointment.objects.get(pk=pk)
+        apt.patient = None
+        apt.save()
+        email_body = 'Hello ' + user.username + '!, \n You canceled an in person appointemnt.Your appointment was in ' + \
+             str(apt.date) + ' at ' + str(apt.start_time) +' with doctor ' + doc.user.last_name + '.'
+        data = {'email_body': email_body, 'to_email': user.email,
+                    'email_subject': 'Cancel in person appointment'}
+        Util.send_email(data)
+        return Response({'message':'canceled!'},status=status.HTTP_200_OK)
