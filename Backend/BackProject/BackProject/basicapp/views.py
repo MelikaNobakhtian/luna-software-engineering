@@ -705,8 +705,8 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         qs = DialogsModel.objects.filter(Q(user1_id=user.id) | Q(user2_id=user.id)) \
             .select_related('user1', 'user2')
         qs = qs.order_by('-created')
-        qs_paginate = self.paginate_queryset(qs)
-        serializer = DialogSerializer(qs_paginate,context={'user_pk':user.id},many=True)
+        #qs_paginate = self.paginate_queryset(qs)
+        serializer = DialogSerializer(qs,context={'user_pk':user.id},many=True)
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
