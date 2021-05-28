@@ -664,6 +664,20 @@ class DoctorPageCalendarInPersonView(APIView):
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
 
+class UserTimeLineView(APIView):
+    
+    def get(self,request,pk):
+        user = User.objects.get(pk=pk)
+        inperson = InPersonAppointment.objects.filter(patient=user)
+        online = OnlineAppointment.objects.filter(patient=user)
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        #apts = apts.order_by('-start_time').order_by('-date')
+        sorted(apts,key=lambda x: x.start_time)
+        sorted(apts,key=lambda x: x.date)
+        user_apt = TimeLineSerializer(apts,many=True)
+        return Response({"data":user_apt.data,"message":"success"})
 
 class ReserveOnlineAppointmentAPIView(APIView):
 
