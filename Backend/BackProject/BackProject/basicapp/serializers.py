@@ -284,7 +284,19 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
         model = InPersonAppointment
         fields = '__all__'
 
+class TimeLineSerializer(serializers.Serializer):
+    doctor = DoctorProfileSerializer(read_only=True)
+    patient = UserProfileSerializer(read_only=True)
+    duration = DurationSerializer(read_only=True)
+    date = serializers.DateField()
+    start_time = serializers.TimeField()
+    end_time = serializers.TimeField()
+    address_number = serializers.SerializerMethodField()
 
-
-
-
+    class Meta:
+        fields = ['doctor','patient','duration','date','start_time','end_time','address_number']
+    
+    def get_address_number(self,obj):
+        if obj.duration.time_type != "online":
+            return obj.address_number
+        return -1

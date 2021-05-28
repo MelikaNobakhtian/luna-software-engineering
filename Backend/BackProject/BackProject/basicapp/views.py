@@ -93,7 +93,6 @@ specialties["33"] = {"specialty":"شنوایی سنجی","icon":'<MdHearing size
 specialties["34"] = {"specialty":"آسیب شناسی","icon":'<FaUserInjured size="35"></FaUserInjured>'}
 specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
 
-
 class RegisterView(generics.GenericAPIView):
 
     serializer_class = RegisterSerializer
@@ -434,8 +433,6 @@ class InPersonAppointmentView(generics.GenericAPIView):
             InPersonAppointment.objects.get(pk=index).delete()
         return Response({'message':'deleted!'},status=status.HTTP_200_OK)
             
-
-
 class DurationAPIView(APIView):
 
     def get(self,request,pk):
@@ -629,10 +626,10 @@ class DoctorPageCalendarOnlineView(APIView):
         online = OnlineAppointment.objects.all()
 
         if date is not None:
-            online = online.filter(date=date)
+            online = online.filter(date=date,patient__isnull=True)
         if dur is not None:
             duration = Duration.objects.get(pk=dur)
-            online = online.filter(duration=duration)
+            online = online.filter(duration=duration,patient__isnull=True)
 
         apt_online = OnlineAppointmentSerializer(online,many=True).data   
 
@@ -652,13 +649,13 @@ class DoctorPageCalendarInPersonView(APIView):
         inperson = InPersonAppointment.objects.all()
 
         if date is not None:
-            inperson = inperson.filter(date=date)
+            inperson = inperson.filter(date=date,patient__isnull=True)
         if dur is not None:
             duration = Duration.objects.get(pk=dur)
-            inperson = inperson.filter(duration=duration)
+            inperson = inperson.filter(duration=duration,patient__isnull=True)
         if addr is not None:
             address = Address.objects.get(pk=addr)
-            inperson = inperson.filter(address=address)
+            inperson = inperson.filter(address=address,patient__isnull=True)
 
         apt_inperson = InPersonAppointmentSerializer(inperson,many=True).data
 
@@ -666,6 +663,7 @@ class DoctorPageCalendarInPersonView(APIView):
             return Response({"message":"No inperson appointments available"},status=status.HTTP_200_OK)
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
+
 
 class ReserveOnlineAppointmentAPIView(APIView):
 
@@ -724,3 +722,38 @@ class ReserveInPersonAppointmentAPIView(APIView):
                     'email_subject': 'Cancel in person appointment'}
         Util.send_email(data)
         return Response({'message':'canceled!'},status=status.HTTP_200_OK)
+
+class DoctorTodayTimeLineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=jdatetime.date.today(),patient__isnull=False)
+        online = OnlineAppointment.objects.filter(doctor=doc,date=jdatetime.date.today(),patient__isnull=False)
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        sorted(apts,key=lambda x: x.start_time)
+        doc_apt = TimeLineSerializer(apts,many=True)
+        if doc_apt == []:
+            return Response({"message":"No appointments"})
+        return Response({"data":doc_apt.data,"message":"success"})
+
+class DoctorTomorrowTimeLineView(APIView):
+
+    def get(self,request,pk):
+        doc = DoctorUser.objects.get(pk=pk)
+
+        date = jdatetime.date.today()
+        tomorrow = date + timedelta(days=1)
+
+        inperson = InPersonAppointment.objects.filter(doctor=doc,date=tomorrow,patient__isnull=False)
+        online = OnlineAppointment.objects.filter(doctor=doc,date=tomorrow,patient__isnull=False)
+        apts = []
+        apts.extend(inperson)
+        apts.extend(online)
+        sorted(apts,key=lambda x: x.start_time)
+        doc_apt = TimeLineSerializer(apts,many=True)
+        if doc_apt == []:
+            return Response({"message":"No appointments"})
+        return Response({"data":doc_apt.data,"message":"success"})
+        

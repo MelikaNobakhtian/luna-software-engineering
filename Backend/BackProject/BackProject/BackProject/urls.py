@@ -58,5 +58,5 @@ urlpatterns = [
     path('doctor/<int:pk>/inperson/',DoctorPageCalendarInPersonView.as_view(), name='get inperson available apts'),
     path('doctor/<int:doc_id>/reserve-online/<int:pk>/',ReserveOnlineAppointmentAPIView.as_view(),name="reserve-online"),
     path('doctor/<int:doc_id>/reserve-inperson/<int:pk>/',ReserveInPersonAppointmentAPIView.as_view(),name="reserve-inperson"),
-
+    path('doctor/<int:pk>/timeline-today/',DoctorTodayTimeLineView.as_view(), name='get doctor today\'s reserved appointments'),path('doctor/<int:pk>/timeline-tomorrow/',DoctorTomorrowTimeLineView.as_view(), name='get doctor tomorrow\'s reserved appointments'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
