@@ -21,6 +21,9 @@ from rest_framework.parsers import JSONParser
 from datetime import timedelta,datetime
 import jdatetime
 from django.db.models import Q
+from django.core.paginator import Paginator
+from .pagination import PaginationHandlerMixin
+from rest_framework.pagination import PageNumberPagination
 
 states = {}
 states["0"]="آذربایجان شرقی"
@@ -92,6 +95,10 @@ specialties["32"] = {"specialty":"بینایی سنجی","icon":'<VisibilityIcon
 specialties["33"] = {"specialty":"شنوایی سنجی","icon":'<MdHearing size="35"></MdHearing>'}
 specialties["34"] = {"specialty":"آسیب شناسی","icon":'<FaUserInjured size="35"></FaUserInjured>'}
 specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"></AiFillMedicineBox>'}
+
+
+class BasicPagination(PageNumberPagination):
+    page_size_query_param = 'page_size'
 
 class RegisterView(generics.GenericAPIView):
 
@@ -664,6 +671,7 @@ class DoctorPageCalendarInPersonView(APIView):
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
 
+
 class UserTimeLineView(APIView):
     
     def get(self,request,pk):
@@ -771,3 +779,48 @@ class DoctorTomorrowTimeLineView(APIView):
             return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
         
+
+
+class MessagesModelList(APIView,PaginationHandlerMixin):
+
+    pagination_class = BasicPagination
+
+    def get(self,request,dialog_with=None):
+        user = request.user
+        user2_id = dialog_with
+        if user2_id is not None:
+            user2 = User.objects.get(pk=user2_id)
+            qs = MessageModel.objects \
+                    .filter(Q(recipient=user, sender=user2) |
+                            Q(sender=user, recipient=user2)) \
+                    .select_related('sender', 'recipient')
+        else:
+            qs = MessageModel.objects.filter(Q(recipient=user) |
+                                             Q(sender=user)).prefetch_related('sender', 'recipient')
+        qs = qs.order_by('-created')
+        qs_paginate = self.paginate_queryset(qs)
+        #print(qs_paginate)
+        serializer = MessageSerializer(qs,context={"user_pk":user.id},many=True)
+        count = Paginator(qs,100).num_pages
+        return Response({'count':count,'messages':serializer.data},status=status.HTTP_200_OK)
+
+class DialogsModelList(APIView,PaginationHandlerMixin):
+
+    pagination_class = BasicPagination
+    model = DialogsModel
+
+    def get(self,request):
+        user = request.user
+        qs = DialogsModel.objects.filter(Q(user1_id=user.id) | Q(user2_id=user.id)) \
+            .select_related('user1', 'user2')
+        qs = qs.order_by('-created')
+        #qs_paginate = self.paginate_queryset(qs)
+        serializer = DialogSerializer(qs,context={'user_pk':user.id},many=True)
+        count = Paginator(qs,20).num_pages
+        return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
+
+
+
+
+
+    

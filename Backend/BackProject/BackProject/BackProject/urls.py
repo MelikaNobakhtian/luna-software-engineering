@@ -16,6 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url, include
 from basicapp.views import *
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (
@@ -24,6 +25,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'', include('basicapp.urls', namespace='basicapp')),
     path('register/', RegisterView.as_view(), name="register"),
     path('register-doctor/', RegisterDoctorView.as_view(), name="register-doctor"),
     path('email-verify/', VerifyEmail.as_view(), name="email-verify"),

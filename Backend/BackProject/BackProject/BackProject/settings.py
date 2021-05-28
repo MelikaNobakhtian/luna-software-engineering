@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'django_jalali',
     'corsheaders',
     'basicapp',
+    'channels',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -90,10 +92,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+    ,'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #'PAGE_SIZE': 10,
 }
 
-WSGI_APPLICATION = 'BackProject.wsgi.application'
+#WSGI_APPLICATION = 'BackProject.wsgi.application'
 
+ASGI_APPLICATION = 'BackProject.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -120,6 +125,11 @@ else:
         "ENGINE": "django.db.backends.sqlite3",
         "TEST": {
             "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),
+        },
+        'OPTIONS': {
+            'timeout': 120,  # in seconds
+            # see also
+            # https://docs.python.org/3.7/library/sqlite3.html#sqlite3.connect
         }
     }
     }
@@ -147,6 +157,17 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 }
 
+CHANNEL_LAYERS = {
+    # 'default': {
+    #     'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    #     'CONFIG': {
+    #         "hosts": [('127.0.0.1', 6379)],
+    #     },
+    # },
+     'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -177,3 +198,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'haminob48@gmail.com'
 EMAIL_HOST_PASSWORD = 'vsndsjvocwjaoahv'
+
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"

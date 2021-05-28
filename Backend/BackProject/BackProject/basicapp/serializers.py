@@ -248,7 +248,6 @@ class PostInPersonAppointmentSerializer(serializers.ModelSerializer):
 
         return apt
 
-
 class DurationSerializer(serializers.ModelSerializer):
     
     doctor = DoctorProfileSerializer(read_only=True)
@@ -262,7 +261,6 @@ class UpdateDurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Duration
         fields = ['time_type','duration','duration_number']
-
 
 class OnlineAppointmentSerializer(serializers.ModelSerializer):
     
@@ -284,6 +282,64 @@ class InPersonAppointmentSerializer(serializers.ModelSerializer):
         model = InPersonAppointment
         fields = '__all__'
 
+class MessageSerializer(serializers.ModelSerializer):
+    sent = serializers.SerializerMethodField()
+    edited = serializers.SerializerMethodField()
+    out = serializers.SerializerMethodField()
+    sender = UserProfileSerializer(read_only=True)
+    recipient = UserProfileSerializer(read_only=True)
+
+    class Meta:
+        model = MessageModel
+        fields = ['id','text','sent','edited','read','sender','recipient','out']
+
+    def get_sent(self,obj):
+        return obj.created
+
+    def get_edited(self,obj):
+        return obj.modified
+
+    def get_out(self,obj):
+        is_out = obj.sender.id == self.context['user_pk']
+        return is_out
+
+class DialogSerializer(serializers.ModelSerializer):
+    created = serializers.SerializerMethodField()
+    modified = serializers.SerializerMethodField()
+    other_user = serializers.SerializerMethodField()
+    unread_count = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MessageModel
+        fields = ['id','created','modified','other_user','unread_count','last_message']
+
+    def get_created(self,obj):
+        return obj.created
+
+    def get_modified(self,obj):
+        return obj.modified
+
+    def get_other_user(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            return UserProfileSerializer(obj.user2).data
+        elif obj.user2.id == self.context['user_pk']:
+            return UserProfileSerializer(obj.user1).data
+    
+    def get_unread_count(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user2, recipient=obj.user1)
+        elif obj.user2.id == self.context['user_pk']:
+            return MessageModel.get_unread_count_for_dialog_with_user(sender=obj.user1, recipient=obj.user2)
+
+    def get_last_message(self,obj):
+        if obj.user1.id == self.context['user_pk']:
+            msg = MessageModel.get_last_message_for_dialog(sender=obj.user2,recipient=obj.user1)
+            return MessageSerializer(msg,context={'user_pk':obj.user1.id}).data
+
+        elif obj.user2.id == self.context['user_pk']:
+            msg = MessageModel.get_last_message_for_dialog(sender=obj.user1,recipient=obj.user2)
+            return MessageSerializer(msg,context={'user_pk':obj.user2.id}).data
 
 class TimeLineSerializer(serializers.Serializer):
     doctor = DoctorProfileSerializer(read_only=True)
