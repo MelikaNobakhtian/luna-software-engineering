@@ -1022,3 +1022,106 @@ class ConsumerTests(TestCase):
     #     connected, subprotocol = await communicator.connect()
     #     assert connected
 
+class RateDoctorTest(TestCase):
+
+    def setUp(self):
+        self.Setup_user1()
+        self.Setup_user2()
+        self.setUp_doctor()
+
+    def Setup_user1(self):
+        username = 'leili'
+        email = 'leili@gmail.com'
+        first_name = 'Leili'
+        last_name = 'Samiei'
+        self.password1 = '123456'
+        self.user1 = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user1.set_password(self.password1)
+        self.user1.save()
+
+    def Setup_user2(self):
+        username2 = 'Sohrab'
+        email2 = 'sohrab@gmail.com'
+        first_name2 = 'Sohrab'
+        last_name2 = 'Salehi'
+        self.password2 = '123456'
+        self.user2 = User(username=username2,email=email2,first_name=first_name2,last_name=last_name2,is_verified=True)
+        self.user2.set_password(self.password2)
+        self.user2.save()
+
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()
+
+    def test_rate_doctor(self):
+
+        #login users to get access token
+        access_token = []
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user1.email , 'password':self.password1}),
+            content_type='application/json')
+        self.assertEqual(response_login.status_code,status.HTTP_200_OK)
+        access_token.append(response_login.data['data']['tokens']['access'])
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user2.email , 'password':self.password2}),
+            content_type='application/json')
+        self.assertEqual(response_login.status_code,status.HTTP_200_OK)
+        access_token.append(response_login.data['data']['tokens']['access'])
+
+        #get rate by user2 when not rated
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token[1]}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token[1])
+        response = new_client.get(reverse('rate',kwargs={'pk' : self.doc.id }),headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'No rate!')
+
+
+        #rate by user1
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token[0]}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token[0])
+        response = new_client.post(reverse('rate',kwargs={'pk' : self.doc.id }),
+            data=json.dumps({'rate' : 4}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'Successfully Rated!')
+        self.assertEqual(self.doc.average_rating,4)
+
+        #get rate by user1 when rated
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token[0]}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token[0])
+        response = new_client.get(reverse('rate',kwargs={'pk' : self.doc.id }),headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['rate'],4)
+
+        #rate by user2
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token[1]}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token[1])
+        response = new_client.post(reverse('rate',kwargs={'pk' : self.doc.id }),
+            data=json.dumps({'rate' : 5}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'Successfully Rated!')
+        self.assertEqual(self.doc.average_rating,4.5)
+
+        #change rate user1
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token[0]}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token[0])
+        response = new_client.put(reverse('rate',kwargs={'pk' : self.doc.id }),
+            data=json.dumps({'rate' : 3}),content_type='application/json',headers =auth_headers)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'update rate')
+        self.assertEqual(self.doc.average_rating,4)
+
+
+
+
+
