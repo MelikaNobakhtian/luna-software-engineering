@@ -671,7 +671,6 @@ class DoctorPageCalendarInPersonView(APIView):
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
 
-
 class UserTimeLineView(APIView):
     
     def get(self,request,pk):
@@ -681,7 +680,6 @@ class UserTimeLineView(APIView):
         apts = []
         apts.extend(inperson)
         apts.extend(online)
-        #apts = apts.order_by('-start_time').order_by('-date')
         sorted(apts,key=lambda x: x.start_time)
         sorted(apts,key=lambda x: x.date)
         user_apt = TimeLineSerializer(apts,many=True)
@@ -714,8 +712,6 @@ class ReserveOnlineAppointmentAPIView(APIView):
                     'email_subject': 'Cancel Online appointment'}
         Util.send_email(data)
         return Response({'message':'canceled!'},status=status.HTTP_200_OK)
-
-
 
 class ReserveInPersonAppointmentAPIView(APIView):
     
@@ -779,8 +775,6 @@ class DoctorTomorrowTimeLineView(APIView):
             return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
         
-
-
 class MessagesModelList(APIView,PaginationHandlerMixin):
 
     pagination_class = BasicPagination
@@ -819,8 +813,3 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
-
-
-
-
-    
