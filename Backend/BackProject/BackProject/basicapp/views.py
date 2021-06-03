@@ -813,3 +813,45 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
+class CommentView(APIView,PaginationHandlerMixin):
+
+    model = Comment
+    parser_classes = [JSONParser]
+    pagination_class = BasicPagination
+
+    def get_object(self, pk):
+        try:
+            return Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+
+    def get(self,request,pk):
+        doctor = DoctorUser.objects.get(id=pk)
+        if Comment.objects.filter(doctor=doctor).exists():    
+
+            mcomment = Comment.objects.filter(doctor=doctor)
+            comment_list = self.paginate_queryset(mcomment)
+            serializer = CommentSerializer(comment_list,many=True)
+            count = Paginator(mcomment,10).num_pages
+            return Response({"comments" : serializer.data, "count": count},status=status.HTTP_200_OK)
+
+        response = {'message' : 'No Comment!',}
+        return Response(response,status=status.HTTP_200_OK)
+
+    def post(self,request,pk):
+        user=request.user
+        doctor=DoctorUser.objects.get(id=pk)
+        serializer = PostCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            comment_text = serializer.data.get("textcomment")
+            new_comment = Comment(user=user,doctor=doctor,comment_text=comment_text)
+            new_comment.save()
+            response = {
+                'status' : 'success',
+                'code' : 'status.HTTP_200_OK',
+                'message' : 'Comment Saved!!',
+                'data' : comment_text,
+            }
+            return Response(response,status=status.HTTP_200_OK)
+        return Response(serializer.errors,
+                        status=status.HTTP_404_NOT_FOUND)
