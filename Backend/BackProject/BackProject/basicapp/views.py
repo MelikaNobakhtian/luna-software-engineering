@@ -855,3 +855,15 @@ class CommentView(APIView,PaginationHandlerMixin):
             return Response(response,status=status.HTTP_200_OK)
         return Response(serializer.errors,
                         status=status.HTTP_404_NOT_FOUND)
+
+class DeleteCommentView(APIView):
+    def delete(self,request,doc_pk,comment_pk):
+        current_comment = Comment.objects.get(id=comment_pk)
+        comment_doctor =DoctorUser.objects.get(id=book_pk)
+        current_user = request.user
+        comment_user = current_comment.user
+        if comment_user == current_user:
+            current_comment.delete()
+            return Response({'message':'Your Comment successfully deleted!'},status=status.HTTP_200_OK)
+        else:
+            return Response({'message':'You dont have permission to delete this comment!'},status=status.HTTP_200_OK)        
