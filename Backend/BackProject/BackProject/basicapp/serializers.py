@@ -361,4 +361,16 @@ class TimeLineSerializer(serializers.Serializer):
     
     def get_id(self,obj):
         return obj.id
-        
+
+class PostCommentSerializer(serializers.Serializer):
+    
+    textcomment = serializers.CharField(required=True)
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    user = UserProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = Comment
+        fields = "__all__"
+    
