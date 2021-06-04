@@ -63,7 +63,7 @@ urlpatterns = [
     path('doctor/<int:pk>/timeline-today/',DoctorTodayTimeLineView.as_view(), name='get doctor today\'s reserved appointments'),
     path('doctor/<int:pk>/timeline-tomorrow/',DoctorTomorrowTimeLineView.as_view(), name='get doctor tomorrow\'s reserved appointments'),
     path('user/<int:pk>/appointments/',UserTimeLineView.as_view(), name='get user appointments'),
-    path('doctor/<int:pk>/comment',CommentView.as_view()),
-    path('doctor/<doc_pk>/comment/<comment_pk>',DeleteCommentView.as_view()),
+    path('doctor/<int:pk>/comment/',CommentView.as_view()),
+    path('doctor/<doc_pk>/comment/<comment_pk>/',DeleteCommentView.as_view()),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

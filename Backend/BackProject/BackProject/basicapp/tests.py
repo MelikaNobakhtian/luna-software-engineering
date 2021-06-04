@@ -933,8 +933,7 @@ class ReserveInPersonAppointmentViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'canceled!')
         self.assertEqual(None,InPersonAppointment.objects.get(pk=self.apt.id).patient)
-
-        
+ 
 class ConsumerTests(TestCase):
     def setUp(self) -> None:
         # self.u1, self.u2 = UserFactory.create(), UserFactory.create()
@@ -1022,3 +1021,77 @@ class ConsumerTests(TestCase):
     #     connected, subprotocol = await communicator.connect()
     #     assert connected
 
+class CommentTests(TestCase):
+    def setUp(self):
+        self.setUp_user()
+        self.setUp_doctor()
+        self.setUp_comment()
+    
+    def setUp_user(self):
+        username = 'user'
+        email = 'user@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+    
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()  
+
+    def setUp_comment(self):
+        text = "first comment"
+        self.comment = Comment(user=self.user,doctor=self.doc,comment_text=text)
+        self.comment.save()
+
+    def test_post_comment(self):
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        body = { "textcomment":"comment"}
+        response = new_client.post('/doctor/'+str(doc_id)+'/comment/',
+        data=json.dumps(body),content_type='application/json',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['status'],'success')
+
+    def test_get_comment(self):
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        response = new_client.get('/doctor/'+str(doc_id)+'/comment/',content_type='application/json',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'success')
+        self.assertEqual(response.data['comments'][0]['comment_text'],self.comment.comment_text)
