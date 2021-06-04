@@ -1094,4 +1094,5 @@ class CommentTests(TestCase):
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'success')
+        self.assertEqual(len(response.data['comments']),1)
         self.assertEqual(response.data['comments'][0]['comment_text'],self.comment.comment_text)
