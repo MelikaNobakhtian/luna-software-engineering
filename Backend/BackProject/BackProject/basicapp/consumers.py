@@ -82,18 +82,6 @@ def save_text_message(text: str, from_: AbstractBaseUser, to: AbstractBaseUser) 
     return MessageModel.objects.create(text=text, sender=from_, recipient=to)
 
 
-
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def _after_message_save(self, msg: MessageModel, rid: int, user_pk: str):
-        ev = {"type": "message_id_created", "random_id": rid, "db_id": msg.id}
-        logger.info(f"Message with id {msg.id} saved, firing events to {user_pk} & {self.group_name}")
-        await self.channel_layer.group_send(user_pk, ev)
-        await self.channel_layer.group_send(self.group_name, ev)
-        new_unreads = await get_unread_count(self.group_name, user_pk)
-        await self.channel_layer.group_send(user_pk,
-                                            {"type": "new_unread_count", "sender": self.group_name,
-                                             "unread_count": new_unreads})
-
 class ChatConsumer(AsyncWebsocketConsumer):
     async def _after_message_save(self, msg: MessageModel, rid: int, user_pk: str):
         ev = {"type": "message_id_created", "random_id": rid, "db_id": msg.id}
@@ -107,6 +95,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user: User = self.scope['user']
+        print("**********")
+        print(self.user)
+        print("++++++++++++")
+        print(self.scope)
         self.group_name: str = str(self.user.id)
         self.sender_username: str = self.user.username
         await self.channel_layer.group_add(self.group_name, self.channel_name)
