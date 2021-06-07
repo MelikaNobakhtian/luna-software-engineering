@@ -83,7 +83,17 @@ class DoctorUser(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+    
+    @property
+    def average_rating(self):
+        value=self.rate_set.all().aggregate(Avg('rate'))['rate__avg']
+        if value==None:
+            return 0
+        return value
 
+    @property
+    def average_rating_count(self):
+        return self.rate_set.all().count()
 
 class Address(models.Model):
     state = models.CharField(max_length=30)

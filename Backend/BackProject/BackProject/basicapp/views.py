@@ -535,7 +535,8 @@ class SearchDoctorView(APIView):
             search_models.append(DoctorUser)
         if len(search_models) == 0:
             docs = DoctorUser.objects.all()
-            doctors = FilterByRateSerializer(docs,many=True)
+            docs = sorted(docs,  key=lambda m: -m.average_rating)
+            doctors = DoctorProfileSerializer(docs,many=True)
             return Response({"message":"return all doctors","doctors":doctors.data})
         search_results = []
         for model in search_models:
@@ -591,7 +592,8 @@ class SearchDoctorView(APIView):
                     for d in docs:
                         search_results.append(d)
 
-        doctors = FilterByRateSerializer(search_results,many=True).data
+        search_results = sorted(search_results,  key=lambda m: -m.average_rating)
+        doctors = DoctorProfileSerializer(search_results,many=True).data
 
         if doctors == []:
             return Response({"message":"No doctors found","doctors":doctors})
