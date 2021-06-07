@@ -361,4 +361,7 @@ class TimeLineSerializer(serializers.Serializer):
     
     def get_id(self,obj):
         return obj.id
-        
+
+class RateByUserSerializer(serializers.Serializer):
+    
+    rate = serializers.IntegerField(required=True,min_value=1,max_value=5)   

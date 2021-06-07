@@ -9,6 +9,9 @@ from model_utils.models import TimeStampedModel, SoftDeletableModel, SoftDeletab
 from typing import Optional, Any
 from django.db.models import Q
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
+
 
 class UserManager(BaseUserManager):
 
@@ -135,6 +138,12 @@ class OnlineAppointment(models.Model):
                 'email_subject': 'Your appointment is deleted!'}
             Util.send_email(data)
         super(OnlineAppointment, self).delete()
+
+class Rate(models.Model):
+
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 
 class DialogsModel(TimeStampedModel):
     id = models.BigAutoField(primary_key=True, verbose_name=_("Id"))
