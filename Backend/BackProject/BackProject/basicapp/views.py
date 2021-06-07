@@ -612,6 +612,7 @@ class FilterBySpecialty(APIView):
         
         if DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty']).exists():
             doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty'])
+            doctors = sorted(doctors,  key=lambda m: -m.average_rating)
             docs = DoctorProfileSerializer(doctors,many=True)
             return Response({"data":docs.data,"message":"success"})
 
