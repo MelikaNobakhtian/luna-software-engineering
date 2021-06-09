@@ -99,6 +99,7 @@ specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"
 
 class BasicPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
+    page_size = 20
 
 class RegisterView(generics.GenericAPIView):
 
@@ -818,6 +819,7 @@ class CommentView(APIView,PaginationHandlerMixin):
     model = Comment
     parser_classes = [JSONParser]
     pagination_class = BasicPagination
+    PageNumberPagination.page_size = 1
 
     def get_object(self, pk):
         try:
@@ -830,10 +832,10 @@ class CommentView(APIView,PaginationHandlerMixin):
         if Comment.objects.filter(doctor=doctor).exists():    
 
             mcomment = Comment.objects.filter(doctor=doctor)
-            #comment_list = self.paginate_queryset(mcomment)
-            serializer = CommentSerializer(mcomment,many=True)
-            count = Paginator(mcomment,10).num_pages
-            return Response({"comments" : serializer.data,"message":"success"},status=status.HTTP_200_OK)
+            comment_list = self.paginate_queryset(mcomment)
+            serializer = CommentSerializer(comment_list,many=True)
+            count = Paginator(mcomment,1).num_pages
+            return Response({"comments" : serializer.data,"count":count,"message":"success"},status=status.HTTP_200_OK)
 
         response = {'message' : 'No Comment!',}
         return Response(response,status=status.HTTP_200_OK)
