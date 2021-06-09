@@ -99,7 +99,7 @@ specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"
 
 class BasicPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
-    page_size = 20
+    #page_size = 1
 
 class RegisterView(generics.GenericAPIView):
 
@@ -814,7 +814,7 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
-class CommentView(APIView,PaginationHandlerMixin):
+class CommentView(generics.GenericAPIView,PaginationHandlerMixin):
 
     model = Comment
     parser_classes = [JSONParser]
