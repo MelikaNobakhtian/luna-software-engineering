@@ -99,6 +99,7 @@ specialties["35"] = {"specialty":"سایر","icon":'<AiFillMedicineBox size="35"
 
 class BasicPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
+    #page_size = 1
 
 class RegisterView(generics.GenericAPIView):
 
@@ -671,7 +672,6 @@ class DoctorPageCalendarInPersonView(APIView):
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
 
-
 class UserTimeLineView(APIView):
     
     def get(self,request,pk):
@@ -681,7 +681,6 @@ class UserTimeLineView(APIView):
         apts = []
         apts.extend(inperson)
         apts.extend(online)
-        #apts = apts.order_by('-start_time').order_by('-date')
         sorted(apts,key=lambda x: x.start_time)
         sorted(apts,key=lambda x: x.date)
         user_apt = TimeLineSerializer(apts,many=True)
@@ -714,8 +713,6 @@ class ReserveOnlineAppointmentAPIView(APIView):
                     'email_subject': 'Cancel Online appointment'}
         Util.send_email(data)
         return Response({'message':'canceled!'},status=status.HTTP_200_OK)
-
-
 
 class ReserveInPersonAppointmentAPIView(APIView):
     
@@ -779,8 +776,6 @@ class DoctorTomorrowTimeLineView(APIView):
             return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
         
-
-
 class MessagesModelList(APIView,PaginationHandlerMixin):
 
     pagination_class = BasicPagination
@@ -819,8 +814,85 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
+class CommentView(generics.GenericAPIView,PaginationHandlerMixin):
 
+    model = Comment
+    parser_classes = [JSONParser]
+    pagination_class = BasicPagination
+    PageNumberPagination.page_size = 1
 
+    def get_object(self, pk):
+        try:
+            return Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            raise Http404
 
+    def get(self,request,pk):
+        doctor = DoctorUser.objects.get(id=pk)
+        if Comment.objects.filter(doctor=doctor).exists():    
 
-    
+            mcomment = Comment.objects.filter(doctor=doctor)
+            comment_list = self.paginate_queryset(mcomment)
+            serializer = CommentSerializer(mcomment,many=True)
+            count = Paginator(mcomment,1).num_pages
+            return Response({"comments" : serializer.data,"message":"success"},status=status.HTTP_200_OK)
+
+        response = {'message' : 'No Comment!',}
+        return Response(response,status=status.HTTP_200_OK)
+
+    def post(self,request,pk):
+        user=request.user
+        doctor=DoctorUser.objects.get(id=pk)
+        serializer = PostCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            comment_text = serializer.data.get("textcomment")
+            new_comment = Comment(user=user,doctor=doctor,comment_text=comment_text)
+            new_comment.save()
+            response = {
+                'status' : 'success',
+                'code' : 'status.HTTP_200_OK',
+                'message' : 'Comment Saved!!',
+                'data' : comment_text,
+            }
+            return Response(response,status=status.HTTP_200_OK)
+        return Response(serializer.errors,
+                        status=status.HTTP_404_NOT_FOUND)
+
+class DeleteCommentView(APIView):
+
+    def delete(self,request,doc_pk,comment_pk):
+        current_comment = Comment.objects.get(id=comment_pk)
+        comment_doctor =DoctorUser.objects.get(id=doc_pk)
+        current_user = request.user
+        comment_user = current_comment.user
+        if comment_user == current_user:
+            current_comment.delete()
+            return Response({'message':'Your Comment successfully deleted!'},status=status.HTTP_200_OK)
+        else:
+            return Response({'message':'You dont have permission to delete this comment!'},status=status.HTTP_200_OK)        
+
+class CreateDialogView(APIView):
+
+    def put(self,request,pk):
+        user1 = request.user
+        user2 = User.objects.get(pk=pk)
+        apt_id = request.data['apt_id']
+        apt = OnlineAppointment.objects.get(id=apt_id)
+
+        now = datetime.now()
+
+        current_time = now.strftime("%H:%M:%S")
+        if apt.date < jdatetime.date.today() : 
+            return Response({"message":"Not started"})
+        
+        else if apt.date == jdatetime.date.today() and apt.start_time < current_time :
+            return Response({"message":"Not time"})
+
+        else:
+            if DialogsModel.objects.filter(user1=user1,user2=user2).exists() or DialogsModel.objects.filter(user1=user2,user2=user1).exists():
+                return Response({"message":"this dialog already exists"})
+
+            else:
+                dialog = DialogsModel(user1=user1,user2=user2)
+                dialog.save()
+                return Response({"message":"success"})

@@ -63,5 +63,6 @@ urlpatterns = [
     path('doctor/<int:pk>/timeline-today/',DoctorTodayTimeLineView.as_view(), name='get doctor today\'s reserved appointments'),
     path('doctor/<int:pk>/timeline-tomorrow/',DoctorTomorrowTimeLineView.as_view(), name='get doctor tomorrow\'s reserved appointments'),
     path('user/<int:pk>/appointments/',UserTimeLineView.as_view(), name='get user appointments'),
+    path('create-dialog-with/<int:pk>/',CreateDialogView.as_view(),name='create dialog'),
     
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
