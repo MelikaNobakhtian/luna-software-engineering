@@ -217,3 +217,18 @@ class MessageModel(TimeStampedModel, SoftDeletableModel):
         ordering = ('-created',)
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
+
+class Rate(models.Model):
+
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+
+class Comment(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctor = models.ForeignKey(DoctorUser,on_delete=models.CASCADE)
+    comment_text=models.TextField()
+    sendtime = models.DateTimeField(auto_now_add=True,editable=False)
+
+    def __str__(self):
+        return self.comment_text

@@ -363,8 +363,22 @@ class TimeLineSerializer(serializers.Serializer):
     def get_id(self,obj):
         return obj.id
 
+
 class RateByUserSerializer(serializers.Serializer):
     
     rate = serializers.IntegerField(required=True,min_value=1,max_value=5)   
+
+class PostCommentSerializer(serializers.Serializer):
+    
+    textcomment = serializers.CharField(required=True)
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    user = UserProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = Comment
+        fields = ['id','user','doctor','comment_text','sendtime']
+    
 
 

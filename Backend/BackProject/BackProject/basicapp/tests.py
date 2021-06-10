@@ -933,8 +933,7 @@ class ReserveInPersonAppointmentViewTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'canceled!')
         self.assertEqual(None,InPersonAppointment.objects.get(pk=self.apt.id).patient)
-
-        
+ 
 class ConsumerTests(TestCase):
     def setUp(self) -> None:
         # self.u1, self.u2 = UserFactory.create(), UserFactory.create()
@@ -1021,6 +1020,7 @@ class ConsumerTests(TestCase):
     #     communicator.scope["user"] = self.user1
     #     connected, subprotocol = await communicator.connect()
     #     assert connected
+
 
 class RateDoctorTest(TestCase):
 
@@ -1120,6 +1120,136 @@ class RateDoctorTest(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'update rate')
         self.assertEqual(self.doc.average_rating,4)
+
+class CommentTests(TestCase):
+    def setUp(self):
+        self.setUp_user()
+        self.setUp_user2()
+        self.setUp_doctor()
+        self.setUp_comment()
+    
+    def setUp_user(self):
+        username = 'user'
+        email = 'user@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+
+    def setUp_user2(self):
+        username = 'user2'
+        email = 'user2@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user2 = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user2.set_password(self.password)
+        self.user2.save()
+    
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()  
+
+    def setUp_comment(self):
+        text = "first comment"
+        self.comment = Comment(user=self.user,doctor=self.doc,comment_text=text)
+        self.comment.save()
+
+    def test_post_comment(self):
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        body = { "textcomment":"comment"}
+        response = new_client.post('/doctor/'+str(doc_id)+'/comment/',
+        data=json.dumps(body),content_type='application/json',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['status'],'success')
+
+    def test_get_comment(self):
+
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        response = new_client.get('/doctor/'+str(doc_id)+'/comment/',content_type='application/json',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'success')
+        self.assertEqual(len(response.data['comments']),1)
+        self.assertEqual(response.data['comments'][0]['comment_text'],self.comment.comment_text)
+
+    def test_delete_comment_with_permission(self):
+
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        comment_id = self.comment.id
+
+        response = new_client.delete('/doctor/'+str(doc_id)+'/comment/'+str(comment_id)+'/',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'Your Comment successfully deleted!')
+
+    def test_delete_comment_without_permission(self):
+
+        response_login = client.post(reverse('login'),
+            data=json.dumps({'email':self.user2.email , 'password':self.password}),
+            content_type='application/json')
+
+        access_token = response_login.data['data']['tokens']['access']
+
+        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + access_token,}
+        new_client = APIClient(HTTP_AUTHORIZATION='Bearer ' + access_token)
+
+        doc = DoctorUser.objects.get(user=self.docuser)
+        doc_id = doc.id
+
+        comment_id = self.comment.id
+
+        response = new_client.delete('/doctor/'+str(doc_id)+'/comment/'+str(comment_id)+'/',headers =auth_headers)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'You dont have permission to delete this comment!')
 
 
 
