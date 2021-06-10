@@ -139,6 +139,7 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
         model = DoctorUser
         fields = ['id','user','specialty','sub_specialty','addresses','average_rating','average_rating_count']
 
+
     def get_addresses(self,obj):
         add_list = Address.objects.filter(doc=obj)
         adds = AddressSerializer(add_list,many=True)
@@ -364,5 +365,6 @@ class TimeLineSerializer(serializers.Serializer):
 
 class RateByUserSerializer(serializers.Serializer):
     
-    rate = serializers.IntegerField(required=True,min_value=1,max_value=5)
-        
+    rate = serializers.IntegerField(required=True,min_value=1,max_value=5)   
+
+

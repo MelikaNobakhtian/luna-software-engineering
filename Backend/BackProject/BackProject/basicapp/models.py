@@ -12,6 +12,7 @@ import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
 
+
 class UserManager(BaseUserManager):
 
     def create_user(self, username, email,first_name,last_name,password=None,password2=None):
@@ -93,7 +94,6 @@ class DoctorUser(models.Model):
     @property
     def average_rating_count(self):
         return self.rate_set.all().count()
-
 
 class Address(models.Model):
     state = models.CharField(max_length=30)

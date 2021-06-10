@@ -517,7 +517,7 @@ class ReservedAppointmentsAPIView(generics.GenericAPIView):
             serializer = OnlineAppointmentSerializer(apts,many=True)
             return Response(serializer.data,status=status.HTTP_200_OK)
         
-class SearchDoctorView(generics.GenericAPIView):
+class SearchDoctorView(APIView):
     def get(self,request):
         search_fields = {}
         search_fields['state'] = self.request.query_params.get('state', None)
@@ -535,6 +535,7 @@ class SearchDoctorView(generics.GenericAPIView):
             search_models.append(DoctorUser)
         if len(search_models) == 0:
             docs = DoctorUser.objects.all()
+            docs = sorted(docs,  key=lambda m: -m.average_rating)
             doctors = DoctorProfileSerializer(docs,many=True)
             return Response({"message":"return all doctors","doctors":doctors.data})
         search_results = []
@@ -591,6 +592,7 @@ class SearchDoctorView(generics.GenericAPIView):
                     for d in docs:
                         search_results.append(d)
 
+        search_results = sorted(search_results,  key=lambda m: -m.average_rating)
         doctors = DoctorProfileSerializer(search_results,many=True).data
 
         if doctors == []:
@@ -610,6 +612,7 @@ class FilterBySpecialty(APIView):
         
         if DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty']).exists():
             doctors = DoctorUser.objects.filter(specialty=specialties[str(pk)]['specialty'])
+            doctors = sorted(doctors,  key=lambda m: -m.average_rating)
             docs = DoctorProfileSerializer(doctors,many=True)
             return Response({"data":docs.data,"message":"success"})
 
@@ -671,7 +674,6 @@ class DoctorPageCalendarInPersonView(APIView):
             
         return Response({"data":apt_inperson,"message":"success"},status=status.HTTP_200_OK)
 
-
 class UserTimeLineView(APIView):
     
     def get(self,request,pk):
@@ -714,8 +716,6 @@ class ReserveOnlineAppointmentAPIView(APIView):
                     'email_subject': 'Cancel Online appointment'}
         Util.send_email(data)
         return Response({'message':'canceled!'},status=status.HTTP_200_OK)
-
-
 
 class ReserveInPersonAppointmentAPIView(APIView):
     
@@ -779,8 +779,6 @@ class DoctorTomorrowTimeLineView(APIView):
             return Response({"message":"No appointments"})
         return Response({"data":doc_apt.data,"message":"success"})
         
-
-
 class MessagesModelList(APIView,PaginationHandlerMixin):
 
     pagination_class = BasicPagination
@@ -854,8 +852,6 @@ class UserRatingview(APIView):
             return Response({"message":"update rate"},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_200_OK)
 
-
-
-
-
-    
+            
+       
+        
