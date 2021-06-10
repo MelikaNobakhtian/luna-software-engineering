@@ -833,9 +833,9 @@ class CommentView(generics.GenericAPIView,PaginationHandlerMixin):
 
             mcomment = Comment.objects.filter(doctor=doctor)
             comment_list = self.paginate_queryset(mcomment)
-            serializer = CommentSerializer(comment_list,many=True)
+            serializer = CommentSerializer(mcomment,many=True)
             count = Paginator(mcomment,1).num_pages
-            return Response({"comments" : serializer.data,"count":count,"message":"success"},status=status.HTTP_200_OK)
+            return Response({"comments" : serializer.data,"message":"success"},status=status.HTTP_200_OK)
 
         response = {'message' : 'No Comment!',}
         return Response(response,status=status.HTTP_200_OK)
