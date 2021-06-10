@@ -820,6 +820,41 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
 
+class UserRatingview(APIView):
+
+    def get(self,request,pk):
+        user = request.user
+        doctor = DoctorUser.objects.get(id=pk)
+        if Rate.objects.filter(user=user,doctor=doctor).exists():
+            rate = Rate.objects.get(user=user,doctor=doctor).rate
+            return Response({'rate':rate },status=status.HTTP_200_OK)
+        return Response({'message' : 'No rate!'},status=status.HTTP_200_OK)
+
+    def post(self,request,pk):
+        user = request.user
+        doctor = DoctorUser.objects.get(id=pk)
+        if Rate.objects.filter(user=user,doctor=doctor).exists():
+            return Response({"message":"You already rated this book!"},status=status.HTTP_200_OK)
+        rate = RateByUserSerializer(data=request.data)
+        if rate.is_valid():
+            new_rating = Rate(user=user,doctor=doctor,rate=rate.data.get("rate"))
+            new_rating.save()
+            return Response({'message':'Successfully Rated!'},status=status.HTTP_200_OK)
+        return Response(rate.errors, status=status.HTTP_200_BAD_OK)
+
+    def put(self,request,pk):
+        user=request.user
+        doctor=DoctorUser.objects.get(id=pk)
+        rate = Rate.objects.get(user=user,doctor=doctor)
+        serializer = RateByUserSerializer(data=request.data)
+        if serializer.is_valid():
+            newrate = serializer.data.get("rate")
+            rate.rate = newrate
+            rate.save()
+            return Response({"message":"update rate"},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_200_OK)
+
+
 
 
 
