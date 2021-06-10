@@ -1,9 +1,9 @@
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+from .middleware import TokenAuthMiddlewareStack
 from basicapp import urls
 
 application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
+    "websocket": TokenAuthMiddlewareStack(
         URLRouter(
             urls.websocket_urlpatterns
         )
