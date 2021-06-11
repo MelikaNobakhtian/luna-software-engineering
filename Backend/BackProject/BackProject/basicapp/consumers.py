@@ -240,6 +240,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
 
     async def message_read(self, event):
+        print("*****************************************")
         await self.send(
             text_data=json.dumps({
                 'msg_type': MessageTypes.MessageRead,

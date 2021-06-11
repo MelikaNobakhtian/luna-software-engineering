@@ -817,6 +817,31 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
+class CreateDialogView(APIView):
+
+    def put(self,request,pk):
+        user1 = request.user
+        user2 = User.objects.get(pk=pk)
+        apt_id = request.data['apt_id']
+        apt = OnlineAppointment.objects.get(id=apt_id)
+
+        now = datetime.now()
+
+        current_time = now.strftime("%H:%M:%S")
+        if apt.date < jdatetime.date.today() : 
+            return Response({"message":"Not started"})
+        
+        elif apt.date == jdatetime.date.today() and apt.start_time > datetime.now().time() :
+            return Response({"message":"Not time"})
+
+        else:
+            if DialogsModel.objects.filter(user1=user1,user2=user2).exists() or DialogsModel.objects.filter(user1=user2,user2=user1).exists():
+                return Response({"message":"this dialog already exists"})
+
+            else:
+                dialog = DialogsModel(user1=user1,user2=user2)
+                dialog.save()
+                return Response({"message":"success"})
 
 class CommentView(generics.GenericAPIView,PaginationHandlerMixin):
 
@@ -908,4 +933,3 @@ class UserRatingview(APIView):
             rate.save()
             return Response({"message":"update rate"},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_200_OK)
-

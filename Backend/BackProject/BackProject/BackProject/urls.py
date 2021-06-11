@@ -66,6 +66,5 @@ urlpatterns = [
     path('doctor/<int:pk>/rate/',UserRatingview.as_view(),name='rate'),
     path('doctor/<int:pk>/comment/',CommentView.as_view()),
     path('doctor/<doc_pk>/comment/<comment_pk>/',DeleteCommentView.as_view()),
-
-    
+    path('create-dialog-with/<int:pk>/',CreateDialogView.as_view(),name='create dialog'),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
