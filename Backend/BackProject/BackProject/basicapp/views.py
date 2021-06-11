@@ -885,7 +885,7 @@ class CreateDialogView(APIView):
         if apt.date < jdatetime.date.today() : 
             return Response({"message":"Not started"})
         
-        else if apt.date == jdatetime.date.today() and apt.start_time < current_time :
+        elif apt.date == jdatetime.date.today() and apt.start_time > datetime.now().time() :
             return Response({"message":"Not time"})
 
         else:
