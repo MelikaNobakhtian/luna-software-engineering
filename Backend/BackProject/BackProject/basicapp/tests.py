@@ -1021,6 +1021,131 @@ class ConsumerTests(TestCase):
     #     connected, subprotocol = await communicator.connect()
     #     assert connected
 
+class UserTimeLineViewTests(TestCase):
+    def setUp(self):
+        self.setUp_patient()
+        self.setUp_doctor()
+        self.setUp_onlinetime()
+        self.setUp_inpersontime()
+
+    def setUp_onlinetime(self):
+        self.duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        self.duration.save()
+        self.apt = OnlineAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date.today(),start_time=time(12,30),end_time=time(13,0),patient=self.user)
+        self.apt.save()
+
+    def setUp_inpersontime(self):
+        self.duration2 = Duration(time_type='general',duration=30,doctor=self.doc)
+        self.duration2.save()
+        self.apt2 = InPersonAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date.today()+ timedelta(days=1),start_time=time(12,30),end_time=time(13,0),address=self.add,patient=self.user)
+        self.apt2.save()
+
+    def setUp_patient(self):
+        username = 'testuser'
+        email = 'testuser@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()   
+        self.add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        self.add.save()
+    
+    def test_get_user_apts(self):
+        response = client.get("/user/"+str(self.user.id)+"/appointments/")
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'success')
+
+        self.assertEqual(2,len(response.data))
+        self.assertEqual(self.doc.id,response.data['data'][0]['doctor']['id'])
+        self.assertEqual(self.duration.id,response.data['data'][0]['duration']['id'])
+
+class DoctorTimeLineViewTests(TestCase):
+    def setUp(self):
+        self.setUp_patient()
+        self.setUp_doctor()
+        self.setUp_onlinetime()
+        self.setUp_inpersontime()
+
+    def setUp_onlinetime(self):
+        self.duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        self.duration.save()
+        self.apt = OnlineAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date.today(),start_time=time(12,30),end_time=time(13,0),patient=self.user)
+        self.apt.save()
+
+    def setUp_inpersontime(self):
+        self.duration2 = Duration(time_type='general',duration=30,doctor=self.doc)
+        self.duration2.save()
+        self.apt2 = InPersonAppointment(doctor=self.doc,duration=self.duration,date=jdatetime.date.today()+ timedelta(days=1),start_time=time(12,30),end_time=time(13,0),address=self.add,patient=self.user)
+        self.apt2.save()
+
+    def setUp_patient(self):
+        username = 'testuser'
+        email = 'testuser@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()   
+        self.add = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        self.add.save()
+
+    def test_get_today(self):
+        response = client.get("/doctor/"+str(self.doc.id)+"/timeline-today/")
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'success')
+
+        self.assertEqual(2,len(response.data))
+        self.assertEqual(1,len(response.data['data']))
+        self.assertEqual(self.user.id,response.data['data'][0]['patient']['id'])
+        self.assertEqual(self.duration.id,response.data['data'][0]['duration']['id'])
+
+    def test_get_tomorrow(self):
+        response = client.get("/doctor/"+str(self.doc.id)+"/timeline-tomorrow/")
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['message'],'success')
+
+        self.assertEqual(2,len(response.data))
+        self.assertEqual(1,len(response.data['data']))
+        self.assertEqual(self.user.id,response.data['data'][0]['patient']['id'])
+        self.assertEqual(self.duration.id,response.data['data'][0]['duration']['id'])
+
+
 class CommentTests(TestCase):
     def setUp(self):
         self.setUp_user()
