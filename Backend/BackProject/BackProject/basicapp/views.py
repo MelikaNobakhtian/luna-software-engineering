@@ -937,8 +937,9 @@ class UserRatingview(APIView):
 class FirstNotReservedOnlineAPIView(APIView):
 
     def get(self,request,pk):
+        today = jdatetime.date.today()
         doc = DoctorUser.objects.get(id=pk)
-        on_apts = OnlineAppointment.objects.filter(doctor=doc,patient__isnull=True).order_by('date')
+        on_apts = OnlineAppointment.objects.filter(doctor=doc,date__gte=today,patient__isnull=True).order_by('date')
         if len(on_apts) != 0:
             first_date = on_apts[0].date
             on_apts = OnlineAppointment.objects.filter(doctor=doc,patient__isnull=True,date=first_date).order_by('start_time')
@@ -951,10 +952,11 @@ class FirstNotReservedInPersonAPIView(APIView):
     def get(self,request,pk):
         duration = None
         address = None
+        today = jdatetime.date.today()
         doc = DoctorUser.objects.get(id=pk)
         duration_id = self.request.query_params.get('durationid', None)
         address_id = self.request.query_params.get('addid', None)
-        in_apts = InPersonAppointment.objects.filter(doctor=doc,patient__isnull=True)
+        in_apts = InPersonAppointment.objects.filter(doctor=doc,patient__isnull=True,date__gte=today)
         if len(in_apts) == 0:
             return Response({'message':'all apts reserved!'},status=status.HTTP_200_OK)
         if duration_id != None:
@@ -966,7 +968,8 @@ class FirstNotReservedInPersonAPIView(APIView):
             address = Address.objects.get(id=address_id)
             in_apts  = in_apts.filter(address=address)
             if len(in_apts) == 0:
-                return Response({'message':'all apts reserved!'},status=status.HTTP_200_OK)     
+                return Response({'message':'all apts reserved!'},status=status.HTTP_200_OK)
+        sorted(in_apts,key=lambda x: x.start_time)     
         in_apts = in_apts.order_by('date')
         serializer = InPersonAppointmentSerializer(in_apts[0])
         return Response(serializer.data,status=status.HTTP_200_OK)
