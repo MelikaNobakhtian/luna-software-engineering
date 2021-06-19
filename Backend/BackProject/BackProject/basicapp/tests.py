@@ -669,7 +669,7 @@ class OnlineAppointmentAPIView(TestCase):
         self.doc = DoctorUser(user=self.user,degree=file_mock)
         self.doc.save()
     
-        duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        duration = Duration(time_type='online',duration=20,duration_number='violet',doctor=self.doc)
         duration.save()
 
     def test_inperson_appointemt(self):
@@ -1373,6 +1373,208 @@ class CommentTests(TestCase):
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data['message'],'You dont have permission to delete this comment!')
+
+class FirstNotReservedOnlineTest(TestCase):
+
+    def setUp(self):
+        self.setUp_doctor()
+        self.duration = Duration(time_type='online',duration=30,duration_number='violet',doctor=self.doc)
+        self.duration.save()
+        self.setUp_user()
+
+    def setUp_user(self):
+        username = 'user'
+        email = 'user@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+    
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()
+
+    def CreateOnlineAppointments(self):
+        doc_id = self.doc.id
+        duration_id = self.duration.id
+        body = {
+        "start_day": "1400-03-22",
+        "end_day":"1400-03-28",
+        "appointments": [
+             {
+                 "duration_id":duration_id,
+                    "doc_id":doc_id,
+                    "start_time":"17:00",
+                    "end_time":"17:30"
+             }
+             ,
+
+             {
+                    "duration_id":duration_id,
+                    "doc_id":doc_id,
+                    "start_time":"17:30",
+                    "end_time":"18:00"
+             }]}
+        response = client.post(reverse('online-apt',kwargs={'pk':doc_id}),
+        data=json.dumps(body),content_type='application/json')
+
+    def test_get_first_not_reserved_online(self):
+        self.CreateOnlineAppointments()
+        apt = OnlineAppointment.objects.get(doctor=self.doc,date=jdatetime.date(1400,3,22),start_time=time(17,0))
+        apt.patient = self.user
+        apt.save()
+        response = client.get("/doctor/"+str(self.doc.id)+"/online/not-reserved")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['date'],"1400-03-22")
+        self.assertEqual(response.data['start_time'],"17:30:00")
+
+class FirstNotReservedInPersonTest(TestCase):
+    
+    def setUp(self):
+        self.setUp_doctor()
+        self.setUp_duration()
+        self.setUp_address()
+        self.setUp_user()
+
+    def setUp_address(self):
+        self.add1 = Address(doc=self.doc,state='Mazandaran',city='Sari',detail='Farhang St.')
+        self.add1.save()
+        self.add2 = Address(doc=self.doc,state='Tehran',city='Tehran',detail='Narmak')
+        self.add2.save()
+
+
+    def setUp_duration(self):
+        self.duration1 = Duration(time_type='visit',duration=30,duration_number='violet',doctor=self.doc)
+        self.duration1.save()
+        self.duration2 = Duration(time_type='general',duration=60,duration_number='green',doctor=self.doc)
+        self.duration2.save()
+
+
+    def setUp_user(self):
+        username = 'user'
+        email = 'user@gmail.com'
+        first_name = 'Lucy'
+        last_name = 'Brown'
+        self.password = '123456'
+        self.user = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.user.set_password(self.password)
+        self.user.save()
+    
+    def setUp_doctor(self):
+        username = 'testdoctor'
+        email = 'testdoctor@gmail.com'
+        first_name = 'Ramin'
+        last_name = 'Mofarrah'
+        password = '123456'
+        self.docuser = User(username=username,email=email,first_name=first_name,last_name=last_name,is_verified=True)
+        self.docuser.set_password(password)
+        self.docuser.save()
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = 'test.pdf'
+
+        self.doc = DoctorUser(user=self.docuser,degree=file_mock)
+        self.doc.save()
+
+    def CreateInPersonAppointments(self):
+        doc_id = self.doc.id
+        duration1_id = self.duration1.id
+        duration2_id = self.duration2.id
+        add1_id = self.add1.id
+        add2_id = self.add2.id
+        body = {
+        "start_day": "1400-03-29",
+        "end_day":"1400-03-30",
+        "appointments": [
+             {
+                 "duration_id":duration1_id,
+                    "address_number":7,
+                    "doc_id":doc_id,
+                    "address_id":add1_id,
+                    "start_time":"17:00",
+                    "end_time":"17:30"
+             },
+             {
+                    "address_number":8,
+                    "duration_id":duration2_id,
+                    "doc_id":doc_id,
+                    "address_id":add2_id,
+                    "start_time":"17:30",
+                    "end_time":"18:30"
+             },
+             {
+                 "duration_id":duration1_id,
+                    "address_number":8,
+                    "doc_id":doc_id,
+                    "address_id":add2_id,
+                    "start_time":"18:30",
+                    "end_time":"19:00"
+             },
+             {
+                    "address_number":7,
+                    "duration_id":duration2_id,
+                    "doc_id":doc_id,
+                    "address_id":add1_id,
+                    "start_time":"19:00",
+                    "end_time":"20:00"
+             }]}
+        response = client.post(reverse('inperson-apt',kwargs={'pk':doc_id}),
+        data=json.dumps(body),content_type='application/json')
+
+
+    def test_get_first_not_reserved_inperson(self):
+        self.CreateInPersonAppointments()
+        apt = InPersonAppointment.objects.get(doctor=self.doc,date=jdatetime.date(1400,3,29),start_time=time(17,0))
+        apt.patient = self.user
+        apt.save()
+
+        #get first not reserved in person appointment without filter
+        response = client.get("/doctor/"+str(self.doc.id)+"/in-person/not-reserved")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['date'],"1400-03-29")
+        self.assertEqual(response.data['start_time'],"17:30:00")
+        self.assertEqual(response.data['address']['state'],'Tehran')
+
+        #get first not reserved in person appointment with address filter
+        apt = InPersonAppointment.objects.get(doctor=self.doc,date=jdatetime.date(1400,3,29),start_time=time(19,0),address=self.add1)
+        apt.patient = self.user
+        apt.save()
+        response = client.get("/doctor/"+str(self.doc.id)+"/in-person/not-reserved?addid=1")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['date'],"1400-03-30")
+        self.assertEqual(response.data['start_time'],"17:00:00")
+
+        #get first not reserved in person appointment with duration filter
+        response = client.get("/doctor/"+str(self.doc.id)+"/in-person/not-reserved?durationid=1")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['date'],"1400-03-29")
+        self.assertEqual(response.data['start_time'],"18:30:00")
+
+        #get first not reserved in person appointment with duration and address filter
+        response = client.get("/doctor/"+str(self.doc.id)+"/in-person/not-reserved?durationid=2&addid=1")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['date'],"1400-03-30")
+        self.assertEqual(response.data['start_time'],"19:00:00")
+        self.assertEqual(response.data['address']['city'],"Sari")
+        self.assertEqual(response.data['duration']['time_type'],"general")
+
+
+
+
+        
+
 
 
 
