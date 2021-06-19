@@ -85,19 +85,21 @@ def save_text_message(text: str, from_: AbstractBaseUser, to: AbstractBaseUser) 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def _after_message_save(self, msg: MessageModel, rid: int, user_pk: str):
         ev = {"type": "message_id_created", "random_id": rid, "db_id": msg.id}
-        logger.info(f"Message with id {msg.id} saved, firing events to {user_pk} & {self.group_name}")
+        print("**********")
+        #logger.info(f"Message with id {msg.id} saved, firing events to {user_pk} & {self.group_name}")
         await self.channel_layer.group_send(user_pk, ev)
         await self.channel_layer.group_send(self.group_name, ev)
         new_unreads = await get_unread_count(self.group_name, user_pk)
+        print("++++++++++++")
         await self.channel_layer.group_send(user_pk,
                                             {"type": "new_unread_count", "sender": self.group_name,
                                              "unread_count": new_unreads})
+        
+        print("!!!!!!!!")
 
     async def connect(self):
         self.user: User = self.scope['user']
-        print("**********")
         print(self.user)
-        print("++++++++++++")
         print(self.scope)
         self.group_name: str = str(self.user.id)
         self.sender_username: str = self.user.username
@@ -146,10 +148,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 else:
                     user_pk = data['user_pk']
                     mid = data['message_id']
+                    print("2222222222222")
+                    print(data)
+                    print(user_pk)
+                    print(mid)
+                    print(self.group_name)
                     await self.channel_layer.group_send(user_pk, {"type": "message_read",
                                                                   "message_id": mid,
                                                                   "sender": user_pk,
                                                                   "receiver": self.group_name})
+
                     recipient: Optional[User] = await get_user_by_pk(user_pk)
                     if not recipient:
                         return ErrorTypes.InvalidUserPk, f"User with pk {user_pk} does not exist"
@@ -191,6 +199,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     text = data['text']
                     user_pk = data['user_pk']
                     rid = data['random_id']
+                    print("333333333333333333")
+                    print(data)
                     await self.channel_layer.group_send(user_pk, {"type": "new_text_message",
                                                                   "random_id": rid,
                                                                   "text": text,
@@ -240,7 +250,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
 
     async def message_read(self, event):
-        print("*****************************************")
         await self.send(
             text_data=json.dumps({
                 'msg_type': MessageTypes.MessageRead,

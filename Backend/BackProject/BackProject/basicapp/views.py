@@ -814,62 +814,6 @@ class DialogsModelList(APIView,PaginationHandlerMixin):
         count = Paginator(qs,20).num_pages
         return Response({'count':count,'dialogs':serializer.data},status=status.HTTP_200_OK)
 
-class CommentView(generics.GenericAPIView,PaginationHandlerMixin):
-
-    model = Comment
-    parser_classes = [JSONParser]
-    pagination_class = BasicPagination
-    PageNumberPagination.page_size = 1
-
-    def get_object(self, pk):
-        try:
-            return Comment.objects.get(pk=pk)
-        except Comment.DoesNotExist:
-            raise Http404
-
-    def get(self,request,pk):
-        doctor = DoctorUser.objects.get(id=pk)
-        if Comment.objects.filter(doctor=doctor).exists():    
-
-            mcomment = Comment.objects.filter(doctor=doctor)
-            comment_list = self.paginate_queryset(mcomment)
-            serializer = CommentSerializer(mcomment,many=True)
-            count = Paginator(mcomment,1).num_pages
-            return Response({"comments" : serializer.data,"message":"success"},status=status.HTTP_200_OK)
-
-        response = {'message' : 'No Comment!',}
-        return Response(response,status=status.HTTP_200_OK)
-
-    def post(self,request,pk):
-        user=request.user
-        doctor=DoctorUser.objects.get(id=pk)
-        serializer = PostCommentSerializer(data=request.data)
-        if serializer.is_valid():
-            comment_text = serializer.data.get("textcomment")
-            new_comment = Comment(user=user,doctor=doctor,comment_text=comment_text)
-            new_comment.save()
-            response = {
-                'status' : 'success',
-                'code' : 'status.HTTP_200_OK',
-                'message' : 'Comment Saved!!',
-                'data' : comment_text,
-            }
-            return Response(response,status=status.HTTP_200_OK)
-        return Response(serializer.errors,
-                        status=status.HTTP_404_NOT_FOUND)
-
-class DeleteCommentView(APIView):
-
-    def delete(self,request,doc_pk,comment_pk):
-        current_comment = Comment.objects.get(id=comment_pk)
-        comment_doctor =DoctorUser.objects.get(id=doc_pk)
-        current_user = request.user
-        comment_user = current_comment.user
-        if comment_user == current_user:
-            current_comment.delete()
-            return Response({'message':'Your Comment successfully deleted!'},status=status.HTTP_200_OK)
-        else:
-            return Response({'message':'You dont have permission to delete this comment!'},status=status.HTTP_200_OK)        
 
 class CreateDialogView(APIView):
 
